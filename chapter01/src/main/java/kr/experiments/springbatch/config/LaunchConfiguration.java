@@ -41,16 +41,16 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 @ImportResource("classpath:/schema/spring-batch-schema.xml")
-public abstract class AbstractBatchConfiguration {
+public class LaunchConfiguration {
 
     @Bean
     public DataSource dataSource() {
         log.info("create DataSource");
-        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 
-        return builder.setType(EmbeddedDatabaseType.HSQL)
-                      .addScript("classpath:/create-tables.sql")
-                      .build();
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("classpath:/create-tables.sql")
+                .build();
     }
 
     @Bean

@@ -8,15 +8,12 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -32,16 +29,17 @@ public class DecompressTasklet implements Tasklet {
     @Setter private String targetDirectory;
     @Setter private String targetFile;
 
-    private void setParameters(Map<String, Object> map) {
-        if (inputResource == null)
-            inputResource = new ClassPathResource((String) map.get("inputResource"));
-
-        if (StringUtils.isEmpty(targetDirectory))
-            targetDirectory = (String) map.get("targetDirectory");
-
-        if (StringUtils.isEmpty(targetFile))
-            targetFile = (String) map.get("targetFile");
-    }
+//    private void setParameters(Map<String, Object> map) {
+//
+//        if (inputResource == null)
+//            inputResource = new ClassPathResource((String) map.get("inputResource"));
+//
+//        if (StringUtils.isEmpty(targetDirectory))
+//            targetDirectory = (String) map.get("targetDirectory");
+//
+//        if (StringUtils.isEmpty(targetFile))
+//            targetFile = (String) map.get("targetFile");
+//    }
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
