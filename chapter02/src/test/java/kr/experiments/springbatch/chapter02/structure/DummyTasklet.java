@@ -15,6 +15,6 @@ public class DummyTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        return RepeatStatus.FINISHED
+        return RepeatStatus.FINISHED;
     }
 }
