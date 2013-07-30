@@ -50,26 +50,25 @@ public class ImportProductJobConfiguration {
     private static final String OVERRIDDEN_BY_EXPRESSION = null;
 
     @Autowired
-    protected JobBuilderFactory jobBuilders;
+    JobBuilderFactory jobBuilders;
 
     @Autowired
-    protected StepBuilderFactory stepBuilders;
+    StepBuilderFactory stepBuilders;
 
     @Autowired
-    protected JobRepository jobRepository;
+    JobRepository jobRepository;
 
     @Autowired
-    protected JobRegistry jobRegistry;
+    JobRegistry jobRegistry;
 
     @Autowired
-    protected PlatformTransactionManager transactionManager;
+    PlatformTransactionManager transactionManager;
 
     @Autowired
-    protected DataSource dataSource;
+    DataSource dataSource;
 
     @Autowired
-    protected JobExecutionListener loggerListener;
-
+    JobExecutionListener loggerListener;
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
