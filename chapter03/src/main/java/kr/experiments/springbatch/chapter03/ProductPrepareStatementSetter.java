@@ -2,6 +2,7 @@ package kr.experiments.springbatch.chapter03;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.database.ItemPreparedStatementSetter;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
  * @since 13. 7. 31. 오후 12:59
  */
 @Slf4j
+@Component
 public class ProductPrepareStatementSetter implements ItemPreparedStatementSetter<Product> {
     @Override
     public void setValues(Product product, PreparedStatement ps) throws SQLException {

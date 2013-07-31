@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.stereotype.Component;
 
 /**
  * kr.experiments.springbatch.chapter03.listener.ImportProductsJobListener
@@ -12,6 +13,7 @@ import org.springframework.batch.core.JobExecutionListener;
  * @since 13. 7. 31. 오전 11:44
  */
 @Slf4j
+@Component
 public class ImportProductsJobListener implements JobExecutionListener {
 
     @Override

@@ -3,7 +3,9 @@ package kr.experiments.springbatch.chapter03.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.annotation.AfterStep;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.stereotype.Component;
 
 /**
  * {@link org.springframework.batch.core.JobExecutionListener},
@@ -13,14 +15,15 @@ import org.springframework.batch.core.StepExecutionListener;
  * @since 13. 7. 31. 오전 11:48
  */
 @Slf4j
-public class ImportProductsExecutionListener implements StepExecutionListener {
+@Component
+public class ImportProductsExecutionListener {
 
-    @Override
+    @BeforeStep
     public void beforeStep(StepExecution stepExecution) {
         log.info("스텝 실행 전에 호출되는 리스너의 메소드입니다.");
     }
 
-    @Override
+    @AfterStep
     public ExitStatus afterStep(StepExecution stepExecution) {
         log.info("스텝 완료 후 호출됩니다. StepName=[{}], ExitStatus=[{}]",
                  stepExecution.getStepName(), stepExecution.getExitStatus());
