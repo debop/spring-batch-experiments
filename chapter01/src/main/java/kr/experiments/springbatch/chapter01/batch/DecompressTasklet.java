@@ -4,11 +4,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,22 +32,22 @@ public class DecompressTasklet implements Tasklet {
     @Setter private String targetDirectory;
     @Setter private String targetFile;
 
-//    private void setParameters(Map<String, Object> map) {
-//
-//        if (inputResource == null)
-//            inputResource = new ClassPathResource((String) map.get("inputResource"));
-//
-//        if (StringUtils.isEmpty(targetDirectory))
-//            targetDirectory = (String) map.get("targetDirectory");
-//
-//        if (StringUtils.isEmpty(targetFile))
-//            targetFile = (String) map.get("targetFile");
-//    }
+    private void setParameters(JobParameters jobParameters) {
+
+        if (inputResource == null)
+            inputResource = new ClassPathResource((String) jobParameters.getString("inputResource"));
+
+        if (StringUtils.isEmpty(targetDirectory))
+            targetDirectory = jobParameters.getString("targetDirectory");
+
+        if (StringUtils.isEmpty(targetFile))
+            targetFile = jobParameters.getString("targetFile");
+    }
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-//        if (chunkContext != null)
-//            setParameters(chunkContext.getStepContext().getJobParameters());
+        if (chunkContext != null)
+            setParameters(chunkContext.getStepContext().getStepExecution().getJobParameters());
 
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(inputResource.getInputStream()));
 

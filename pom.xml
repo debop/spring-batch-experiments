@@ -11,6 +11,7 @@
         <module>chapter01</module>
         <module>chapter02</module>
         <module>chapter03</module>
+        <module>chapter04</module>
     </modules>
 
     <name>spring-batch-experiments</name>
@@ -163,13 +164,6 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>httpunit</groupId>
-            <artifactId>httpunit</artifactId>
-            <version>1.7</version>
-        </dependency>
-
 
         <!-- Tomcat Connection Pool -->
         <dependency>
