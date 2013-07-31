@@ -1,6 +1,7 @@
 package kr.experiments.springbatch.chapter02.structure;
 
 import kr.experiments.springbatch.chapter02.domain.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -15,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 7. 31. 오전 12:14
  */
+@Slf4j
 public class DummyItemReader implements ItemReader<Product> {
 
     // HINT: 자료 구조의 초기화 시에 이렇게 한다.

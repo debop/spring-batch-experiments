@@ -20,7 +20,6 @@ import org.springframework.batch.core.repository.support.JobRepositoryFactoryBea
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -41,7 +40,6 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-@ImportResource("classpath:/schema/spring-batch-schema.xml")
 public class LaunchConfiguration {
 
     @Bean
@@ -49,9 +47,11 @@ public class LaunchConfiguration {
         log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.HSQL)
-                .addScript("classpath:/create-tables.sql")
-                .build();
+            .setType(EmbeddedDatabaseType.HSQL)
+            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+            .addScript("classpath:/create-tables.sql")
+            .build();
     }
 
     @Bean

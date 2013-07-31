@@ -13,27 +13,27 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.batch</groupId>
-            <artifactId>spring-batch-admin-resources</artifactId>
-            <version>1.2.2.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.batch</groupId>-->
+            <!--<artifactId>spring-batch-admin-resources</artifactId>-->
+            <!--<version>1.2.2.RELEASE</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.batch</groupId>
-            <artifactId>spring-batch-admin-manager</artifactId>
-            <version>1.2.2.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>aspectjweaver</artifactId>
-                    <groupId>org.aspectj</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>aspectjrt</artifactId>
-                    <groupId>org.aspectj</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.batch</groupId>-->
+            <!--<artifactId>spring-batch-admin-manager</artifactId>-->
+            <!--<version>1.2.2.RELEASE</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>aspectjweaver</artifactId>-->
+                    <!--<groupId>org.aspectj</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>aspectjrt</artifactId>-->
+                    <!--<groupId>org.aspectj</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
