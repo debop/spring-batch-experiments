@@ -15,14 +15,14 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.List;
 
 /**
- * kr.spring.batch.chapter05.test.jpa.JobStructureJpaCursorTest
+ * kr.spring.batch.chapter05.test.jpa.JobStructureJpaTest
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 1. 오후 2:03
  */
 @Slf4j
-@ContextConfiguration(classes = { JobStructureJpaCursorConfig.class })
-public class JobStructureJpaCursorTest extends AbstractJobStructureTest {
+@ContextConfiguration(classes = { JobStructureJpaConfig.class })
+public class JobStructureJpaTest extends AbstractJobStructureTest {
 
     @Autowired
     ProductRepository productRepository;
@@ -56,10 +56,19 @@ public class JobStructureJpaCursorTest extends AbstractJobStructureTest {
     }
 
     @Test
-    public void hibernateCursorJob() throws Exception {
+    public void jpaPagingJob() throws Exception {
         jobLauncher.run(job, new JobParameters());
-        checkProducts(writer.getProducts(), new String[]{ "PR....210", "PR....211", "PR....212",
-                                                          "PR....213", "PR....214", "PR....215", "PR....216", "PR....217" });
+        checkProducts(writer.getProducts(),
+                      new String[] {
+                              "PR....210",
+                              "PR....211",
+                              "PR....212",
+                              "PR....213",
+                              "PR....214",
+                              "PR....215",
+                              "PR....216",
+                              "PR....217"
+                      });
     }
 
 }

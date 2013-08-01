@@ -45,11 +45,11 @@ public class LaunchConfiguration {
         LaunchConfiguration.log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
-            .setType(EmbeddedDatabaseType.HSQL)
-            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+                .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
 //            .addScript("classpath:/create-tables.sql")
-            .build();
+                .build();
     }
 
     @Bean
@@ -130,6 +130,10 @@ public class LaunchConfiguration {
         factory.setDataSource(dataSource());
         factory.setDatabaseType(DatabaseType.HSQL.name());
         factory.setTransactionManager(transactionManager());
+
+        // JPA 사용 시에는 꼭 넣어줘야 합니다.
+        factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
+
         factory.afterPropertiesSet();
 
         return factory.getJobRepository();

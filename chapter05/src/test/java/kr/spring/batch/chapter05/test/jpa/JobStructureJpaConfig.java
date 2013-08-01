@@ -30,7 +30,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableBatchProcessing
 @EnableTransactionManagement
 @Import(HSqlConfig.class)
-public class JobStructureJpaCursorConfig extends AbstractJobConfiguration {
+public class JobStructureJpaConfig extends AbstractJobConfiguration {
 
     @Autowired EntityManagerFactory emf;
 
@@ -38,17 +38,6 @@ public class JobStructureJpaCursorConfig extends AbstractJobConfiguration {
     public TaskExecutor jobTaskExecutor() throws Exception {
         return null;
     }
-
-//    @Override
-//    @Bean(destroyMethod = "close")
-//    public DataSource jobDataSource() {
-//        return new EmbeddedDatabaseBuilder()
-//            .setType(EmbeddedDatabaseType.HSQL)
-//            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-//            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-//            .addScript("classpath:create-tables.sql")
-//            .build();
-//    }
 
     @Bean
     public Job importProductsJob() throws Exception {
@@ -69,7 +58,7 @@ public class JobStructureJpaCursorConfig extends AbstractJobConfiguration {
         JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
         reader.setEntityManagerFactory(emf);
         reader.setQueryString("select p from Product p");
-        reader.setPageSize(100);
+        reader.setPageSize(5);
         reader.afterPropertiesSet();
 
         return reader;
@@ -79,40 +68,4 @@ public class JobStructureJpaCursorConfig extends AbstractJobConfiguration {
     public ItemWriter<Product> productItemWriter() {
         return new DummyProductItemWriter();
     }
-
-//    @Bean
-//    public EntityManagerFactory entityManagerFactory() {
-//
-//        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-//
-//        factoryBean.setPackagesToScan(Product.class.getPackage().getName());
-//        factoryBean.setDataSource(jobDataSource());
-//        factoryBean.setJpaProperties(jpaProperties());
-//
-//        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-//        adapter.setGenerateDdl(true);
-//        factoryBean.setJpaVendorAdapter(adapter);
-//
-//        factoryBean.afterPropertiesSet();
-//
-//        return factoryBean.getObject();
-//    }
-//
-//    public Properties jpaProperties() {
-//        Properties props = new Properties();
-//
-//        props.put(Environment.FORMAT_SQL, "true");
-//        props.put(Environment.SHOW_SQL, "true");
-//        props.put(Environment.AUTOCOMMIT, "true");
-//        props.put(Environment.STATEMENT_BATCH_SIZE, 100);
-//        props.put(Environment.RELEASE_CONNECTIONS, ConnectionReleaseMode.ON_CLOSE);
-//
-//        props.put(Environment.DIALECT, getDialect());
-//
-//        return props;
-//    }
-//
-//    public String getDialect() {
-//        return "org.hibernate.dialect.HSQLDialect";
-//    }
 }

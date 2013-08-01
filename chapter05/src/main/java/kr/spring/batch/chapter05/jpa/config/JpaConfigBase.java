@@ -1,6 +1,5 @@
 package kr.spring.batch.chapter05.jpa.config;
 
-import kr.spring.batch.chapter05.jpa.IsolationSupportHibernateJpaDialect;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.hibernate.ConnectionReleaseMode;
@@ -49,7 +48,6 @@ public abstract class JpaConfigBase {
         props.put(Environment.AUTOCOMMIT, "true");
         props.put(Environment.STATEMENT_BATCH_SIZE, 100);
         props.put(Environment.DIALECT, getDialect());
-        props.put("jpaDialect", IsolationSupportHibernateJpaDialect.class.getName());
 
         return props;
     }

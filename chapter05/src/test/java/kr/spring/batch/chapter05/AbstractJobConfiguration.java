@@ -52,10 +52,11 @@ public class AbstractJobConfiguration {
         AbstractJobConfiguration.log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
-            .setType(EmbeddedDatabaseType.HSQL)
-            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-            .build();
+                .setName("JobRepository")
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+                .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+                .build();
     }
 
     @Bean(name = "jobTransactionManager")
