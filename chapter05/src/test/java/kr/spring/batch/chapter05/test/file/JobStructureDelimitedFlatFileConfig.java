@@ -32,7 +32,7 @@ public class JobStructureDelimitedFlatFileConfig extends AbstractJobConfiguratio
 
     @Bean
     @Override
-    public TaskExecutor taskExecutor() throws Exception {
+    public TaskExecutor jobTaskExecutor() throws Exception {
         return null;
     }
 

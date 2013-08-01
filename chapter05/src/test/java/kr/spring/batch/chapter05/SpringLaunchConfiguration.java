@@ -16,6 +16,7 @@ import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.support.DatabaseType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,7 +65,7 @@ public class SpringLaunchConfiguration {
     }
 
     @Bean
-    public JobExplorer jobExplorer(DataSource dataSource) throws Exception {
+    public JobExplorer jobExplorer(@Qualifier("jobDataSource") DataSource dataSource) throws Exception {
         JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
         factory.setDataSource(dataSource);
         factory.afterPropertiesSet();
@@ -85,7 +86,8 @@ public class SpringLaunchConfiguration {
     }
 
     @Bean
-    public JobLauncher jobLauncher(JobRepository jobRepository, TaskExecutor taskExecutor) throws Exception {
+    public JobLauncher jobLauncher(JobRepository jobRepository,
+                                   @Qualifier("jobTaskExecutor") TaskExecutor taskExecutor) throws Exception {
         SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
         if (taskExecutor != null)
@@ -95,14 +97,19 @@ public class SpringLaunchConfiguration {
     }
 
     @Bean
-    public JobRepository jobRepository(DataSource dataSource,
-                                       PlatformTransactionManager transactionManager) throws Exception {
+    public JobRepository jobRepository(@Qualifier("jobDataSource") DataSource dataSource,
+                                       @Qualifier("jobTransactionManager") PlatformTransactionManager transactionManager) throws Exception {
         SpringLaunchConfiguration.log.info("create JobRepository...");
 
         JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
         factory.setDataSource(dataSource);
         factory.setDatabaseType(DatabaseType.HSQL.name());
         factory.setTransactionManager(transactionManager);
+
+        // HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
+        // HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
+        factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
+
         factory.afterPropertiesSet();
 
         return factory.getJobRepository();
@@ -115,6 +122,7 @@ public class SpringLaunchConfiguration {
 
     @Bean
     public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
+                                                 @Qualifier("jobTransactionManager")
                                                  PlatformTransactionManager transactionManager) throws Exception {
         return new StepBuilderFactory(jobRepository, transactionManager);
     }

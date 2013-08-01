@@ -29,7 +29,7 @@ public class JobStructureExistingServiceConfig extends AbstractJobConfiguration 
 
     @Bean
     @Override
-    public TaskExecutor taskExecutor() throws Exception {
+    public TaskExecutor jobTaskExecutor() throws Exception {
         return null;
     }
 

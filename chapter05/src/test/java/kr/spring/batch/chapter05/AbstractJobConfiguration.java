@@ -47,8 +47,8 @@ public class AbstractJobConfiguration {
     @Autowired
     protected JobRegistry jobRegistry;
 
-    @Bean
-    public DataSource dataSource() {
+    @Bean(name = "jobDataSource")
+    public DataSource jobDataSource() {
         AbstractJobConfiguration.log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
@@ -58,9 +58,9 @@ public class AbstractJobConfiguration {
             .build();
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    @Bean(name = "jobTransactionManager")
+    public PlatformTransactionManager jobTransactionManager() {
+        return new DataSourceTransactionManager(jobDataSource());
     }
 
     /**
@@ -71,8 +71,8 @@ public class AbstractJobConfiguration {
      * @return
      * @throws Exception
      */
-    @Bean
-    public TaskExecutor taskExecutor() throws Exception {
+    @Bean(name = "jobTaskExecutor")
+    public TaskExecutor jobTaskExecutor() throws Exception {
 
         // NOTE: TaskExecutor 를 제공하는 것은 비동기 방식으로 작업을 수행한다는 뜻입니다.
         // NOTE: 테스트 시에는 작업 진행 중에 테스트가 종료될 수 있으므로 옳바른 테스트 결과가 안나올 수 있습니다.
