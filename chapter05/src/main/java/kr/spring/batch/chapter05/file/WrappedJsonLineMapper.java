@@ -27,7 +27,7 @@ public class WrappedJsonLineMapper implements LineMapper<Product> {
         product.setId((String) productAsMap.get("id"));
         product.setName((String) productAsMap.get("name"));
         product.setDescription((String) productAsMap.get("description"));
-        product.setPrice(Float.parseFloat((String) productAsMap.get("price")));
+        product.setPrice(Float.parseFloat(productAsMap.get("price").toString()));
 
         return product;
     }

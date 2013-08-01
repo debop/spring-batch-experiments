@@ -38,6 +38,8 @@
         <mongo.driver.version>2.11.0</mongo.driver.version>
         <jedis.version>2.1.0</jedis.version>
 
+        <jackson.version>2.0.6</jackson.version>
+
         <lombok.version>0.12.0</lombok.version>
 
         <slf4j.version>1.7.5</slf4j.version>
@@ -254,6 +256,16 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
@@ -419,6 +431,44 @@
                 <artifactId>guava</artifactId>
                 <version>14.0.1</version>
             </dependency>
+
+            <!-- Jackson JSON Serializer -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- Jackson Mapper ASL -->
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>1.9.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>1.9.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>com.springsource.org.codehaus.jackson</artifactId>
+                <version>1.4.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>com.springsource.org.codehaus.jackson.mapper</artifactId>
+                <version>1.4.3</version>
+            </dependency>
+
 
             <!-- Lombok Project -->
             <dependency>
