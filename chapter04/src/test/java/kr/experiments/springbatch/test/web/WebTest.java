@@ -1,7 +1,6 @@
 package kr.experiments.springbatch.test.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fest.util.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,15 +57,24 @@ public class WebTest {
 
         WebAppContext wac = new WebAppContext();
         wac.setContextPath("/sb04");
-        log.info("Current directory=[{}]", Files.currentFolder());
-        wac.setWar("chapter04/src/test/resources/spring/web/webapp/");
-        server.setHandler(wac);
-        server.setStopAtShutdown(true);
 
-        server.start();
-        ApplicationContext context = getWebAppSpringContext(wac);
-        countDownLatch = context.getBean(CountDownLatch.class);
-        jobParams = context.getBean("params", Map.class);
+        try {
+
+            // NOTE: 원하는 리소스나 위치를 얻기 위해서는 ClassLoader 를 사용하는 것이 좋다.
+            // HINT: http://stackoverflow.com/questions/5637765/how-to-deal-with-relative-path-in-junits-between-maven-and-intellij/5638830#5638830
+            //
+            wac.setWar(ClassLoader.getSystemResource("spring/web/webapp/").toString());
+
+            server.setHandler(wac);
+            server.setStopAtShutdown(true);
+
+            server.start();
+            ApplicationContext context = getWebAppSpringContext(wac);
+            countDownLatch = context.getBean(CountDownLatch.class);
+            jobParams = context.getBean("params", Map.class);
+        } catch (Exception e) {
+            log.error("테스트 방법에 따라 WAR 의 파일 위치를 지정해 줘야 합니다.", e);
+        }
     }
 
     private void stopWebContainer() throws Exception {

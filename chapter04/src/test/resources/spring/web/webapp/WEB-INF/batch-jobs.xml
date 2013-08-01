@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
 
-    <batch:job id="scheduledJob" job-repository="jobRepository">
+    <batch:job id="scheduledJob">
         <batch:step id="scheduledStep">
             <batch:tasklet>
                 <bean class="kr.experiments.springbatch.test.CountDownTasklet">
@@ -19,7 +19,7 @@
         <constructor-arg value="2"/>
     </bean>
 
-    <batch:job id="importProductsJob" job-repository="jobRepository">
+    <batch:job id="importProductsJob">
         <batch:step id="trackParamsStep">
             <batch:tasklet>
                 <bean class="kr.experiments.springbatch.test.web.JobParameterAwareTasklet">
