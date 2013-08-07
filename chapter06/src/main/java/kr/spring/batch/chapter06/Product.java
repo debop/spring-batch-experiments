@@ -45,5 +45,10 @@ public class Product implements Serializable {
     @Transient
     private transient String operation;
 
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + "]";
+    }
+
     private static final long serialVersionUID = -4204388747228776515L;
 }
