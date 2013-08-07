@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * kr.spring.batch.chapter06.file.ProductHeaderCallBack
+ * kr.spring.batch.chapter06.file.ProductHeaderCallback
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 7. 오전 10:06
  */
-public class ProductHeaderCallBack implements FlatFileHeaderCallback {
+public class ProductHeaderCallback implements FlatFileHeaderCallback {
 
     @Override
     public void writeHeader(Writer writer) throws IOException {
