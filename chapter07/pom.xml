@@ -12,6 +12,7 @@
     <artifactId>chapter07</artifactId>
 
     <dependencies>
+
         <!-- Spring Framework -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -107,52 +108,17 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>com.springsource.org.codehaus.jackson</artifactId>
-            <version>1.4.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>com.springsource.org.codehaus.jackson.mapper</artifactId>
-            <version>1.4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.oxm</artifactId>
-            <version>3.2.3.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.springsource.org.apache.commons.logging</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>net.java.dev.springmodules</groupId>
-            <artifactId>com.springsource.org.springmodules.validation.validator</artifactId>
-            <version>0.9.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.springsource.org.apache.commons.logging</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.springsource.org.apache.commons.beanutils</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.springsource.org.apache.commons.collections</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>org.springframework.beans</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>org.springframework.core</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.0</version>
         </dependency>
 
         <dependency>
