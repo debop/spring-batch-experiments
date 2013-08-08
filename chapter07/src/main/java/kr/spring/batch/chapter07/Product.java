@@ -1,8 +1,6 @@
 package kr.spring.batch.chapter07;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -10,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -25,9 +22,16 @@ import java.math.BigDecimal;
 @DynamicUpdate
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Product implements Serializable {
+
+    public Product() {}
+
+    public Product(String id, String name, String description, BigDecimal price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
 
     @Id
     private String id;
@@ -40,9 +44,6 @@ public class Product implements Serializable {
 
     @Column(nullable = false)
     private BigDecimal price;
-
-    @Transient
-    private transient String operation;
 
     @Override
     public String toString() {

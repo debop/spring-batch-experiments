@@ -6,6 +6,7 @@ import kr.spring.batch.chapter06.test.FlatFileReaderConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
@@ -45,6 +46,7 @@ public class JobPassThroughFlatFileConfiguration extends AbstractJobConfiguratio
     }
 
     @Bean
+    @StepScope
     public FlatFileItemWriter<Product> productItemWriter() {
         FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
         writer.setResource(new FileSystemResource(OUTPUT_FILE));
