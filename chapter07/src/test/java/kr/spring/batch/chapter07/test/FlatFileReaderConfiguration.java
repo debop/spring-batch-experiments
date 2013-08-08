@@ -29,9 +29,7 @@ public class FlatFileReaderConfiguration {
     public FlatFileItemReader<Product> productItemReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
         FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        // InputStream input = getClass().getResourceAsStream(inputFile);
         reader.setResource(new ClassPathResource(inputFile));
-
         reader.setLinesToSkip(1);
         reader.setLineMapper(productLineMapper());
 
