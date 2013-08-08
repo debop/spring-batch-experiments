@@ -1,8 +1,8 @@
 package kr.spring.batch.chapter07;
 
 import kr.spring.batch.chapter07.jpa.ProductRepository;
-import lombok.Setter;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * kr.spring.batch.chapter07.ExistingProductFilterItemProcessor
@@ -12,7 +12,8 @@ import org.springframework.batch.item.ItemProcessor;
  */
 public class ExistingProductFilterItemProcessor implements ItemProcessor<Product, Product> {
 
-    @Setter ProductRepository repository;
+    @Autowired
+    ProductRepository repository;
 
     @Override
     public Product process(Product product) throws Exception {
@@ -20,7 +21,7 @@ public class ExistingProductFilterItemProcessor implements ItemProcessor<Product
         return needsToBeFiltered(product) ? null : product;
     }
 
-    private boolean needsToBeFiltered(Product item) {
-        return repository.exists(item.getId());
+    private boolean needsToBeFiltered(Product product) {
+        return repository.exists(product.getId());
     }
 }

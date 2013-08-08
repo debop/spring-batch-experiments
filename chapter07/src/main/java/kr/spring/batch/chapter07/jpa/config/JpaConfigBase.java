@@ -55,7 +55,7 @@ public abstract class JpaConfigBase {
         return props;
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public DataSource dataSource() {
         return getTomcatDataSource("org.hsqldb.jdbcDriver",
                                    "jdbc:hsqldb:mem:" + getDatabaseName() + ";MVCC=TRUE;",
