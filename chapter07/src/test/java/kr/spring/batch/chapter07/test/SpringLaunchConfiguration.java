@@ -16,7 +16,6 @@ import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.support.DatabaseType;
-import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -128,9 +127,10 @@ public class SpringLaunchConfiguration {
         return new StepBuilderFactory(jobRepository, transactionManager);
     }
 
-    @Bean
-    public JobLauncherTestUtils jobLauncherTestUtils() {
-        return new JobLauncherTestUtils();
-    }
+    // NOTE: JobLauncherTestUtils 는 테스트 대상 Job 이 한개만 있어야 한다.
+//    @Bean
+//    public JobLauncherTestUtils jobLauncherTestUtils() {
+//        return new JobLauncherTestUtils();
+//    }
 
 }

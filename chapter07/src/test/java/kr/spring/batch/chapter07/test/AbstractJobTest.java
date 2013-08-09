@@ -63,8 +63,7 @@ public abstract class AbstractJobTest {
 
 
     @Before
-    public void setUp() throws Exception {
-
+    public void setUp() {
         productRepository.deleteAll();
         partnerMappingRepository.deleteAll();
         productRepository.flush();

@@ -7,8 +7,13 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * kr.spring.batch.chapter07.Product
@@ -39,7 +44,12 @@ public class Product implements Serializable {
 
     private String description;
 
-    private BigDecimal price;
+    @NotNull
+    @Min(0)
+    private BigDecimal price = BigDecimal.ZERO;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimestamp = new Date();
 
     @Override
     public String toString() {

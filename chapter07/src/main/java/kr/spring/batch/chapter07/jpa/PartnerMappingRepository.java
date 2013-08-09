@@ -2,6 +2,8 @@ package kr.spring.batch.chapter07.jpa;
 
 import kr.spring.batch.chapter07.PartnerMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * kr.spring.batch.chapter07.jpa.PartnerMappingRepository
@@ -11,5 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PartnerMappingRepository extends JpaRepository<PartnerMapping, String> {
 
-    PartnerMapping findByPartnerIdAndProductId(String partnerId, String productId);
+    @Query("select pm from PartnerMapping pm where pm.partnerId = :partnerId and pm.productId = :productId")
+    PartnerMapping findByPartnerIdAndProductId(@Param("partnerId") String partnerId, @Param("productId") String productId);
 }
