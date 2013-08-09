@@ -1,4 +1,4 @@
-package kr.spring.batch.chapter08.test;
+package kr.spring.batch.chapter08.test.beans;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
@@ -7,7 +7,7 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
 /**
- * kr.spring.batch.chapter08.test.DummyItemReader
+ * kr.spring.batch.chapter08.test.beans.DummyItemReader
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 9. 오후 2:22
@@ -24,7 +24,7 @@ public class DummyItemReader implements ItemReader<String> {
     @Override
     public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         String read = service.reading();
-        log.debug("read [{}]", read);
+        DummyItemReader.log.debug("read [{}]", read);
         return read;
     }
 }

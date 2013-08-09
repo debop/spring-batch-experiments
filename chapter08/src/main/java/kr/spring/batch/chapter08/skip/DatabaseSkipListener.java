@@ -2,7 +2,7 @@ package kr.spring.batch.chapter08.skip;
 
 import kr.spring.batch.chapter08.SkippedProduct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.annotation.OnSkipInRead;
+import org.springframework.batch.core.listener.SkipListenerSupport;
 import org.springframework.batch.item.file.FlatFileParseException;
 
 import javax.persistence.EntityManager;
@@ -15,13 +15,13 @@ import javax.persistence.PersistenceContext;
  * @since 13. 8. 9. 오후 1:54
  */
 @Slf4j
-public class DatabaseSkipListener {
+public class DatabaseSkipListener extends SkipListenerSupport {
 
     @PersistenceContext
     EntityManager em;
 
-    @OnSkipInRead
-    public void logWhenSkipInRead(Throwable t) {
+    @Override
+    public void onSkipInRead(Throwable t) {
         if (t instanceof FlatFileParseException) {
             FlatFileParseException ffpe = (FlatFileParseException) t;
             SkippedProduct product = new SkippedProduct();
