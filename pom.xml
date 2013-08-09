@@ -15,6 +15,7 @@
         <module>chapter05</module>
         <module>chapter06</module>
         <module>chapter07</module>
+        <module>chapter08</module>
     </modules>
 
     <name>spring-batch-experiments</name>
@@ -134,6 +135,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Joda-Time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
 
         <!-- Guava -->
@@ -466,6 +473,13 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.1</version>
+            </dependency>
+
+            <!-- Joda-Time -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.2</version>
             </dependency>
 
             <!-- Guava -->
