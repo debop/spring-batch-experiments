@@ -11,7 +11,7 @@ import org.springframework.batch.item.file.FlatFileParseException;
  * @since 13. 8. 9. 오후 1:51
  */
 @Slf4j
-public class Slf4jSkipListener extends SkipListenerSupport {
+public class Slf4jSkipListener extends SkipListenerSupport<String, String> {
 
     @Override
     public void onSkipInRead(Throwable t) {

@@ -37,7 +37,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 @Import({ SpringLaunchConfiguration.class })
-public class AbstractRobuestnessJobConfiguration {
+public class AbstractRobustnessJobConfiguration {
 
     @Autowired
     protected JobBuilderFactory jobBuilders;
@@ -59,11 +59,11 @@ public class AbstractRobuestnessJobConfiguration {
         log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
-            .setName("JobRepository")
-            .setType(EmbeddedDatabaseType.HSQL)
-            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-            .build();
+                .setName("JobRepository")
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+                .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+                .build();
     }
 
     @Bean(name = "jobTransactionManager")
@@ -115,7 +115,7 @@ public class AbstractRobuestnessJobConfiguration {
     }
 
     @Bean
-    public SkipListener<?, ?> skipListener() {
+    public SkipListener skipListener() {
         return Mockito.mock(SkipListener.class);
     }
 }

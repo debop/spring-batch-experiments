@@ -20,9 +20,9 @@ public class DummyItemProcessor implements ItemProcessor<String, String> {
 
     @Override
     public String process(String item) throws Exception {
-        DummyItemProcessor.log.debug("processing [{}]", item);
+        log.debug("processing [{}]", item);
         service.processing(item);
-        DummyItemProcessor.log.debug("after processing [{}]", item);
+        log.debug("after processing [{}]", item);
         return item;
     }
 }
