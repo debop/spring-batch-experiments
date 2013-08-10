@@ -37,8 +37,8 @@ public class SkipTest {
         int initialSkippedCount = countSkippedProducts();
 
         JobParameters params = new JobParametersBuilder()
-            .addString("inputFile", "classpath:/skip/products_no_error.txt")
-            .toJobParameters();
+                .addString("inputFile", "classpath:skip/products_no_error.txt")
+                .toJobParameters();
 
         JobExecution exec = jobLauncher.run(importProductsJob, params);
 

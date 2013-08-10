@@ -24,14 +24,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.util.ResourceUtils;
 
 import javax.persistence.EntityManagerFactory;
-import java.net.URL;
+import java.io.FileNotFoundException;
 
 /**
  * kr.spring.batch.chapter08.test.skip.SkipConfiguration
@@ -57,11 +55,11 @@ public class SkipConfiguration extends AbstractRobuestnessJobConfiguration {
         Step importProductsStep = stepBuilders.get("importProductsStep")
                                               .<Product, Product>chunk(3)
                                               .reader(reader)
-            .writer(writer())
-                //.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
-                //.listener(slf4jSkipListener())
-                //.listener(databaseSkipListener())
-            .build();
+                .writer(writer())
+                        //.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
+                        //.listener(slf4jSkipListener())
+                        //.listener(databaseSkipListener())
+                .build();
 
         return jobBuilders.get("importProductsJob")
                           .start(importProductsStep)
@@ -103,7 +101,7 @@ public class SkipConfiguration extends AbstractRobuestnessJobConfiguration {
     public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
+        tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
 
         DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
         lineMapper.setLineTokenizer(tokenizer);
@@ -111,7 +109,12 @@ public class SkipConfiguration extends AbstractRobuestnessJobConfiguration {
 
         FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        reader.setResource(getResource(inputFile));
+        try {
+            reader.setResource(new FileSystemResource(ResourceUtils.getFile(inputFile)));
+        } catch (FileNotFoundException e) {
+            log.error("파일을 찾을 수 없습니다. inputFile=" + inputFile, e);
+            throw new RuntimeException(e);
+        }
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper);
 
@@ -121,19 +124,5 @@ public class SkipConfiguration extends AbstractRobuestnessJobConfiguration {
     @Bean
     public ProductJpaItemWriter writer() {
         return new ProductJpaItemWriter();
-    }
-
-    private Resource getResource(String resourceLocation) {
-        log.info("load Resouce = [{}]", resourceLocation);
-        try {
-            URL url = ResourceUtils.getURL(resourceLocation);
-            log.info("resouce url=[{}]", url);
-            return ResourceUtils.isUrl(resourceLocation)
-                   ? new ClassPathResource(ResourceUtils.extractJarFileURL(url).toString())
-                   : new FileSystemResource(ResourceUtils.getFile(url));
-        } catch (Exception ignored) {
-            log.error("load resource error", ignored);
-            throw new RuntimeException(ignored);
-        }
     }
 }
