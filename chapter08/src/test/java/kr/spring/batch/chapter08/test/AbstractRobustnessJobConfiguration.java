@@ -100,17 +100,17 @@ public class AbstractRobustnessJobConfiguration {
 	}
 
 	@Bean
-	public ItemReader<String> dummyReader() {
+	public ItemReader<String> reader() {
 		return new DummyItemReader(service());
 	}
 
 	@Bean
-	public ItemProcessor<String, String> dummyProcessor() {
+	public ItemProcessor<String, String> processor() {
 		return new DummyItemProcessor(service());
 	}
 
 	@Bean
-	public DummyItemWriter dummyWriter() {
+	public DummyItemWriter writer() {
 		return new DummyItemWriter(service());
 	}
 

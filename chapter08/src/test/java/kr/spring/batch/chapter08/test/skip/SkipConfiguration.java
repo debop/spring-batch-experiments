@@ -55,7 +55,7 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 		Step importProductsStep = stepBuilders.get("importProductsStep")
 		                                      .<Product, Product>chunk(3)
 		                                      .reader(reader)
-				.writer(writer())
+				.writer(productItemWriter())
 						//.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
 						//.listener(slf4jSkipListener())
 						//.listener(databaseSkipListener())
@@ -72,7 +72,7 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 		                                                    .<Product, Product>chunk(3)
 		                                                    .faultTolerant().skipPolicy(skipPolicy())
 		                                                    .reader(reader)
-		                                                    .writer(writer())
+		                                                    .writer(productItemWriter())
 		                                                    .build();
 
 		return jobBuilders.get("importProductsJobWithSkipPolicy")
@@ -98,7 +98,7 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 
 	@Bean
 	@StepScope
-	public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+	public FlatFileItemReader<Product> productReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 
 		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
 		tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
@@ -122,7 +122,7 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 	}
 
 	@Bean
-	public ProductJpaItemWriter writer() {
+	public ProductJpaItemWriter productItemWriter() {
 		return new ProductJpaItemWriter();
 	}
 }
