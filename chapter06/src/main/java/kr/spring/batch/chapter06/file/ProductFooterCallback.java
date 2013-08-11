@@ -15,18 +15,18 @@ import java.io.Writer;
  */
 public class ProductFooterCallback extends StepExecutionListenerSupport implements FlatFileFooterCallback {
 
-    private static final String LINE_SEPARATOR = System.lineSeparator();
-    private StepExecution stepExecution;
+	private static final String LINE_SEPARATOR = System.lineSeparator();
+	private StepExecution stepExecution;
 
-    public void writeFooter(Writer writer) throws IOException {
-        writer.write("# Write count: " + stepExecution.getWriteCount());
-        writer.write(LINE_SEPARATOR);
-        long delta = stepExecution.getEndTime().getTime() - stepExecution.getStartTime().getTime();
-        writer.write("# Done in: " + delta + " ms");
-    }
+	public void writeFooter(Writer writer) throws IOException {
+		writer.write("# Write count: " + stepExecution.getWriteCount());
+		writer.write(LINE_SEPARATOR);
+		long delta = stepExecution.getEndTime().getTime() - stepExecution.getStartTime().getTime();
+		writer.write("# Done in: " + delta + " ms");
+	}
 
-    @Override
-    public void beforeStep(StepExecution stepExecution) {
-        this.stepExecution = stepExecution;
-    }
+	@Override
+	public void beforeStep(StepExecution stepExecution) {
+		this.stepExecution = stepExecution;
+	}
 }

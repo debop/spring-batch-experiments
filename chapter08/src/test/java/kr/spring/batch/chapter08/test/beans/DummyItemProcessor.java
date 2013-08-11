@@ -12,17 +12,17 @@ import org.springframework.batch.item.ItemProcessor;
 @Slf4j
 public class DummyItemProcessor implements ItemProcessor<String, String> {
 
-    private BusinessService service;
+	private BusinessService service;
 
-    public DummyItemProcessor(BusinessService service) {
-        this.service = service;
-    }
+	public DummyItemProcessor(BusinessService service) {
+		this.service = service;
+	}
 
-    @Override
-    public String process(String item) throws Exception {
-        log.debug("processing [{}]", item);
-        service.processing(item);
-        log.debug("after processing [{}]", item);
-        return item;
-    }
+	@Override
+	public String process(String item) throws Exception {
+		log.debug("processing [{}]", item);
+		service.processing(item);
+		log.debug("after processing [{}]", item);
+		return item;
+	}
 }

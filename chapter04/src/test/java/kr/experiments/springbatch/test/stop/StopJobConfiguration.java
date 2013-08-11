@@ -27,76 +27,76 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @ComponentScan(basePackageClasses = { InfiniteReader.class })
 public class StopJobConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    StopListener stopListener;
+	@Autowired
+	StopListener stopListener;
 
-    @Autowired
-    InfiniteReader reader;
+	@Autowired
+	InfiniteReader reader;
 
-    @Autowired
-    EmptyWriter writer;
+	@Autowired
+	EmptyWriter writer;
 
-    @Autowired
-    ProcessItemsTasklet tasklet;
+	@Autowired
+	ProcessItemsTasklet tasklet;
 
-    // 종료시키기 위해 PoolSize 를 1 로 설정해야 합니다.
-    @Override
-    @Bean
-    public TaskExecutor taskExecutor() throws Exception {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setMaxPoolSize(1);
-        executor.afterPropertiesSet();
-        return executor;
-    }
+	// 종료시키기 위해 PoolSize 를 1 로 설정해야 합니다.
+	@Override
+	@Bean
+	public TaskExecutor taskExecutor() throws Exception {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setMaxPoolSize(1);
+		executor.afterPropertiesSet();
+		return executor;
+	}
 
 
-    @Bean
-    public Job readWriteJob() {
-        return jobBuilders.get("readWriteJob")
-                          .start(readWriteStep())
-                          .build();
-    }
+	@Bean
+	public Job readWriteJob() {
+		return jobBuilders.get("readWriteJob")
+		                  .start(readWriteStep())
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep() {
-        return stepBuilders.get("readWriteStep")
-                           .<String, String>chunk(10)
-                           .reader(reader)
-                           .writer(writer)
-                           .listener((ItemReadListener) stopListener)
-                           .listener((StepExecutionListener) stopListener)
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep() {
+		return stepBuilders.get("readWriteStep")
+		                   .<String, String>chunk(10)
+		                   .reader(reader)
+		                   .writer(writer)
+		                   .listener((ItemReadListener) stopListener)
+		                   .listener((StepExecutionListener) stopListener)
+		                   .build();
+	}
 
-    @Bean
-    public Job taskletJob() {
-        return jobBuilders.get("taskletJob")
-                          .start(taskletStep())
-                          .build();
-    }
+	@Bean
+	public Job taskletJob() {
+		return jobBuilders.get("taskletJob")
+		                  .start(taskletStep())
+		                  .build();
+	}
 
-    @Bean
-    public Step taskletStep() {
-        return stepBuilders.get("taskletStep")
-                           .tasklet(tasklet)
-                           .build();
-    }
+	@Bean
+	public Step taskletStep() {
+		return stepBuilders.get("taskletStep")
+		                   .tasklet(tasklet)
+		                   .build();
+	}
 
-    @Bean
-    public Job jobOperatorJob() {
-        return jobBuilders.get("jobOperatorJob")
-                          .start(jobOperatorStep())
-                          .build();
-    }
+	@Bean
+	public Job jobOperatorJob() {
+		return jobBuilders.get("jobOperatorJob")
+		                  .start(jobOperatorStep())
+		                  .build();
+	}
 
-    @Bean
-    public Step jobOperatorStep() {
-        return stepBuilders.get("jobOperatorStep")
-                           .<String, String>chunk(10)
-                           .reader(reader)
-                           .writer(writer)
-                           .build();
-    }
+	@Bean
+	public Step jobOperatorStep() {
+		return stepBuilders.get("jobOperatorStep")
+		                   .<String, String>chunk(10)
+		                   .reader(reader)
+		                   .writer(writer)
+		                   .build();
+	}
 
     /*
     @Bean

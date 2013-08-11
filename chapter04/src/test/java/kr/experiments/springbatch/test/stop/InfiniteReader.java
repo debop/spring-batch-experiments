@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
  */
 @Component("productItemReader")
 public class InfiniteReader implements ItemReader<String> {
-    private int count = 0;
+	private int count = 0;
 
-    @Override
-    public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        return ++count + "";
-    }
+	@Override
+	public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+		return ++count + "";
+	}
 }

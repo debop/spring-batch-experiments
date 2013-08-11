@@ -40,104 +40,104 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 public class LaunchConfiguration {
 
-    @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
+	@Bean
+	public PlatformTransactionManager transactionManager(DataSource dataSource) {
+		return new DataSourceTransactionManager(dataSource);
+	}
 
-    @Bean
-    public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
+	@Bean
+	public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
 
-        log.info("create PropertyPlaceholderConfigurer");
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setLocation(new ClassPathResource("batch.properties"));
-        configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
-        configurer.setIgnoreUnresolvablePlaceholders(true);
-        configurer.setOrder(1);
+		log.info("create PropertyPlaceholderConfigurer");
+		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+		configurer.setLocation(new ClassPathResource("batch.properties"));
+		configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
+		configurer.setIgnoreUnresolvablePlaceholders(true);
+		configurer.setOrder(1);
 
-        return configurer;
-    }
+		return configurer;
+	}
 
-    @Bean
-    public JobOperator jobOperator(JobLauncher jobLauncher,
-                                   JobRepository jobRepository,
-                                   JobExplorer jobExplorer) throws Exception {
-        SimpleJobOperator jobOperator = new SimpleJobOperator();
-        jobOperator.setJobLauncher(jobLauncher);
-        jobOperator.setJobRepository(jobRepository);
-        jobOperator.setJobExplorer(jobExplorer);
-        jobOperator.setJobRegistry(jobRegistry());
+	@Bean
+	public JobOperator jobOperator(JobLauncher jobLauncher,
+	                               JobRepository jobRepository,
+	                               JobExplorer jobExplorer) throws Exception {
+		SimpleJobOperator jobOperator = new SimpleJobOperator();
+		jobOperator.setJobLauncher(jobLauncher);
+		jobOperator.setJobRepository(jobRepository);
+		jobOperator.setJobExplorer(jobExplorer);
+		jobOperator.setJobRegistry(jobRegistry());
 
-        jobOperator.afterPropertiesSet();
-        return jobOperator;
-    }
+		jobOperator.afterPropertiesSet();
+		return jobOperator;
+	}
 
-    @Bean
-    public JobExplorer jobExplorer(DataSource dataSource) throws Exception {
-        JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.afterPropertiesSet();
+	@Bean
+	public JobExplorer jobExplorer(DataSource dataSource) throws Exception {
+		JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
+		factory.setDataSource(dataSource);
+		factory.afterPropertiesSet();
 
-        return (JobExplorer) factory.getObject();
-    }
+		return (JobExplorer) factory.getObject();
+	}
 
-    @Bean
-    public JobRegistry jobRegistry() {
-        return new MapJobRegistry();
-    }
+	@Bean
+	public JobRegistry jobRegistry() {
+		return new MapJobRegistry();
+	}
 
-    @Bean
-    public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
-        JobRegistryBeanPostProcessor postProcessor = new JobRegistryBeanPostProcessor();
-        postProcessor.setJobRegistry(jobRegistry());
-        return postProcessor;
-    }
+	@Bean
+	public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
+		JobRegistryBeanPostProcessor postProcessor = new JobRegistryBeanPostProcessor();
+		postProcessor.setJobRegistry(jobRegistry());
+		return postProcessor;
+	}
 
-    @Bean
-    public TaskExecutor taskExecutor() throws Exception {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setMaxPoolSize(16);
-        executor.setThreadPriority(1);
+	@Bean
+	public TaskExecutor taskExecutor() throws Exception {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setMaxPoolSize(16);
+		executor.setThreadPriority(1);
 
-        executor.afterPropertiesSet();
-        return executor;
-    }
+		executor.afterPropertiesSet();
+		return executor;
+	}
 
-    @Bean
-    public JobLauncher jobLauncher(JobRepository jobRepository) throws Exception {
-        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-        jobLauncher.setJobRepository(jobRepository);
-        //jobLauncher.setTaskExecutor(taskExecutor());
+	@Bean
+	public JobLauncher jobLauncher(JobRepository jobRepository) throws Exception {
+		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+		jobLauncher.setJobRepository(jobRepository);
+		//jobLauncher.setTaskExecutor(taskExecutor());
 
-        return jobLauncher;
-    }
+		return jobLauncher;
+	}
 
-    @Bean
-    public JobRepository jobRepository(DataSource dataSource,
-                                       PlatformTransactionManager transactionManager) throws Exception {
-        log.info("create JobRepository...");
+	@Bean
+	public JobRepository jobRepository(DataSource dataSource,
+	                                   PlatformTransactionManager transactionManager) throws Exception {
+		log.info("create JobRepository...");
 
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setTransactionManager(transactionManager);
-        factory.afterPropertiesSet();
+		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+		factory.setDataSource(dataSource);
+		factory.setTransactionManager(transactionManager);
+		factory.afterPropertiesSet();
 
-        return factory.getJobRepository();
-    }
+		return factory.getJobRepository();
+	}
 
-    @Bean
-    public JobBuilderFactory jobBuilderFactory(JobRepository jobRepository) throws Exception {
-        return new JobBuilderFactory(jobRepository);
-    }
+	@Bean
+	public JobBuilderFactory jobBuilderFactory(JobRepository jobRepository) throws Exception {
+		return new JobBuilderFactory(jobRepository);
+	}
 
-    @Bean
-    public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
-                                                 PlatformTransactionManager transactionManager) throws Exception {
-        return new StepBuilderFactory(jobRepository, transactionManager);
-    }
+	@Bean
+	public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
+	                                             PlatformTransactionManager transactionManager) throws Exception {
+		return new StepBuilderFactory(jobRepository, transactionManager);
+	}
 
-    @Bean
-    public JobExecutionListener jobLoggerListener() {
-        return new JobLoggerListener();
-    }
+	@Bean
+	public JobExecutionListener jobLoggerListener() {
+		return new JobLoggerListener();
+	}
 }

@@ -14,11 +14,11 @@ import java.util.Map;
  */
 public class ProductLineAggregator implements LineAggregator<Product> {
 
-    @Setter
-    private Map<Class<LineAggregator<Product>>, LineAggregator<Object>> aggregators;
+	@Setter
+	private Map<Class<LineAggregator<Product>>, LineAggregator<Object>> aggregators;
 
-    @Override
-    public String aggregate(Product product) {
-        return this.aggregators.get(product.getClass()).aggregate(product);
-    }
+	@Override
+	public String aggregate(Product product) {
+		return this.aggregators.get(product.getClass()).aggregate(product);
+	}
 }

@@ -23,18 +23,18 @@ import java.io.Serializable;
 @Setter
 public class SkippedProduct implements Serializable {
 
-    @Id
-    @GeneratedValue
-    public Long id;
+	@Id
+	@GeneratedValue
+	public Long id;
 
-    public Integer lineNumber;
+	public Integer lineNumber;
 
-    public String input;
+	public String input;
 
-    @Override
-    public String toString() {
-        return "SkippedProduct# lineNumber=" + lineNumber + ", input=" + input;
-    }
+	@Override
+	public String toString() {
+		return "SkippedProduct# lineNumber=" + lineNumber + ", input=" + input;
+	}
 
-    private static final long serialVersionUID = 2462868704626608656L;
+	private static final long serialVersionUID = 2462868704626608656L;
 }

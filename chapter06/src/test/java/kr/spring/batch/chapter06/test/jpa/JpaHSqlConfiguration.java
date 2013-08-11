@@ -15,10 +15,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class JpaHSqlConfiguration extends HSqlConfigBase {
 
-    @Override
-    public String[] getMappedPackageNames() {
-        return new String[]{
-            Product.class.getPackage().getName()
-        };
-    }
+	@Override
+	public String[] getMappedPackageNames() {
+		return new String[] {
+				Product.class.getPackage().getName()
+		};
+	}
 }

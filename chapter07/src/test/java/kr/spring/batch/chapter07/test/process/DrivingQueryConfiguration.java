@@ -37,54 +37,54 @@ import java.util.HashMap;
 @Import({ JpaHSqlConfiguration.class })
 public class DrivingQueryConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Bean
-    public Job readWriteJob(Step readWriteStep) {
-        return jobBuilders.get("readWriteJob")
-                          .start(readWriteStep)
-                          .build();
-    }
+	@Bean
+	public Job readWriteJob(Step readWriteStep) {
+		return jobBuilders.get("readWriteJob")
+		                  .start(readWriteStep)
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep(JpaPagingItemReader<Product> reader, FlatFileItemWriter<Product> writer) {
-        return stepBuilders.get("readWrite")
-                           .<Product, Product>chunk(2)
-                           .reader(reader)
-                           .writer(writer)
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep(JpaPagingItemReader<Product> reader, FlatFileItemWriter<Product> writer) {
+		return stepBuilders.get("readWrite")
+		                   .<Product, Product>chunk(2)
+		                   .reader(reader)
+		                   .writer(writer)
+		                   .build();
+	}
 
-    // NOTE: jobParameters 인자를 받으려면 @StepScope 이어야 합니다.
-    @Bean
-    @StepScope
-    public JpaPagingItemReader<Product> reader(@Value("#{jobParameters['updateTimestamp']}") Date updateTiemstamp) {
-        assert emf != null;
-        log.info("updateTimestamp=[{}]", updateTiemstamp);
+	// NOTE: jobParameters 인자를 받으려면 @StepScope 이어야 합니다.
+	@Bean
+	@StepScope
+	public JpaPagingItemReader<Product> reader(@Value("#{jobParameters['updateTimestamp']}") Date updateTiemstamp) {
+		assert emf != null;
+		log.info("updateTimestamp=[{}]", updateTiemstamp);
 
-        JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
-        reader.setEntityManagerFactory(emf);
-        reader.setPageSize(3);
-        reader.setQueryString("select p from Product p where p.updateTimestamp > :updateTimestamp");
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("updateTimestamp", updateTiemstamp);
-        //params.put("updateTimestamp", DateTime.now().withDate(2010, 6, 30).toDate());
-        reader.setParameterValues(params);
+		JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
+		reader.setEntityManagerFactory(emf);
+		reader.setPageSize(3);
+		reader.setQueryString("select p from Product p where p.updateTimestamp > :updateTimestamp");
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("updateTimestamp", updateTiemstamp);
+		//params.put("updateTimestamp", DateTime.now().withDate(2010, 6, 30).toDate());
+		reader.setParameterValues(params);
 
-        return reader;
-    }
+		return reader;
+	}
 
-    // NOTE: jobParameters 인자를 받으려면 @StepScope 이어야 합니다.
-    @Bean
-    @StepScope
-    public FlatFileItemWriter<Product> writer(@Value("#{jobParameters['targetFile']}") String targetFile) {
-        log.info("create ItemWriter. file=[{}]", targetFile);
+	// NOTE: jobParameters 인자를 받으려면 @StepScope 이어야 합니다.
+	@Bean
+	@StepScope
+	public FlatFileItemWriter<Product> writer(@Value("#{jobParameters['targetFile']}") String targetFile) {
+		log.info("create ItemWriter. file=[{}]", targetFile);
 
-        FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
-        writer.setResource(new FileSystemResource(targetFile));
-        writer.setLineAggregator(new PassThroughLineAggregator<Product>());
+		FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
+		writer.setResource(new FileSystemResource(targetFile));
+		writer.setLineAggregator(new PassThroughLineAggregator<Product>());
 
-        return writer;
-    }
+		return writer;
+	}
 }

@@ -16,10 +16,10 @@ import java.util.List;
 @Slf4j
 public class DummyItemWriter implements ItemWriter<Product> {
 
-    public List<Product> products = new ArrayList<Product>();
+	public List<Product> products = new ArrayList<Product>();
 
-    @Override
-    public void write(List<? extends Product> items) throws Exception {
-        products.addAll(items);
-    }
+	@Override
+	public void write(List<? extends Product> items) throws Exception {
+		products.addAll(items);
+	}
 }

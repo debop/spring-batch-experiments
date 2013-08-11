@@ -24,17 +24,17 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { JobJpaItemWriterConfiguration.class })
 public class JobJpaItemWriterTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Autowired
-    private ProductRepository repository;
+	@Autowired
+	private ProductRepository repository;
 
-    @Test
-    public void testJpa() throws Exception {
+	@Test
+	public void testJpa() throws Exception {
 
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        assertThat(repository.count()).isEqualTo(8);
-    }
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(repository.count()).isEqualTo(8);
+	}
 }

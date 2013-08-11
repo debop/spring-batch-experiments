@@ -12,15 +12,15 @@ import java.math.BigDecimal;
  * @since 13. 8. 1. 오후 11:01
  */
 public class ProductFieldExtractor implements FieldExtractor<Product> {
-    @Override
-    public Object[] extract(Product item) {
-        return new Object[] {
-                "BEGIN",
-                item.getId(),
-                item.getPrice(),
-                item.getPrice().multiply(new BigDecimal("0.15")),
-                item.getName(),
-                "END"
-        };
-    }
+	@Override
+	public Object[] extract(Product item) {
+		return new Object[] {
+				"BEGIN",
+				item.getId(),
+				item.getPrice(),
+				item.getPrice().multiply(new BigDecimal("0.15")),
+				item.getName(),
+				"END"
+		};
+	}
 }

@@ -24,16 +24,16 @@ import java.util.Date;
 @Setter
 public class PartnerProduct implements Serializable {
 
-    @Id
-    private String id;
+	@Id
+	private String id;
 
-    private String title;
+	private String title;
 
-    private String details;
+	private String details;
 
-    private BigDecimal price;
+	private BigDecimal price;
 
-    private Date releaseDate;
+	private Date releaseDate;
 
-    private static final long serialVersionUID = 201275399428244388L;
+	private static final long serialVersionUID = 201275399428244388L;
 }

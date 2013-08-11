@@ -43,104 +43,104 @@ import javax.persistence.EntityManagerFactory;
 @Import({ JpaHSqlConfiguration.class })
 public class CompositeProcessingConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Autowired
-    PartnerMappingRepository partnerMappingRepository;
+	@Autowired
+	PartnerMappingRepository partnerMappingRepository;
 
-    @Autowired
-    ItemReader<Product> reader;
+	@Autowired
+	ItemReader<Product> reader;
 
-    @Autowired
-    Step readWriteStep;
+	@Autowired
+	Step readWriteStep;
 
-    @Bean(name = "readWriteJob")
-    public Job readWriteJob() {
-        return jobBuilders.get("readWriteJob")
-                          .start(readWriteStep)
-                          .build();
-    }
+	@Bean(name = "readWriteJob")
+	public Job readWriteJob() {
+		return jobBuilders.get("readWriteJob")
+		                  .start(readWriteStep)
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep(FlatFileItemReader<PartnerProduct> reader) {
-        return stepBuilders.get("readWrite")
-                           .<PartnerProduct, Product>chunk(2)
-                           .reader(reader)
-                           .processor(compoiteItemProcessor())
-                           .writer(writer())
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep(FlatFileItemReader<PartnerProduct> reader) {
+		return stepBuilders.get("readWrite")
+		                   .<PartnerProduct, Product>chunk(2)
+		                   .reader(reader)
+		                   .processor(compoiteItemProcessor())
+		                   .writer(writer())
+		                   .build();
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemReader<PartnerProduct> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
-        FlatFileItemReader<PartnerProduct> reader = new FlatFileItemReader<PartnerProduct>();
+	@Bean
+	@StepScope
+	public FlatFileItemReader<PartnerProduct> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		FlatFileItemReader<PartnerProduct> reader = new FlatFileItemReader<PartnerProduct>();
 
-        reader.setResource(new ClassPathResource(inputFile));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper());
+		reader.setResource(new ClassPathResource(inputFile));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public DefaultLineMapper<PartnerProduct> productLineMapper() {
-        DefaultLineMapper<PartnerProduct> lineMapper = new DefaultLineMapper<PartnerProduct>();
-        lineMapper.setLineTokenizer(productLineTokenizer());
-        lineMapper.setFieldSetMapper(productFieldSetMapper());
-        return lineMapper;
-    }
+	@Bean
+	public DefaultLineMapper<PartnerProduct> productLineMapper() {
+		DefaultLineMapper<PartnerProduct> lineMapper = new DefaultLineMapper<PartnerProduct>();
+		lineMapper.setLineTokenizer(productLineTokenizer());
+		lineMapper.setFieldSetMapper(productFieldSetMapper());
+		return lineMapper;
+	}
 
-    @Bean
-    public LineTokenizer productLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "PRODUCT_ID", "TITLE", "DETAILS", "PRICE", "RELEASE_DATE" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer productLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "PRODUCT_ID", "TITLE", "DETAILS", "PRICE", "RELEASE_DATE" });
+		return tokenizer;
+	}
 
-    @Bean
-    public FieldSetMapper<PartnerProduct> productFieldSetMapper() {
-        return new PartnerProductFieldSetMapper();
-    }
+	@Bean
+	public FieldSetMapper<PartnerProduct> productFieldSetMapper() {
+		return new PartnerProductFieldSetMapper();
+	}
 
-    @Bean
-    public CompositeItemProcessor<PartnerProduct, Product> compoiteItemProcessor() {
-        CompositeItemProcessor<PartnerProduct, Product> compositeProcessor =
-            new CompositeItemProcessor<PartnerProduct, Product>();
+	@Bean
+	public CompositeItemProcessor<PartnerProduct, Product> compoiteItemProcessor() {
+		CompositeItemProcessor<PartnerProduct, Product> compositeProcessor =
+				new CompositeItemProcessor<PartnerProduct, Product>();
 
-        compositeProcessor.setDelegates(Lists.newArrayList(partnerProductItemProcessor(),
-                                                           partnerIdItemProcessor()));
-        return compositeProcessor;
-    }
+		compositeProcessor.setDelegates(Lists.newArrayList(partnerProductItemProcessor(),
+		                                                   partnerIdItemProcessor()));
+		return compositeProcessor;
+	}
 
 
-    @Bean
-    public ItemProcessor<PartnerProduct, Product> partnerProductItemProcessor() {
-        PartnerProductItemProcessor processor = new PartnerProductItemProcessor();
-        processor.setMapper(new SimplePartnerProductMapper());
-        return processor;
-    }
+	@Bean
+	public ItemProcessor<PartnerProduct, Product> partnerProductItemProcessor() {
+		PartnerProductItemProcessor processor = new PartnerProductItemProcessor();
+		processor.setMapper(new SimplePartnerProductMapper());
+		return processor;
+	}
 
-    @Bean
-    public ItemProcessor<Product, Product> partnerIdItemProcessor() {
-        PartnerIdItemProcessor processor = new PartnerIdItemProcessor();
-        processor.setMapper(partnerIdMapper());
-        return processor;
-    }
+	@Bean
+	public ItemProcessor<Product, Product> partnerIdItemProcessor() {
+		PartnerIdItemProcessor processor = new PartnerIdItemProcessor();
+		processor.setMapper(partnerIdMapper());
+		return processor;
+	}
 
-    @Bean
-    public PartnerIdMapper partnerIdMapper() {
-        PartnerIdMapper mapper = new PartnerIdMapper();
-        mapper.setPartnerId("PARTNER1");
-        mapper.setPartnerMappingRepository(partnerMappingRepository);
-        return mapper;
-    }
+	@Bean
+	public PartnerIdMapper partnerIdMapper() {
+		PartnerIdMapper mapper = new PartnerIdMapper();
+		mapper.setPartnerId("PARTNER1");
+		mapper.setPartnerMappingRepository(partnerMappingRepository);
+		return mapper;
+	}
 
-    @Bean
-    public JpaItemWriter<Product> writer() {
-        JpaItemWriter<Product> writer = new JpaItemWriter<Product>();
-        writer.setEntityManagerFactory(emf);
-        return writer;
-    }
+	@Bean
+	public JpaItemWriter<Product> writer() {
+		JpaItemWriter<Product> writer = new JpaItemWriter<Product>();
+		writer.setEntityManagerFactory(emf);
+		return writer;
+	}
 }

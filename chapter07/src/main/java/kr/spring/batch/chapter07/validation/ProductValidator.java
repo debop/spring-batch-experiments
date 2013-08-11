@@ -13,10 +13,10 @@ import java.math.BigDecimal;
  * @since 13. 8. 7. 오후 6:07
  */
 public class ProductValidator implements Validator<Product> {
-    @Override
-    public void validate(Product product) throws ValidationException {
-        if (BigDecimal.ZERO.compareTo(product.getPrice()) >= 0) {
-            throw new ValidationException("제품 가격은 양수여야 합니다.");
-        }
-    }
+	@Override
+	public void validate(Product product) throws ValidationException {
+		if (BigDecimal.ZERO.compareTo(product.getPrice()) >= 0) {
+			throw new ValidationException("제품 가격은 양수여야 합니다.");
+		}
+	}
 }

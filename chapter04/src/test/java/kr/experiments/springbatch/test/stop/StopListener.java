@@ -18,33 +18,33 @@ import org.springframework.stereotype.Component;
 @Component("stopListener")
 public class StopListener extends StepExecutionListenerSupport implements ItemReadListener {
 
-    private StepExecution stepExecution;
+	private StepExecution stepExecution;
 
-    @Setter private boolean stop = false;
+	@Setter private boolean stop = false;
 
-    @Override
-    public void beforeStep(StepExecution stepExecution) {
-        this.stepExecution = stepExecution;
-    }
+	@Override
+	public void beforeStep(StepExecution stepExecution) {
+		this.stepExecution = stepExecution;
+	}
 
-    @AfterRead
-    public void afterRead() { }
+	@AfterRead
+	public void afterRead() { }
 
-    @Override
-    public void beforeRead() { }
+	@Override
+	public void beforeRead() { }
 
-    @Override
-    public void afterRead(Object item) {
-        if (stopConditionMet()) {
-            log.info("읽기 작업 후에 중단 여부를 판단했습니다. 중단을 요청합니다.");
-            stepExecution.setTerminateOnly();
-        }
-    }
+	@Override
+	public void afterRead(Object item) {
+		if (stopConditionMet()) {
+			log.info("읽기 작업 후에 중단 여부를 판단했습니다. 중단을 요청합니다.");
+			stepExecution.setTerminateOnly();
+		}
+	}
 
-    @Override
-    public void onReadError(Exception ex) { }
+	@Override
+	public void onReadError(Exception ex) { }
 
-    private boolean stopConditionMet() {
-        return stop;
-    }
+	private boolean stopConditionMet() {
+		return stop;
+	}
 }

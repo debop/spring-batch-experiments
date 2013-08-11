@@ -24,17 +24,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = { JobPassThroughFlatFileConfiguration.class })
 public class JobPassThroughFlatFileTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Test
-    public void delimitedJob() throws Exception {
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	@Test
+	public void delimitedJob() throws Exception {
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        Resource output = new FileSystemResource(JobPassThroughFlatFileConfiguration.OUTPUT_FILE);
-        AssertLine.assertLineFileEquals(output, 1, "Product [id=PR....210, name=BlackBerry 8100 Pearl]");
-        AssertLine.assertLineFileEquals(output, 7, "Product [id=PR....216, name=AT&T 8525 PDA]");
-        AssertLine.assertLineFileEquals(output, 8, "Product [id=PR....217, name=Canon Digital Rebel XT 8MP]");
-    }
+		Resource output = new FileSystemResource(JobPassThroughFlatFileConfiguration.OUTPUT_FILE);
+		AssertLine.assertLineFileEquals(output, 1, "Product [id=PR....210, name=BlackBerry 8100 Pearl]");
+		AssertLine.assertLineFileEquals(output, 7, "Product [id=PR....216, name=AT&T 8525 PDA]");
+		AssertLine.assertLineFileEquals(output, 8, "Product [id=PR....217, name=Canon Digital Rebel XT 8MP]");
+	}
 }

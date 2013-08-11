@@ -17,19 +17,19 @@ import java.util.Map;
  */
 public class JobParameterAwareTasklet implements Tasklet {
 
-    @Getter
-    @Setter
-    private Map<String, String> params;
+	@Getter
+	@Setter
+	private Map<String, String> params;
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        Map<String, Object> jobParams = chunkContext.getStepContext().getJobParameters();
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		Map<String, Object> jobParams = chunkContext.getStepContext().getJobParameters();
 
-        this.params.clear();
-        for (Map.Entry<String, Object> entry : jobParams.entrySet()) {
-            this.params.put(entry.getKey(), entry.getValue().toString());
-        }
+		this.params.clear();
+		for (Map.Entry<String, Object> entry : jobParams.entrySet()) {
+			this.params.put(entry.getKey(), entry.getValue().toString());
+		}
 
-        return RepeatStatus.FINISHED;
-    }
+		return RepeatStatus.FINISHED;
+	}
 }

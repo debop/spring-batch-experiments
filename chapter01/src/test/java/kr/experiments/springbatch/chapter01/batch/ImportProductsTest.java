@@ -25,40 +25,40 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "/launch-context.xml", "/job-context.xml" })
 public class ImportProductsTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job importProductsJob;
+	@Autowired
+	private Job importProductsJob;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Before
-    public void setup() throws Exception {
-        jdbcTemplate.update("delete from product");
-        jdbcTemplate.update(
-            "insert into product(id, name, description, price) values(?,?,?,?)",
-            "PR....214", "Nokia 2610 Phone", "", 102.23
-        );
-    }
+	@Before
+	public void setup() throws Exception {
+		jdbcTemplate.update("delete from product");
+		jdbcTemplate.update(
+				"insert into product(id, name, description, price) values(?,?,?,?)",
+				"PR....214", "Nokia 2610 Phone", "", 102.23
+		);
+	}
 
-    @Test
-    public void importProducts() throws Exception {
-        int initial = jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
+	@Test
+	public void importProducts() throws Exception {
+		int initial = jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
 
-        JobParameters jobParameters =
-            new JobParametersBuilder()
-                .addString("inputResource", "/input/products.zip")
-                .addString("targetDirectory", "./target/importProductsBatch/")
-                .addString("targetFile", "products.txt")
-                .addLong("timestamp", System.currentTimeMillis())
-                .toJobParameters();
+		JobParameters jobParameters =
+				new JobParametersBuilder()
+						.addString("inputResource", "/input/products.zip")
+						.addString("targetDirectory", "./target/importProductsBatch/")
+						.addString("targetFile", "products.txt")
+						.addLong("timestamp", System.currentTimeMillis())
+						.toJobParameters();
 
-        jobLauncher.run(importProductsJob, jobParameters);
+		jobLauncher.run(importProductsJob, jobParameters);
 
-        int nbOfNewProducts = 7;
-        int totalNumber = jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
-        Assertions.assertThat(totalNumber - initial).isEqualTo(nbOfNewProducts);
-    }
+		int nbOfNewProducts = 7;
+		int totalNumber = jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
+		Assertions.assertThat(totalNumber - initial).isEqualTo(nbOfNewProducts);
+	}
 }

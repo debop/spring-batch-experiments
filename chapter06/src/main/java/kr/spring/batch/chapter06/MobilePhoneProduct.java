@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class MobilePhoneProduct extends Product {
 
-    private String manufacturer;
+	private String manufacturer;
 
-    private static final long serialVersionUID = 501496932942144935L;
+	private static final long serialVersionUID = 501496932942144935L;
 }

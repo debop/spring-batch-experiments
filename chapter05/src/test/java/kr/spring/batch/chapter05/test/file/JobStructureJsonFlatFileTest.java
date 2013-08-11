@@ -16,17 +16,17 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = { JobStructureJsonFlatFileConfig.class })
 public class JobStructureJsonFlatFileTest extends AbstractJobStructureTest {
 
-    @Test
-    public void existingServiceJob() throws Exception {
-        jobLauncher.run(job, new JobParameters());
+	@Test
+	public void existingServiceJob() throws Exception {
+		jobLauncher.run(job, new JobParameters());
 
-        checkProducts(writer.getProducts(), new String[]{ "PR....210",
-                                                          "PR....211",
-                                                          "PR....212",
-                                                          "PR....213",
-                                                          "PR....214",
-                                                          "PR....215",
-                                                          "PR....216",
-                                                          "PR....217" });
-    }
+		checkProducts(writer.getProducts(), new String[] { "PR....210",
+				"PR....211",
+				"PR....212",
+				"PR....213",
+				"PR....214",
+				"PR....215",
+				"PR....216",
+				"PR....217" });
+	}
 }

@@ -14,16 +14,16 @@ import org.springframework.batch.core.job.flow.JobExecutionDecider;
  */
 @Slf4j
 public class SkippedDecider implements JobExecutionDecider {
-    @Override
-    public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
-        FlowExecutionStatus status =
-            stepExecution.getSkipCount() == 0
-            ? FlowExecutionStatus.COMPLETED
-            : new FlowExecutionStatus("SKIPPED");
+	@Override
+	public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
+		FlowExecutionStatus status =
+				stepExecution.getSkipCount() == 0
+						? FlowExecutionStatus.COMPLETED
+						: new FlowExecutionStatus("SKIPPED");
 
-        if(log.isTraceEnabled())
-            log.trace("FlowExecutionStatus를 결정했습니다. FlowExecutionStatus=[{}]", status);
+		if (log.isTraceEnabled())
+			log.trace("FlowExecutionStatus를 결정했습니다. FlowExecutionStatus=[{}]", status);
 
-        return status;
-    }
+		return status;
+	}
 }

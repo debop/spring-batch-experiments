@@ -23,37 +23,37 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { FilteringExistingProductConfiguration.class })
 public class FilteringExistingProductTest extends AbstractJobTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job job;
+	@Autowired
+	private Job job;
 
-    @Autowired
-    private ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 
-    @Before
-    public void setUp() {
-        productRepository.deleteAll();
+	@Before
+	public void setUp() {
+		productRepository.deleteAll();
 
-        Product p = new Product();
-        p.setId("214");
-        productRepository.save(p);
-        p = new Product();
-        p.setId("215");
-        productRepository.save(p);
-        productRepository.flush();
-    }
+		Product p = new Product();
+		p.setId("214");
+		productRepository.save(p);
+		p = new Product();
+		p.setId("215");
+		productRepository.save(p);
+		productRepository.flush();
+	}
 
-    @Test
-    public void changingState() throws Exception {
-        JobExecution exec = jobLauncher.run(job,
-                                            new JobParametersBuilder()
-                                                .addString("inputFile", "/products.txt")
-                                                .toJobParameters());
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        StepExecution stepExecution = exec.getStepExecutions().iterator().next();
-        assertThat(stepExecution.getFilterCount()).isEqualTo(2);
-        assertThat(stepExecution.getWriteCount()).isEqualTo(6);
-    }
+	@Test
+	public void changingState() throws Exception {
+		JobExecution exec = jobLauncher.run(job,
+		                                    new JobParametersBuilder()
+				                                    .addString("inputFile", "/products.txt")
+				                                    .toJobParameters());
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		StepExecution stepExecution = exec.getStepExecutions().iterator().next();
+		assertThat(stepExecution.getFilterCount()).isEqualTo(2);
+		assertThat(stepExecution.getWriteCount()).isEqualTo(6);
+	}
 }

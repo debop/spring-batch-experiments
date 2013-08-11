@@ -13,10 +13,10 @@ import java.io.Serializable;
 @Data
 public class Product implements Serializable {
 
-    private String id;
-    private String name;
-    private String description;
-    private float price;
+	private String id;
+	private String name;
+	private String description;
+	private float price;
 
-    private static final long serialVersionUID = 3552827527136677964L;
+	private static final long serialVersionUID = 3552827527136677964L;
 }

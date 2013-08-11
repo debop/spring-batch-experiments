@@ -36,105 +36,105 @@ import java.util.Map;
 @EnableBatchProcessing
 public class JobStructureDelimitedMultiFlatFileConfig extends AbstractJobConfiguration {
 
-    @Bean
-    @Override
-    public TaskExecutor jobTaskExecutor() throws Exception {
-        return null;
-    }
+	@Bean
+	@Override
+	public TaskExecutor jobTaskExecutor() throws Exception {
+		return null;
+	}
 
-    @Bean
-    public Job importProductsJob() throws Exception {
+	@Bean
+	public Job importProductsJob() throws Exception {
 
-        Step step = stepBuilders.get("importProductsJob")
-                                .<Product, Product>chunk(100)
-                                .reader(productItemReader())
-                                .writer(productItemWriter())
-                                .build();
+		Step step = stepBuilders.get("importProductsJob")
+		                        .<Product, Product>chunk(100)
+		                        .reader(productItemReader())
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public ItemReader<Product> productItemReader() throws Exception {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-        reader.setResource(new ClassPathResource("/input/multi-products-delimited.txt"));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper());
+	@Bean
+	public ItemReader<Product> productItemReader() throws Exception {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+		reader.setResource(new ClassPathResource("/input/multi-products-delimited.txt"));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter() {
-        return new DummyProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> productItemWriter() {
+		return new DummyProductItemWriter();
+	}
 
-    @Bean
-    public LineMapper<Product> productLineMapper() throws Exception {
-        // HINT: 한 파일에 여러 종류의 데이터가 혼재해 있을 때 씁니다.
+	@Bean
+	public LineMapper<Product> productLineMapper() throws Exception {
+		// HINT: 한 파일에 여러 종류의 데이터가 혼재해 있을 때 씁니다.
 
-        PatternMatchingCompositeLineMapper<Product> mapper = new PatternMatchingCompositeLineMapper<>();
+		PatternMatchingCompositeLineMapper<Product> mapper = new PatternMatchingCompositeLineMapper<>();
 
-        Map<String, LineTokenizer> tokenizers = new HashMap<String, LineTokenizer>();
-        tokenizers.put("PRM*", mobilePhoneProductLineTokenizer());
-        tokenizers.put("PRB*", bookProductLineTokenizer());
-        mapper.setTokenizers(tokenizers);
+		Map<String, LineTokenizer> tokenizers = new HashMap<String, LineTokenizer>();
+		tokenizers.put("PRM*", mobilePhoneProductLineTokenizer());
+		tokenizers.put("PRB*", bookProductLineTokenizer());
+		mapper.setTokenizers(tokenizers);
 
-        Map<String, FieldSetMapper<Product>> mappers = new HashMap<String, FieldSetMapper<Product>>();
-        mappers.put("PRM*", mobilePhoneProductFieldSetMapper());
-        mappers.put("PRB*", bookProductFieldSetMapper());
-        mapper.setFieldSetMappers(mappers);
+		Map<String, FieldSetMapper<Product>> mappers = new HashMap<String, FieldSetMapper<Product>>();
+		mappers.put("PRM*", mobilePhoneProductFieldSetMapper());
+		mappers.put("PRB*", bookProductFieldSetMapper());
+		mapper.setFieldSetMappers(mappers);
 
-        return mapper;
-    }
+		return mapper;
+	}
 
 
-    @Bean
-    public LineTokenizer mobilePhoneProductLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "id", "name", "description", "manufacturer", "price" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer mobilePhoneProductLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "id", "name", "description", "manufacturer", "price" });
+		return tokenizer;
+	}
 
-    @Bean
-    public LineTokenizer bookProductLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "id", "name", "description", "publisher", "price" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer bookProductLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "id", "name", "description", "publisher", "price" });
+		return tokenizer;
+	}
 
-    @Bean
-    public FieldSetMapper<Product> mobilePhoneProductFieldSetMapper() throws Exception {
-        BeanWrapperFieldSetMapper<Product> mapper =
-            new BeanWrapperFieldSetMapper<Product>();
+	@Bean
+	public FieldSetMapper<Product> mobilePhoneProductFieldSetMapper() throws Exception {
+		BeanWrapperFieldSetMapper<Product> mapper =
+				new BeanWrapperFieldSetMapper<Product>();
 
-        mapper.setPrototypeBeanName("mobilePhoneProduct");
-        mapper.afterPropertiesSet();
-        return mapper;
-    }
+		mapper.setPrototypeBeanName("mobilePhoneProduct");
+		mapper.afterPropertiesSet();
+		return mapper;
+	}
 
-    @Bean
-    @Scope("prototype")
-    public MobilePhoneProduct mobilePhoneProduct() {
-        return new MobilePhoneProduct();
-    }
+	@Bean
+	@Scope("prototype")
+	public MobilePhoneProduct mobilePhoneProduct() {
+		return new MobilePhoneProduct();
+	}
 
-    @Bean
-    public FieldSetMapper<Product> bookProductFieldSetMapper() throws Exception {
-        BeanWrapperFieldSetMapper<Product> mapper =
-            new BeanWrapperFieldSetMapper<Product>();
+	@Bean
+	public FieldSetMapper<Product> bookProductFieldSetMapper() throws Exception {
+		BeanWrapperFieldSetMapper<Product> mapper =
+				new BeanWrapperFieldSetMapper<Product>();
 
-        mapper.setPrototypeBeanName("bookProduct");
-        mapper.afterPropertiesSet();
-        return mapper;
-    }
+		mapper.setPrototypeBeanName("bookProduct");
+		mapper.afterPropertiesSet();
+		return mapper;
+	}
 
-    @Bean
-    @Scope("prototype")
-    public BookProduct bookProduct() {
-        return new BookProduct();
-    }
+	@Bean
+	@Scope("prototype")
+	public BookProduct bookProduct() {
+		return new BookProduct();
+	}
 }
 

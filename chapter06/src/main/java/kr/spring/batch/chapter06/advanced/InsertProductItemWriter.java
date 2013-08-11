@@ -16,12 +16,12 @@ import java.util.List;
 @Transactional
 public class InsertProductItemWriter implements ItemWriter<Product> {
 
-    @Autowired
-    ProductRepository repository;
+	@Autowired
+	ProductRepository repository;
 
-    @Override
-    public void write(List<? extends Product> items) throws Exception {
-        repository.save(items);
-        repository.flush();
-    }
+	@Override
+	public void write(List<? extends Product> items) throws Exception {
+		repository.save(items);
+		repository.flush();
+	}
 }

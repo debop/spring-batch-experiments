@@ -23,15 +23,15 @@ import javax.sql.DataSource;
 @Import(LaunchConfiguration.class)
 public class ConnectDatabaseConfiguration {
 
-    @Bean
-    public DataSource dataSource() {
-        log.info("create DataSource");
+	@Bean
+	public DataSource dataSource() {
+		log.info("create DataSource");
 
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.HSQL)
+		return new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.HSQL)
 //                .addScript("classpath:/org/springframework/batch/core/schema-drop-h2.sql")
 //                .addScript("classpath:/org/springframework/batch/core/schema-h2.sql")
 //                .addScript("classpath:/create-tables.sql")
-                .build();
-    }
+				.build();
+	}
 }

@@ -16,14 +16,14 @@ import java.sql.SQLException;
 @Slf4j
 @Component
 public class ProductPrepareStatementSetter implements ItemPreparedStatementSetter<Product> {
-    @Override
-    public void setValues(Product product, PreparedStatement ps) throws SQLException {
+	@Override
+	public void setValues(Product product, PreparedStatement ps) throws SQLException {
 
-        log.debug("Product 정보를 PreparedStatement에 설정합니다. product=[{}]", product);
+		log.debug("Product 정보를 PreparedStatement에 설정합니다. product=[{}]", product);
 
-        ps.setString(1, product.getId());
-        ps.setString(2, product.getName());
-        ps.setString(3, product.getDescription());
-        ps.setFloat(4, product.getPrice());
-    }
+		ps.setString(1, product.getId());
+		ps.setString(2, product.getName());
+		ps.setString(3, product.getDescription());
+		ps.setFloat(4, product.getPrice());
+	}
 }

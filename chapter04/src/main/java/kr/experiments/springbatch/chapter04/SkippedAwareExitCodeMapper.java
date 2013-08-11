@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class SkippedAwareExitCodeMapper implements ExitCodeMapper {
 
-    @Override
-    public int intValue(String exitCode) {
-        if(ExitStatus.COMPLETED.getExitCode().equals(exitCode)) {
-            return 0;
-        } else if(ExitStatus.FAILED.getExitCode().equals(exitCode)) {
-            return 1;
-        } else if("COMPLETED WITH SKIPS".equals(exitCode)) {
-            return 3;
-        } else {
-            return 2;
-        }
+	@Override
+	public int intValue(String exitCode) {
+		if (ExitStatus.COMPLETED.getExitCode().equals(exitCode)) {
+			return 0;
+		} else if (ExitStatus.FAILED.getExitCode().equals(exitCode)) {
+			return 1;
+		} else if ("COMPLETED WITH SKIPS".equals(exitCode)) {
+			return 3;
+		} else {
+			return 2;
+		}
 
-    }
+	}
 }

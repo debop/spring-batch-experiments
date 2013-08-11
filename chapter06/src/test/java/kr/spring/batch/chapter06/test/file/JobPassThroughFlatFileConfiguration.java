@@ -27,31 +27,31 @@ import org.springframework.core.io.FileSystemResource;
 @Import({ FlatFileReaderConfiguration.class })
 public class JobPassThroughFlatFileConfiguration extends AbstractJobConfiguration {
 
-    public static final String OUTPUT_FILE = "target/outputs/passthrough.txt";
+	public static final String OUTPUT_FILE = "target/outputs/passthrough.txt";
 
-    @Autowired
-    FlatFileItemReader<Product> productItemReader;
+	@Autowired
+	FlatFileItemReader<Product> productItemReader;
 
-    @Bean
-    public Job writeProductJob() {
-        Step step = stepBuilders.get("readWrite")
-                                .<Product, Product>chunk(10)
-                                .reader(productItemReader)
-                                .writer(productItemWriter())
-                                .build();
+	@Bean
+	public Job writeProductJob() {
+		Step step = stepBuilders.get("readWrite")
+		                        .<Product, Product>chunk(10)
+		                        .reader(productItemReader)
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("writeProductJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("writeProductJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemWriter<Product> productItemWriter() {
-        FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
-        writer.setResource(new FileSystemResource(OUTPUT_FILE));
-        writer.setLineAggregator(new PassThroughLineAggregator<Product>());
+	@Bean
+	@StepScope
+	public FlatFileItemWriter<Product> productItemWriter() {
+		FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
+		writer.setResource(new FileSystemResource(OUTPUT_FILE));
+		writer.setLineAggregator(new PassThroughLineAggregator<Product>());
 
-        return writer;
-    }
+		return writer;
+	}
 }

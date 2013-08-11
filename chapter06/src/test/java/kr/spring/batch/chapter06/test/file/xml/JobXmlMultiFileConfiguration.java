@@ -32,68 +32,68 @@ import java.util.HashMap;
 @Import({ FlatFileReaderConfiguration.class })
 public class JobXmlMultiFileConfiguration extends AbstractJobConfiguration {
 
-    public static final String OUTPUT_FILE = "target/outputs/products-multi.xml";
+	public static final String OUTPUT_FILE = "target/outputs/products-multi.xml";
 
-    @Autowired
-    LineMapper<Product> productLineMapper;
+	@Autowired
+	LineMapper<Product> productLineMapper;
 
-    public FlatFileItemReader<Product> productItemReader() {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-        reader.setResource(new ClassPathResource("springbatch/input/products-delimited-big.txt"));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper);
+	public FlatFileItemReader<Product> productItemReader() {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+		reader.setResource(new ClassPathResource("springbatch/input/products-delimited-big.txt"));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper);
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public Job writeProductJob() {
-        Step step = stepBuilders.get("readWrite")
-                                .<Product, Product>chunk(50)
-                                .reader(productItemReader())
-                                .writer(productItemWriter())
-                                .build();
+	@Bean
+	public Job writeProductJob() {
+		Step step = stepBuilders.get("readWrite")
+		                        .<Product, Product>chunk(50)
+		                        .reader(productItemReader())
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("writeProductJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("writeProductJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    @StepScope
-    public MultiResourceItemWriter<Product> productItemWriter() {
-        MultiResourceItemWriter<Product> writer = new MultiResourceItemWriter<Product>();
-        writer.setResource(new FileSystemResource(OUTPUT_FILE));
+	@Bean
+	@StepScope
+	public MultiResourceItemWriter<Product> productItemWriter() {
+		MultiResourceItemWriter<Product> writer = new MultiResourceItemWriter<Product>();
+		writer.setResource(new FileSystemResource(OUTPUT_FILE));
 
-        // NOTE: 최대 1000 개의 Product 정보만 쓰고, 파일 명을 변경합니다.
-        //
-        writer.setItemCountLimitPerResource(1000);
-        writer.setDelegate(delegateWriter());
+		// NOTE: 최대 1000 개의 Product 정보만 쓰고, 파일 명을 변경합니다.
+		//
+		writer.setItemCountLimitPerResource(1000);
+		writer.setDelegate(delegateWriter());
 
-        return writer;
-    }
+		return writer;
+	}
 
-    @Bean(destroyMethod = "close")
-    public StaxEventItemWriter<Product> delegateWriter() {
-        StaxEventItemWriter<Product> writer = new StaxEventItemWriter<Product>();
-        writer.setMarshaller(productMarshaller());
-        writer.setRootTagName("products");
-        writer.setOverwriteOutput(true);
+	@Bean(destroyMethod = "close")
+	public StaxEventItemWriter<Product> delegateWriter() {
+		StaxEventItemWriter<Product> writer = new StaxEventItemWriter<Product>();
+		writer.setMarshaller(productMarshaller());
+		writer.setRootTagName("products");
+		writer.setOverwriteOutput(true);
 
-        return writer;
-    }
+		return writer;
+	}
 
-    @Bean
-    public XStreamMarshaller productMarshaller() {
+	@Bean
+	public XStreamMarshaller productMarshaller() {
 
-        HashMap<String, Class> aliases = new HashMap<String, Class>();
-        aliases.put("product", Product.class);
+		HashMap<String, Class> aliases = new HashMap<String, Class>();
+		aliases.put("product", Product.class);
 
-        XStreamMarshaller marshaller = new XStreamMarshaller();
-        try {
-            marshaller.setAliases(aliases);
-        } catch (Exception ignored) {}
+		XStreamMarshaller marshaller = new XStreamMarshaller();
+		try {
+			marshaller.setAliases(aliases);
+		} catch (Exception ignored) {}
 
-        return marshaller;
-    }
+		return marshaller;
+	}
 }

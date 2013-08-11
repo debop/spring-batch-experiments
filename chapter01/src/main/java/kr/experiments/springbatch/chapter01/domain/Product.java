@@ -14,16 +14,16 @@ import java.math.BigDecimal;
 @Data
 public class Product implements Serializable {
 
-    private String id;
-    private String name;
-    private String description;
-    private BigDecimal price;
+	private String id;
+	private String name;
+	private String description;
+	private BigDecimal price;
 
-    public Product() {}
+	public Product() {}
 
-    public Product(String id) {
-        this.id = id;
-    }
+	public Product(String id) {
+		this.id = id;
+	}
 
-    private static final long serialVersionUID = -4402010052037941957L;
+	private static final long serialVersionUID = -4402010052037941957L;
 }

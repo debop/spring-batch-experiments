@@ -19,16 +19,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class DummyItemReader implements ItemReader<Product> {
 
-    // HINT: 자료 구조의 초기화 시에 이렇게 한다.
-    Queue<Product> products = new LinkedBlockingQueue<Product>() {{
-        add(new Product("1"));
-        add(new Product("2"));
-        add(new Product("3"));
-        add(new Product("4"));
-    }};
+	// HINT: 자료 구조의 초기화 시에 이렇게 한다.
+	Queue<Product> products = new LinkedBlockingQueue<Product>() {{
+		add(new Product("1"));
+		add(new Product("2"));
+		add(new Product("3"));
+		add(new Product("4"));
+	}};
 
-    @Override
-    public Product read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        return products.poll();
-    }
+	@Override
+	public Product read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+		return products.poll();
+	}
 }

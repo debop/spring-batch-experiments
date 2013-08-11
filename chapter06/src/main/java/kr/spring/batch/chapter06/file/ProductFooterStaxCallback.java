@@ -20,34 +20,34 @@ import java.io.IOException;
 @Slf4j
 public class ProductFooterStaxCallback extends StepExecutionListenerSupport implements StaxWriterCallback {
 
-    private StepExecution stepExecution;
+	private StepExecution stepExecution;
 
-    @Override
-    public void write(XMLEventWriter writer) throws IOException {
-        try {
-            XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+	@Override
+	public void write(XMLEventWriter writer) throws IOException {
+		try {
+			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
-            XMLEvent event = eventFactory.createStartElement("", "", "footer");
-            writer.add(event);
+			XMLEvent event = eventFactory.createStartElement("", "", "footer");
+			writer.add(event);
 
-            event = eventFactory.createStartElement("", "", "writeCount");
-            writer.add(event);
+			event = eventFactory.createStartElement("", "", "writeCount");
+			writer.add(event);
 
-            event = eventFactory.createCharacters(String.valueOf(stepExecution.getWriteCount()));
-            writer.add(event);
+			event = eventFactory.createCharacters(String.valueOf(stepExecution.getWriteCount()));
+			writer.add(event);
 
-            event = eventFactory.createEndElement("", "", "writeCount");
-            writer.add(event);
+			event = eventFactory.createEndElement("", "", "writeCount");
+			writer.add(event);
 
-            event = eventFactory.createEndElement("", "", "footer");
-            writer.add(event);
-        } catch (XMLStreamException ignored) {
-            log.warn("Footer 작업 중 예외가 발생했습니다.", ignored);
-        }
-    }
+			event = eventFactory.createEndElement("", "", "footer");
+			writer.add(event);
+		} catch (XMLStreamException ignored) {
+			log.warn("Footer 작업 중 예외가 발생했습니다.", ignored);
+		}
+	}
 
-    @Override
-    public void beforeStep(StepExecution stepExecution) {
-        this.stepExecution = stepExecution;
-    }
+	@Override
+	public void beforeStep(StepExecution stepExecution) {
+		this.stepExecution = stepExecution;
+	}
 }

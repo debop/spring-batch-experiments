@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = { JobStructureConfiguration.class })
 public class JobStructureTest extends AbstractJobStructureTest {
 
-    @Test
-    public void delimitedJob() throws Exception {
-        jobLauncher.run(job, new JobParameters());
-    }
+	@Test
+	public void delimitedJob() throws Exception {
+		jobLauncher.run(job, new JobParameters());
+	}
 }

@@ -43,7 +43,7 @@
         <batch:step id="annotationStep">
             <batch:tasklet>
                 <bean class="kr.experiments.springbatch.test.CountDownTasklet">
-                    <property name="countDownLatch" ref="annotationCountDownLatch" />
+                    <property name="countDownLatch" ref="annotationCountDownLatch"/>
                 </bean>
             </batch:tasklet>
         </batch:step>

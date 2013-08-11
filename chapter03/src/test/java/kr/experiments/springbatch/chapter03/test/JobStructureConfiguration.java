@@ -36,53 +36,53 @@ import javax.sql.DataSource;
 @ImportResource("classpath:/spring/job.xml")
 public class JobStructureConfiguration {
 
-    @Autowired
-    DataSource dataSource;
+	@Autowired
+	DataSource dataSource;
 
-    @Autowired
-    JobBuilderFactory jobBuilders;
+	@Autowired
+	JobBuilderFactory jobBuilders;
 
-    @Autowired
-    StepBuilderFactory stepBuilders;
+	@Autowired
+	StepBuilderFactory stepBuilders;
 
 
-    @Bean
-    public ItemReader<Product> productItemReader(LineMapper<Product> productLineMapper) throws Exception {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-        reader.setResource(new ClassPathResource("/input/products-delimited.txt"));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper);
+	@Bean
+	public ItemReader<Product> productItemReader(LineMapper<Product> productLineMapper) throws Exception {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+		reader.setResource(new ClassPathResource("/input/products-delimited.txt"));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper);
 
-        reader.afterPropertiesSet();
-        return reader;
-    }
+		reader.afterPropertiesSet();
+		return reader;
+	}
 
-    @Bean
-    public LineMapper<Product> productLineMapper(FieldSetMapper<Product> productFieldSetMapper) throws Exception {
-        DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
-        lineMapper.setLineTokenizer(productLineTokenizer());
-        lineMapper.setFieldSetMapper(productFieldSetMapper);
-        lineMapper.afterPropertiesSet();
-        return lineMapper;
-    }
+	@Bean
+	public LineMapper<Product> productLineMapper(FieldSetMapper<Product> productFieldSetMapper) throws Exception {
+		DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
+		lineMapper.setLineTokenizer(productLineTokenizer());
+		lineMapper.setFieldSetMapper(productFieldSetMapper);
+		lineMapper.afterPropertiesSet();
+		return lineMapper;
+	}
 
-    @Bean
-    public LineTokenizer productLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "id", "name", "description", "price" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer productLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "id", "name", "description", "price" });
+		return tokenizer;
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter(ProductPrepareStatementSetter productPrepareStatementSetter) {
-        JdbcBatchItemWriter<Product> itemWriter = new JdbcBatchItemWriter<Product>();
-        itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("insert into product (id, name, description, price) values(?,?,?,?)");
-        itemWriter.setItemPreparedStatementSetter(productPrepareStatementSetter);
-        itemWriter.afterPropertiesSet();
+	@Bean
+	public ItemWriter<Product> productItemWriter(ProductPrepareStatementSetter productPrepareStatementSetter) {
+		JdbcBatchItemWriter<Product> itemWriter = new JdbcBatchItemWriter<Product>();
+		itemWriter.setDataSource(dataSource);
+		itemWriter.setSql("insert into product (id, name, description, price) values(?,?,?,?)");
+		itemWriter.setItemPreparedStatementSetter(productPrepareStatementSetter);
+		itemWriter.afterPropertiesSet();
 
-        return itemWriter;
-    }
+		return itemWriter;
+	}
 
 //    @Bean
 //    public Job importProductsJob() throws Exception {

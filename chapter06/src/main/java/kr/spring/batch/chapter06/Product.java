@@ -30,25 +30,25 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Product implements Serializable {
 
-    @Id
-    private String id;
+	@Id
+	private String id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String description;
+	@Column(nullable = false)
+	private String description;
 
-    @Column(nullable = false)
-    private BigDecimal price;
+	@Column(nullable = false)
+	private BigDecimal price;
 
-    @Transient
-    private transient String operation;
+	@Transient
+	private transient String operation;
 
-    @Override
-    public String toString() {
-        return "Product [id=" + id + ", name=" + name + "]";
-    }
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + "]";
+	}
 
-    private static final long serialVersionUID = -4204388747228776515L;
+	private static final long serialVersionUID = -4204388747228776515L;
 }

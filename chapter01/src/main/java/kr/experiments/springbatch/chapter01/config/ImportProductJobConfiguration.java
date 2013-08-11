@@ -45,104 +45,104 @@ import javax.sql.DataSource;
 @Import(LaunchConfiguration.class)
 public class ImportProductJobConfiguration {
 
-    private static final String[] FIELD_NAMES = new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" };
+	private static final String[] FIELD_NAMES = new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" };
 
-    private static final String OVERRIDDEN_BY_EXPRESSION = null;
+	private static final String OVERRIDDEN_BY_EXPRESSION = null;
 
-    @Autowired
-    JobBuilderFactory jobBuilders;
+	@Autowired
+	JobBuilderFactory jobBuilders;
 
-    @Autowired
-    StepBuilderFactory stepBuilders;
+	@Autowired
+	StepBuilderFactory stepBuilders;
 
-    @Autowired
-    JobRepository jobRepository;
+	@Autowired
+	JobRepository jobRepository;
 
-    @Autowired
-    JobRegistry jobRegistry;
+	@Autowired
+	JobRegistry jobRegistry;
 
-    @Autowired
-    PlatformTransactionManager transactionManager;
+	@Autowired
+	PlatformTransactionManager transactionManager;
 
-    @Autowired
-    DataSource dataSource;
+	@Autowired
+	DataSource dataSource;
 
-    @Autowired
-    JobExecutionListener loggerListener;
+	@Autowired
+	JobExecutionListener loggerListener;
 
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource);
-    }
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource);
+	}
 
-    @Bean
-    @StepScope
-    public DecompressTasklet decompressTasklet(@Value("#{jobParameters['inputResource']}") String inputResource,
-                                               @Value("#{jobParameters['targetDirectory']}") String targetDirectory,
-                                               @Value("#{jobParameters['targetFile']}") String targetFile) {
-        DecompressTasklet tasklet = new DecompressTasklet();
-        tasklet.setInputResource(new ClassPathResource(inputResource));
-        tasklet.setTargetDirectory(targetDirectory);
-        tasklet.setTargetFile(targetFile);
-        return tasklet;
-    }
+	@Bean
+	@StepScope
+	public DecompressTasklet decompressTasklet(@Value("#{jobParameters['inputResource']}") String inputResource,
+	                                           @Value("#{jobParameters['targetDirectory']}") String targetDirectory,
+	                                           @Value("#{jobParameters['targetFile']}") String targetFile) {
+		DecompressTasklet tasklet = new DecompressTasklet();
+		tasklet.setInputResource(new ClassPathResource(inputResource));
+		tasklet.setTargetDirectory(targetDirectory);
+		tasklet.setTargetFile(targetFile);
+		return tasklet;
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemReader<Product> reader(@Value("#{jobParameters['targetDirectory'] + jobParameters['targetFile']}") String path) {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+	@Bean
+	@StepScope
+	public FlatFileItemReader<Product> reader(@Value("#{jobParameters['targetDirectory'] + jobParameters['targetFile']}") String path) {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        reader.setResource(new FileSystemResource(path));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(lineMapper());
+		reader.setResource(new FileSystemResource(path));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(lineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    @StepScope
-    public DefaultLineMapper<Product> lineMapper() {
-        DefaultLineMapper<Product> mapper = new DefaultLineMapper<Product>();
+	@Bean
+	@StepScope
+	public DefaultLineMapper<Product> lineMapper() {
+		DefaultLineMapper<Product> mapper = new DefaultLineMapper<Product>();
 
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
-        tokenizer.setNames(FIELD_NAMES);
-        mapper.setLineTokenizer(tokenizer);
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
+		tokenizer.setNames(FIELD_NAMES);
+		mapper.setLineTokenizer(tokenizer);
 
-        ProductFieldSetMapper fieldSetMapper = new ProductFieldSetMapper();
-        mapper.setFieldSetMapper(fieldSetMapper);
+		ProductFieldSetMapper fieldSetMapper = new ProductFieldSetMapper();
+		mapper.setFieldSetMapper(fieldSetMapper);
 
-        return mapper;
-    }
+		return mapper;
+	}
 
-    @Bean
-    @StepScope
-    public ProductJdbcItemWriter writer() {
-        return new ProductJdbcItemWriter(dataSource);
-    }
+	@Bean
+	@StepScope
+	public ProductJdbcItemWriter writer() {
+		return new ProductJdbcItemWriter(dataSource);
+	}
 
-    @Bean
-    public Job importProductsJob(Tasklet decompressTasklet, ItemReader<Product> reader) {
+	@Bean
+	public Job importProductsJob(Tasklet decompressTasklet, ItemReader<Product> reader) {
 
-        Step decompress = stepBuilders.get("decompress")
-                                      .tasklet(decompressTasklet)
-                                      .repository(jobRepository)
-                                      .transactionManager(transactionManager)
-                                      .build();
+		Step decompress = stepBuilders.get("decompress")
+		                              .tasklet(decompressTasklet)
+		                              .repository(jobRepository)
+		                              .transactionManager(transactionManager)
+		                              .build();
 
-        Step readWriteProducts = stepBuilders.get("readWriteProducts")
-                                             .<Product, Product>chunk(3)
-                                             .reader(reader)
-                                             .writer(writer())
-                                             .faultTolerant()
-                                             .skipLimit(5)
-                                             .skip(FlatFileParseException.class)
-                                             .build();
+		Step readWriteProducts = stepBuilders.get("readWriteProducts")
+		                                     .<Product, Product>chunk(3)
+		                                     .reader(reader)
+		                                     .writer(writer())
+		                                     .faultTolerant()
+		                                     .skipLimit(5)
+		                                     .skip(FlatFileParseException.class)
+		                                     .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .repository(jobRepository)
-                          .listener(loggerListener)
-                          .start(decompress)
-                          .next(readWriteProducts)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .repository(jobRepository)
+		                  .listener(loggerListener)
+		                  .start(decompress)
+		                  .next(readWriteProducts)
+		                  .build();
+	}
 }

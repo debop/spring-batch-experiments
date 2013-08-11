@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * kr.spring.batch.chapter08.test.retry.RetryTemplateTest
+ * {@link org.springframework.retry.support.RetryTemplate}를 이용한 테스트
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 10. 오후 5:03
@@ -25,24 +25,25 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = { RetryTemplateConfiguration.class })
 public class RetryTemplateTest {
 
-    @Test
-    public void discountTaskletWithRetryTemplateOk() throws Exception {
-        DiscountsWithRetryTemplateTasklet tasklet = new DiscountsWithRetryTemplateTasklet();
-        DiscountService service = mock(DiscountService.class);
-        DiscountsHolder holder = new DiscountsHolder();
-        tasklet.setDiscountService(service);
-        tasklet.setDiscountsHolder(holder);
+	@Test
+	public void discountTaskletWithRetryTemplateOk() throws Exception {
+		DiscountsWithRetryTemplateTasklet tasklet = new DiscountsWithRetryTemplateTasklet();
+		DiscountService service = mock(DiscountService.class);
+		DiscountsHolder holder = new DiscountsHolder();
+		tasklet.setDiscountService(service);
+		tasklet.setDiscountsHolder(holder);
 
-        List<Discount> discounts = new ArrayList<Discount>();
-        discounts.add(new Discount());
+		List<Discount> discounts = new ArrayList<Discount>();
+		discounts.add(new Discount());
 
-        when(service.getDiscounts())
-                .thenThrow(new TransientDataAccessResourceException(""))
-                .thenThrow(new TransientDataAccessResourceException(""))
-                .thenReturn(discounts);
+		// HINT: Mockito를 이용하여, 두번의 실퍠 후 성공하는 가상 시나리오를 제작합니다.
+		when(service.getDiscounts())
+				.thenThrow(new TransientDataAccessResourceException(""))
+				.thenThrow(new TransientDataAccessResourceException(""))
+				.thenReturn(discounts);
 
-        RepeatStatus status = tasklet.execute(null, null);
-        assertThat(status).isEqualTo(RepeatStatus.FINISHED);
-        assertThat(holder.getDiscounts()).isEqualTo(discounts);
-    }
+		RepeatStatus status = tasklet.execute(null, null);
+		assertThat(status).isEqualTo(RepeatStatus.FINISHED);
+		assertThat(holder.getDiscounts()).isEqualTo(discounts);
+	}
 }

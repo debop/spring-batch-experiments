@@ -7,11 +7,11 @@ package kr.spring.batch.chapter07;
  * @since 13. 8. 8. 오후 3:07
  */
 public class SimplePartnerProductMapper implements PartnerProductMapper {
-    @Override
-    public Product map(PartnerProduct partnerProduct) {
-        return new Product(partnerProduct.getId(),
-                           partnerProduct.getTitle(),
-                           partnerProduct.getDetails(),
-                           partnerProduct.getPrice());
-    }
+	@Override
+	public Product map(PartnerProduct partnerProduct) {
+		return new Product(partnerProduct.getId(),
+		                   partnerProduct.getTitle(),
+		                   partnerProduct.getDetails(),
+		                   partnerProduct.getPrice());
+	}
 }

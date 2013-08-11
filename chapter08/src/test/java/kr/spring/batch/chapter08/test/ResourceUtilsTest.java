@@ -20,41 +20,41 @@ import static org.fest.assertions.Assertions.assertThat;
 @Slf4j
 public class ResourceUtilsTest {
 
-    @Test
-    public void classpathResource() throws Exception {
-        String resourceLocation = "classpath:./skip/products_no_error.txt";
-        assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
-        assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
+	@Test
+	public void classpathResource() throws Exception {
+		String resourceLocation = "classpath:./skip/products_no_error.txt";
+		assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
+		assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
 
-        resourceLocation = "classpath:skip/products_no_error.txt";
-        assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
-        assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
-    }
+		resourceLocation = "classpath:skip/products_no_error.txt";
+		assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
+		assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
+	}
 
-    @Test(expected = Exception.class)
-    public void absoluteClasspathResource() throws Exception {
+	@Test(expected = Exception.class)
+	public void absoluteClasspathResource() throws Exception {
 
-        // NOTE: 절대 경로를 사용하면 파일을 찾을 수 없습니다.
-        //
-        String resourceLocation = "classpath:/skip/products_no_error.txt";
-        assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
-        assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
-    }
+		// NOTE: 절대 경로를 사용하면 파일을 찾을 수 없습니다.
+		//
+		String resourceLocation = "classpath:/skip/products_no_error.txt";
+		assertThat(ResourceUtils.isUrl(resourceLocation)).isTrue();
+		assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
+	}
 
-    @Test
-    public void fileSystemResource() throws Exception {
-        String resourceLocation = "file:./products.txt";
+	@Test
+	public void fileSystemResource() throws Exception {
+		String resourceLocation = "file:./products.txt";
 
-        log.debug("Current Folder=[{}]", Files.currentFolder());
+		log.debug("Current Folder=[{}]", Files.currentFolder());
 
 
-        URL url = ResourceUtils.getURL(resourceLocation);
-        assertThat(ResourceUtils.isFileURL(url)).isTrue();
-        assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
+		URL url = ResourceUtils.getURL(resourceLocation);
+		assertThat(ResourceUtils.isFileURL(url)).isTrue();
+		assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
 
-        resourceLocation = "file:products.txt";
-        url = ResourceUtils.getURL(resourceLocation);
-        assertThat(ResourceUtils.isFileURL(url)).isTrue();
-        assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
-    }
+		resourceLocation = "file:products.txt";
+		url = ResourceUtils.getURL(resourceLocation);
+		assertThat(ResourceUtils.isFileURL(url)).isTrue();
+		assertThat(ResourceUtils.getFile(resourceLocation).exists()).isTrue();
+	}
 }

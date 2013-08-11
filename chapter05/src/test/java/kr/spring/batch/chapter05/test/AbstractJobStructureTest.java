@@ -20,32 +20,32 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class AbstractJobStructureTest {
 
-    @Autowired
-    protected Job job;
+	@Autowired
+	protected Job job;
 
-    @Autowired
-    protected JobLauncher jobLauncher;
+	@Autowired
+	protected JobLauncher jobLauncher;
 
-    @Autowired
-    protected DummyProductItemWriter writer;
+	@Autowired
+	protected DummyProductItemWriter writer;
 
-    protected Product createProduct(String id, String name, String description, float price) {
-        return new Product(id, name, description, price);
-    }
+	protected Product createProduct(String id, String name, String description, float price) {
+		return new Product(id, name, description, price);
+	}
 
-    protected void hasProduct(List<Product> products, String productId) {
-        for (Product product : products) {
-            if (product.getId().equals(productId))
-                return;
-        }
+	protected void hasProduct(List<Product> products, String productId) {
+		for (Product product : products) {
+			if (product.getId().equals(productId))
+				return;
+		}
 
-        Assert.fail("Product with id " + productId + " is expected.");
-    }
+		Assert.fail("Product with id " + productId + " is expected.");
+	}
 
-    protected void checkProducts(List<Product> products, String[] productIds) {
-        Assertions.assertThat(products.size()).isEqualTo(8);
-        for (String productId : productIds) {
-            hasProduct(products, productId);
-        }
-    }
+	protected void checkProducts(List<Product> products, String[] productIds) {
+		Assertions.assertThat(products.size()).isEqualTo(8);
+		for (String productId : productIds) {
+			hasProduct(products, productId);
+		}
+	}
 }

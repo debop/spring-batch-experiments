@@ -22,16 +22,16 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @EnableBatchProcessing
 @Import(LaunchConfiguration.class)
-@ImportResource({ "classpath:/spring/incrementer-job.xml"})
+@ImportResource({ "classpath:/spring/incrementer-job.xml" })
 public class IncrementerConfiguration {
 
-    @Bean
-    public Tasklet tasklet() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet tasklet() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public JobParametersIncrementer incrementer() {
-        return new RunIdIncrementer();
-    }
+	@Bean
+	public JobParametersIncrementer incrementer() {
+		return new RunIdIncrementer();
+	}
 }

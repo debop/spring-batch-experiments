@@ -20,35 +20,35 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class FlatFileReaderConfiguration {
 
-    @Bean
-    public FlatFileItemReader<Product> productItemReader() {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-        reader.setResource(new ClassPathResource("/springbatch/input/products-delimited.txt"));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper());
+	@Bean
+	public FlatFileItemReader<Product> productItemReader() {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+		reader.setResource(new ClassPathResource("/springbatch/input/products-delimited.txt"));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public DefaultLineMapper<Product> productLineMapper() {
-        DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
-        lineMapper.setLineTokenizer(productLineTokenizer());
-        lineMapper.setFieldSetMapper(productFieldSetMapper());
-        return lineMapper;
-    }
+	@Bean
+	public DefaultLineMapper<Product> productLineMapper() {
+		DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
+		lineMapper.setLineTokenizer(productLineTokenizer());
+		lineMapper.setFieldSetMapper(productFieldSetMapper());
+		return lineMapper;
+	}
 
-    @Bean
-    public LineTokenizer productLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "id", "name", "description", "price", "operation" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer productLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "id", "name", "description", "price", "operation" });
+		return tokenizer;
+	}
 
-    @Bean
-    public FieldSetMapper<Product> productFieldSetMapper() {
-        BeanWrapperFieldSetMapper<Product> mapper = new BeanWrapperFieldSetMapper<Product>();
-        mapper.setTargetType(Product.class);
-        return mapper;
-    }
+	@Bean
+	public FieldSetMapper<Product> productFieldSetMapper() {
+		BeanWrapperFieldSetMapper<Product> mapper = new BeanWrapperFieldSetMapper<Product>();
+		mapper.setTargetType(Product.class);
+		return mapper;
+	}
 }

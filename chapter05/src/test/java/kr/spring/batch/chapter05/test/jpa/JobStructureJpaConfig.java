@@ -32,40 +32,40 @@ import javax.persistence.EntityManagerFactory;
 @Import(HSqlConfig.class)
 public class JobStructureJpaConfig extends AbstractJobConfiguration {
 
-    @Autowired EntityManagerFactory emf;
+	@Autowired EntityManagerFactory emf;
 
-    @Override
-    public TaskExecutor jobTaskExecutor() throws Exception {
-        return null;
-    }
+	@Override
+	public TaskExecutor jobTaskExecutor() throws Exception {
+		return null;
+	}
 
-    @Bean
-    public Job importProductsJob() throws Exception {
+	@Bean
+	public Job importProductsJob() throws Exception {
 
-        Step step = stepBuilders.get("importProductsJob")
-                                .<Product, Product>chunk(100)
-                                .reader(productItemReader())
-                                .writer(productItemWriter())
-                                .build();
+		Step step = stepBuilders.get("importProductsJob")
+		                        .<Product, Product>chunk(100)
+		                        .reader(productItemReader())
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public ItemReader<Product> productItemReader() throws Exception {
-        JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
-        reader.setEntityManagerFactory(emf);
-        reader.setQueryString("select p from Product p");
-        reader.setPageSize(5);
-        reader.afterPropertiesSet();
+	@Bean
+	public ItemReader<Product> productItemReader() throws Exception {
+		JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
+		reader.setEntityManagerFactory(emf);
+		reader.setQueryString("select p from Product p");
+		reader.setPageSize(5);
+		reader.afterPropertiesSet();
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter() {
-        return new DummyProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> productItemWriter() {
+		return new DummyProductItemWriter();
+	}
 }

@@ -17,9 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class AbstractJobStructureTest {
 
-    @Autowired
-    protected Job job;
+	@Autowired
+	protected Job job;
 
-    @Autowired
-    protected JobLauncher jobLauncher;
+	@Autowired
+	protected JobLauncher jobLauncher;
 }

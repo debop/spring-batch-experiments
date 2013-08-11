@@ -16,20 +16,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImportProductsJobListener implements JobExecutionListener {
 
-    @Override
-    public void beforeJob(JobExecution jobExecution) {
-        log.info("작업 전에 호출되는 리스너의 메소드입니다.");
-    }
+	@Override
+	public void beforeJob(JobExecution jobExecution) {
+		log.info("작업 전에 호출되는 리스너의 메소드입니다.");
+	}
 
-    @Override
-    public void afterJob(JobExecution jobExecution) {
-        log.info("작업 결과 상세. 시작=[{}], 완료=[{}], ExitStatus=[{}]",
-                 jobExecution.getStartTime(), jobExecution.getEndTime(), jobExecution.getExitStatus());
+	@Override
+	public void afterJob(JobExecution jobExecution) {
+		log.info("작업 결과 상세. 시작=[{}], 완료=[{}], ExitStatus=[{}]",
+		         jobExecution.getStartTime(), jobExecution.getEndTime(), jobExecution.getExitStatus());
 
-        if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            log.info("작업이 성공적으로 완료되었습니다.");
-        } else if (jobExecution.getStatus() == BatchStatus.FAILED) {
-            log.info("작업이 실패했습니다.");
-        }
-    }
+		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
+			log.info("작업이 성공적으로 완료되었습니다.");
+		} else if (jobExecution.getStatus() == BatchStatus.FAILED) {
+			log.info("작업이 실패했습니다.");
+		}
+	}
 }

@@ -18,69 +18,69 @@ import org.springframework.batch.repeat.support.RepeatTemplate;
 @Slf4j
 public class RepeatTemplateTest {
 
-    @Test
-    public void callbackInternalCount() {
-        RepeatTemplate repeatTemplate = new RepeatTemplate();
-        repeatTemplate.iterate(new RepeatCallback() {
-            int count = 0;
+	@Test
+	public void callbackInternalCount() {
+		RepeatTemplate repeatTemplate = new RepeatTemplate();
+		repeatTemplate.iterate(new RepeatCallback() {
+			int count = 0;
 
-            @Override
-            public RepeatStatus doInIteration(RepeatContext context) throws Exception {
-                return ++count > 5 ? RepeatStatus.FINISHED : RepeatStatus.CONTINUABLE;
-            }
-        });
-    }
+			@Override
+			public RepeatStatus doInIteration(RepeatContext context) throws Exception {
+				return ++count > 5 ? RepeatStatus.FINISHED : RepeatStatus.CONTINUABLE;
+			}
+		});
+	}
 
-    @Test
-    public void callbackConetxtCount() {
-        RepeatTemplate tpl = new RepeatTemplate();
-        tpl.iterate(new RepeatCallback() {
-            @Override
-            public RepeatStatus doInIteration(RepeatContext context) throws Exception {
-                Integer count = (Integer) context.getAttribute("count");
-                if (count == null)
-                    count = 0;
-                count++;
-                context.setAttribute("count", count);
-                return count > 5 ? RepeatStatus.FINISHED : RepeatStatus.CONTINUABLE;
-            }
-        });
-    }
+	@Test
+	public void callbackConetxtCount() {
+		RepeatTemplate tpl = new RepeatTemplate();
+		tpl.iterate(new RepeatCallback() {
+			@Override
+			public RepeatStatus doInIteration(RepeatContext context) throws Exception {
+				Integer count = (Integer) context.getAttribute("count");
+				if (count == null)
+					count = 0;
+				count++;
+				context.setAttribute("count", count);
+				return count > 5 ? RepeatStatus.FINISHED : RepeatStatus.CONTINUABLE;
+			}
+		});
+	}
 
-    @Test
-    public void completionStrategy() {
-        RepeatTemplate tpl = new RepeatTemplate();
-        tpl.setCompletionPolicy(new CompletionPolicy() {
-            @Override
-            public boolean isComplete(RepeatContext context, RepeatStatus result) {
-                Integer count = (Integer) context.getAttribute("count");
-                return count > 5;
-            }
+	@Test
+	public void completionStrategy() {
+		RepeatTemplate tpl = new RepeatTemplate();
+		tpl.setCompletionPolicy(new CompletionPolicy() {
+			@Override
+			public boolean isComplete(RepeatContext context, RepeatStatus result) {
+				Integer count = (Integer) context.getAttribute("count");
+				return count > 5;
+			}
 
-            @Override
-            public boolean isComplete(RepeatContext context) {
-                return isComplete(context, RepeatStatus.CONTINUABLE);
-            }
+			@Override
+			public boolean isComplete(RepeatContext context) {
+				return isComplete(context, RepeatStatus.CONTINUABLE);
+			}
 
-            @Override
-            public RepeatContext start(RepeatContext parent) {
-                RepeatContextSupport ctx = new RepeatContextSupport(parent);
-                ctx.setAttribute("count", 0);
-                return ctx;
-            }
+			@Override
+			public RepeatContext start(RepeatContext parent) {
+				RepeatContextSupport ctx = new RepeatContextSupport(parent);
+				ctx.setAttribute("count", 0);
+				return ctx;
+			}
 
-            @Override
-            public void update(RepeatContext context) {
-                Integer count = (Integer) context.getAttribute("count");
-                context.setAttribute("count", ++count);
-            }
-        });
+			@Override
+			public void update(RepeatContext context) {
+				Integer count = (Integer) context.getAttribute("count");
+				context.setAttribute("count", ++count);
+			}
+		});
 
-        tpl.iterate(new RepeatCallback() {
-            @Override
-            public RepeatStatus doInIteration(RepeatContext context) throws Exception {
-                return RepeatStatus.CONTINUABLE;
-            }
-        });
-    }
+		tpl.iterate(new RepeatCallback() {
+			@Override
+			public RepeatStatus doInIteration(RepeatContext context) throws Exception {
+				return RepeatStatus.CONTINUABLE;
+			}
+		});
+	}
 }

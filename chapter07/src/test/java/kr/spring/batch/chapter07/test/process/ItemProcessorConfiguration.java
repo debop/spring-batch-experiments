@@ -37,51 +37,51 @@ import javax.persistence.EntityManagerFactory;
 @Import({ JpaHSqlConfiguration.class })
 public class ItemProcessorConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Bean
-    public Job readWriteJob(Step readWriteStep) {
-        return jobBuilders.get("readWriteJob")
-                          .start(readWriteStep)
-                          .build();
-    }
+	@Bean
+	public Job readWriteJob(Step readWriteStep) {
+		return jobBuilders.get("readWriteJob")
+		                  .start(readWriteStep)
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep(ItemWriter<Product> writer) {
-        return stepBuilders.get("readWrite")
-                           .<Product, Product>chunk(2)
-                           .reader(reader())
-                           .processor(processor())
-                           .writer(writer)
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep(ItemWriter<Product> writer) {
+		return stepBuilders.get("readWrite")
+		                   .<Product, Product>chunk(2)
+		                   .reader(reader())
+		                   .processor(processor())
+		                   .writer(writer)
+		                   .build();
+	}
 
-    @Bean
-    public JpaPagingItemReader<Product> reader() {
-        assert emf != null;
-        JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
-        reader.setEntityManagerFactory(emf);
-        reader.setPageSize(3);
-        reader.setQueryString("select p from Product p");
+	@Bean
+	public JpaPagingItemReader<Product> reader() {
+		assert emf != null;
+		JpaPagingItemReader<Product> reader = new JpaPagingItemReader<Product>();
+		reader.setEntityManagerFactory(emf);
+		reader.setPageSize(3);
+		reader.setQueryString("select p from Product p");
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ItemProcessor<Product, Product> processor() {
-        return new FilteringProductItemProcessor();
-    }
+	@Bean
+	public ItemProcessor<Product, Product> processor() {
+		return new FilteringProductItemProcessor();
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemWriter<Product> writer(@Value("#{jobParameters['targetFile']}") String targetFile) {
-        log.info("create ItemWriter. file=[{}]", targetFile);
+	@Bean
+	@StepScope
+	public FlatFileItemWriter<Product> writer(@Value("#{jobParameters['targetFile']}") String targetFile) {
+		log.info("create ItemWriter. file=[{}]", targetFile);
 
-        FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
-        writer.setResource(new FileSystemResource(targetFile));
-        writer.setLineAggregator(new PassThroughLineAggregator<Product>());
+		FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
+		writer.setResource(new FileSystemResource(targetFile));
+		writer.setLineAggregator(new PassThroughLineAggregator<Product>());
 
-        return writer;
-    }
+		return writer;
+	}
 }

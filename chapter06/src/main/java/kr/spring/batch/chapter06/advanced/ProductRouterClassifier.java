@@ -11,8 +11,8 @@ import org.springframework.batch.support.annotation.Classifier;
  */
 public class ProductRouterClassifier {
 
-    @Classifier
-    public String classify(Product classifiable) {
-        return classifiable.getOperation();
-    }
+	@Classifier
+	public String classify(Product classifiable) {
+		return classifiable.getOperation();
+	}
 }

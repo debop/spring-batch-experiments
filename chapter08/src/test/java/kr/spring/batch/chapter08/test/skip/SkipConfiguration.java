@@ -44,85 +44,85 @@ import java.io.FileNotFoundException;
 @Import({ JpaHSqlConfiguration.class })
 public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Autowired
-    ItemReader<Product> reader;
+	@Autowired
+	ItemReader<Product> reader;
 
-    @Bean
-    public Job importProductsJob() {
-        Step importProductsStep = stepBuilders.get("importProductsStep")
-                                              .<Product, Product>chunk(3)
-                                              .reader(reader)
-                .writer(writer())
-                        //.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
-                        //.listener(slf4jSkipListener())
-                        //.listener(databaseSkipListener())
-                .build();
+	@Bean
+	public Job importProductsJob() {
+		Step importProductsStep = stepBuilders.get("importProductsStep")
+		                                      .<Product, Product>chunk(3)
+		                                      .reader(reader)
+				.writer(writer())
+						//.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
+						//.listener(slf4jSkipListener())
+						//.listener(databaseSkipListener())
+				.build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(importProductsStep)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(importProductsStep)
+		                  .build();
+	}
 
-    @Bean
-    public Job importProductsJobWithSkipPolicy() {
-        Step importProductsStepWithSkipPolicy = stepBuilders.get("importProductsStepWithSkipPolicy")
-                                                            .<Product, Product>chunk(3)
-                                                            .faultTolerant().skipPolicy(skipPolicy())
-                                                            .reader(reader)
-                                                            .writer(writer())
-                                                            .build();
+	@Bean
+	public Job importProductsJobWithSkipPolicy() {
+		Step importProductsStepWithSkipPolicy = stepBuilders.get("importProductsStepWithSkipPolicy")
+		                                                    .<Product, Product>chunk(3)
+		                                                    .faultTolerant().skipPolicy(skipPolicy())
+		                                                    .reader(reader)
+		                                                    .writer(writer())
+		                                                    .build();
 
-        return jobBuilders.get("importProductsJobWithSkipPolicy")
-                          .start(importProductsStepWithSkipPolicy)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJobWithSkipPolicy")
+		                  .start(importProductsStepWithSkipPolicy)
+		                  .build();
+	}
 
 
-    @Bean
-    public ExceptionSkipPolicy skipPolicy() {
-        return new ExceptionSkipPolicy(FlatFileParseException.class);
-    }
+	@Bean
+	public ExceptionSkipPolicy skipPolicy() {
+		return new ExceptionSkipPolicy(FlatFileParseException.class);
+	}
 
-    @Bean
-    public Slf4jSkipListener slf4jSkipListener() {
-        return new Slf4jSkipListener();
-    }
+	@Bean
+	public Slf4jSkipListener slf4jSkipListener() {
+		return new Slf4jSkipListener();
+	}
 
-    @Bean
-    public DatabaseSkipListener databaseSkipListener() {
-        return new DatabaseSkipListener();
-    }
+	@Bean
+	public DatabaseSkipListener databaseSkipListener() {
+		return new DatabaseSkipListener();
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+	@Bean
+	@StepScope
+	public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
 
-        DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
-        lineMapper.setLineTokenizer(tokenizer);
-        lineMapper.setFieldSetMapper(new ProductFieldSetMapper());
+		DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
+		lineMapper.setLineTokenizer(tokenizer);
+		lineMapper.setFieldSetMapper(new ProductFieldSetMapper());
 
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        try {
-            reader.setResource(new FileSystemResource(ResourceUtils.getFile(inputFile)));
-        } catch (FileNotFoundException e) {
-            log.error("파일을 찾을 수 없습니다. inputFile=" + inputFile, e);
-            throw new RuntimeException(e);
-        }
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(lineMapper);
+		try {
+			reader.setResource(new FileSystemResource(ResourceUtils.getFile(inputFile)));
+		} catch (FileNotFoundException e) {
+			log.error("파일을 찾을 수 없습니다. inputFile=" + inputFile, e);
+			throw new RuntimeException(e);
+		}
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(lineMapper);
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ProductJpaItemWriter writer() {
-        return new ProductJpaItemWriter();
-    }
+	@Bean
+	public ProductJpaItemWriter writer() {
+		return new ProductJpaItemWriter();
+	}
 }

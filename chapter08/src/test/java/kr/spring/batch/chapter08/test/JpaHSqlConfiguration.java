@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JpaHSqlConfiguration extends HSqlConfigBase {
 
-    @Override
-    public String[] getMappedPackageNames() {
-        return new String[]{
-            SkippedProduct.class.getPackage().getName()
-        };
-    }
+	@Override
+	public String[] getMappedPackageNames() {
+		return new String[] {
+				SkippedProduct.class.getPackage().getName()
+		};
+	}
 }

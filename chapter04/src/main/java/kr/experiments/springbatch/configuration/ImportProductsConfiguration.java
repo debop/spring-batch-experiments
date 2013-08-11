@@ -28,28 +28,28 @@ import org.springframework.context.annotation.Import;
 @Import(LaunchConfiguration.class)
 public class ImportProductsConfiguration {
 
-    @Autowired
-    JobBuilderFactory jobBuilderFactory;
+	@Autowired
+	JobBuilderFactory jobBuilderFactory;
 
-    @Autowired
-    StepBuilderFactory stepBuilderFactory;
+	@Autowired
+	StepBuilderFactory stepBuilderFactory;
 
-    @Bean
-    public Tasklet helloTasklet() {
-        return new HelloTasklet();
-    }
+	@Bean
+	public Tasklet helloTasklet() {
+		return new HelloTasklet();
+	}
 
-    @Bean
-    public Step importProductStep() {
-        return stepBuilderFactory.get("importProductStep")
-                                 .tasklet(helloTasklet())
-                                 .build();
-    }
+	@Bean
+	public Step importProductStep() {
+		return stepBuilderFactory.get("importProductStep")
+		                         .tasklet(helloTasklet())
+		                         .build();
+	}
 
-    @Bean
-    public Job importProductJob() {
-        return jobBuilderFactory.get("importProductJob")
-                                .start(importProductStep())
-                                .build();
-    }
+	@Bean
+	public Job importProductJob() {
+		return jobBuilderFactory.get("importProductJob")
+		                        .start(importProductStep())
+		                        .build();
+	}
 }

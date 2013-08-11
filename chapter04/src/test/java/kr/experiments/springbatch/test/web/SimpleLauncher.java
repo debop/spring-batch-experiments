@@ -15,10 +15,10 @@ import java.util.Date;
  */
 public class SimpleLauncher {
 
-    @Setter private JobLauncher jobLauncher;
-    @Setter private Job job;
+	@Setter private JobLauncher jobLauncher;
+	@Setter private Job job;
 
-    public void launch() throws Exception {
-        jobLauncher.run(job, new JobParametersBuilder().addDate("date", new Date()).toJobParameters());
-    }
+	public void launch() throws Exception {
+		jobLauncher.run(job, new JobParametersBuilder().addDate("date", new Date()).toJobParameters());
+	}
 }

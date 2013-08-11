@@ -18,16 +18,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImportProductsExecutionListener {
 
-    @BeforeStep
-    public void beforeStep(StepExecution stepExecution) {
-        log.info("스텝 실행 전에 호출되는 리스너의 메소드입니다.");
-    }
+	@BeforeStep
+	public void beforeStep(StepExecution stepExecution) {
+		log.info("스텝 실행 전에 호출되는 리스너의 메소드입니다.");
+	}
 
-    @AfterStep
-    public ExitStatus afterStep(StepExecution stepExecution) {
-        log.info("스텝 완료 후 호출됩니다. StepName=[{}], ExitStatus=[{}]",
-                 stepExecution.getStepName(), stepExecution.getExitStatus());
+	@AfterStep
+	public ExitStatus afterStep(StepExecution stepExecution) {
+		log.info("스텝 완료 후 호출됩니다. StepName=[{}], ExitStatus=[{}]",
+		         stepExecution.getStepName(), stepExecution.getExitStatus());
 
-        return ExitStatus.COMPLETED;
-    }
+		return ExitStatus.COMPLETED;
+	}
 }

@@ -20,19 +20,19 @@ import java.util.concurrent.TimeUnit;
 @ContextConfiguration(locations = { "classpath:/spring/spring-scheduling-job.xml" })
 public class SpringSchedulingTest {
 
-    @Autowired CountDownLatch xmlCountDownLatch;
+	@Autowired CountDownLatch xmlCountDownLatch;
 
-    @Autowired CountDownLatch annotationCountDownLatch;
+	@Autowired CountDownLatch annotationCountDownLatch;
 
-    @Test
-    public void xmlSpringScheduling() throws Exception {
-        Assertions.assertThat(xmlCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
-    }
+	@Test
+	public void xmlSpringScheduling() throws Exception {
+		Assertions.assertThat(xmlCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
+	}
 
-    @Test
-    public void annotationSpringScheduling() throws Exception {
-        Assertions.assertThat(annotationCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
-    }
+	@Test
+	public void annotationSpringScheduling() throws Exception {
+		Assertions.assertThat(annotationCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
+	}
 }
 
 

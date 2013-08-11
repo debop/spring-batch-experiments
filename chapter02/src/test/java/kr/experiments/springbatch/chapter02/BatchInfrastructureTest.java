@@ -22,11 +22,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = { RootDatabaseConfiguration.class })
 public class BatchInfrastructureTest {
 
-    @Autowired
-    JobRepository jobRepository;
+	@Autowired
+	JobRepository jobRepository;
 
-    @Test
-    public void jobInstanceExists() {
-        Assertions.assertThat(jobRepository.isJobInstanceExists("dummy-job", new JobParameters())).isFalse();
-    }
+	@Test
+	public void jobInstanceExists() {
+		Assertions.assertThat(jobRepository.isJobInstanceExists("dummy-job", new JobParameters())).isFalse();
+	}
 }

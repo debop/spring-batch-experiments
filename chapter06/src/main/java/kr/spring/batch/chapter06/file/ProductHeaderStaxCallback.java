@@ -20,19 +20,19 @@ import java.util.Date;
 @Slf4j
 public class ProductHeaderStaxCallback implements StaxWriterCallback {
 
-    @Override
-    public void write(XMLEventWriter writer) throws IOException {
-        try {
-            XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+	@Override
+	public void write(XMLEventWriter writer) throws IOException {
+		try {
+			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
-            XMLEvent event = eventFactory.createStartElement("", "", "header");
-            writer.add(event);
-            event = eventFactory.createAttribute("generated", DateFormat.getDateTimeInstance().format(new Date()));
-            writer.add(event);
-            event = eventFactory.createEndElement("", "", "header");
-            writer.add(event);
-        } catch (XMLStreamException ignored) {
-            log.warn("Header를 쓰는데 예외가 발생했습니다.", ignored);
-        }
-    }
+			XMLEvent event = eventFactory.createStartElement("", "", "header");
+			writer.add(event);
+			event = eventFactory.createAttribute("generated", DateFormat.getDateTimeInstance().format(new Date()));
+			writer.add(event);
+			event = eventFactory.createEndElement("", "", "header");
+			writer.add(event);
+		} catch (XMLStreamException ignored) {
+			log.warn("Header를 쓰는데 예외가 발생했습니다.", ignored);
+		}
+	}
 }

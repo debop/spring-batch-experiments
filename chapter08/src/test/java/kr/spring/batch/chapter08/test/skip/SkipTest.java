@@ -22,49 +22,49 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { SkipConfiguration.class })
 public class SkipTest {
 
-    @Autowired
-    JobLauncher jobLauncher;
+	@Autowired
+	JobLauncher jobLauncher;
 
-    @Autowired
-    private Job importProductsJob;
+	@Autowired
+	private Job importProductsJob;
 
-    @Autowired
-    private Job importProductsJobWithSkipPolicy;
+	@Autowired
+	private Job importProductsJobWithSkipPolicy;
 
-    @Test
-    public void jobWithNoSkip() throws Exception {
-        int initialCount = countProducts();
-        int initialSkippedCount = countSkippedProducts();
+	@Test
+	public void jobWithNoSkip() throws Exception {
+		int initialCount = countProducts();
+		int initialSkippedCount = countSkippedProducts();
 
-        JobParameters params = new JobParametersBuilder()
-                .addString("inputFile", "classpath:skip/products_no_error.txt")
-                .toJobParameters();
+		JobParameters params = new JobParametersBuilder()
+				.addString("inputFile", "classpath:skip/products_no_error.txt")
+				.toJobParameters();
 
-        JobExecution exec = jobLauncher.run(importProductsJob, params);
+		JobExecution exec = jobLauncher.run(importProductsJob, params);
 
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        assertThat(countProducts()).isEqualTo(initialCount + 8);
-        assertThat(getStepExec(exec).getSkipCount()).isEqualTo(0);
-        assertThat(getStepExec(exec).getRollbackCount()).isEqualTo(0);
-        assertThat(countSkippedProducts()).isEqualTo(initialSkippedCount + getStepExec(exec).getSkipCount());
-    }
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(countProducts()).isEqualTo(initialCount + 8);
+		assertThat(getStepExec(exec).getSkipCount()).isEqualTo(0);
+		assertThat(getStepExec(exec).getRollbackCount()).isEqualTo(0);
+		assertThat(countSkippedProducts()).isEqualTo(initialSkippedCount + getStepExec(exec).getSkipCount());
+	}
 
 
-    @Autowired
-    ProductRepository productRepository;
+	@Autowired
+	ProductRepository productRepository;
 
-    @Autowired
-    SkippedProductRepository skippedProductRepository;
+	@Autowired
+	SkippedProductRepository skippedProductRepository;
 
-    private int countProducts() {
-        return Long.valueOf(productRepository.count()).intValue();
-    }
+	private int countProducts() {
+		return Long.valueOf(productRepository.count()).intValue();
+	}
 
-    private int countSkippedProducts() {
-        return Long.valueOf(skippedProductRepository.count()).intValue();
-    }
+	private int countSkippedProducts() {
+		return Long.valueOf(skippedProductRepository.count()).intValue();
+	}
 
-    private StepExecution getStepExec(JobExecution exec) {
-        return exec.getStepExecutions().iterator().next();
-    }
+	private StepExecution getStepExec(JobExecution exec) {
+		return exec.getStepExecutions().iterator().next();
+	}
 }

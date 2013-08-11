@@ -14,7 +14,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 @Slf4j
 public class LaunchDatabaseAndConsole {
 
-    public static void main(String[] args) throws Exception {
-        new AnnotationConfigApplicationContext(RootDatabaseConfiguration.class);
-    }
+	public static void main(String[] args) throws Exception {
+		new AnnotationConfigApplicationContext(RootDatabaseConfiguration.class);
+	}
 }

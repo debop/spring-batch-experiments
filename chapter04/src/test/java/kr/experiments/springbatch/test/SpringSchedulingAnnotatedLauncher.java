@@ -17,19 +17,19 @@ import java.util.Date;
  */
 public class SpringSchedulingAnnotatedLauncher {
 
-    @Setter Job job;
+	@Setter Job job;
 
-    @Setter JobLauncher jobLauncher;
+	@Setter JobLauncher jobLauncher;
 
-    @Scheduled(fixedRate = 1000)
-    public void launch() throws Exception {
-        JobParameters jobParameters = createJobParameters();
-        jobLauncher.run(job, jobParameters);
-    }
+	@Scheduled(fixedRate = 1000)
+	public void launch() throws Exception {
+		JobParameters jobParameters = createJobParameters();
+		jobLauncher.run(job, jobParameters);
+	}
 
-    private JobParameters createJobParameters() {
-        return new JobParametersBuilder()
-            .addDate("date", new Date())
-            .toJobParameters();
-    }
+	private JobParameters createJobParameters() {
+		return new JobParametersBuilder()
+				.addDate("date", new Date())
+				.toJobParameters();
+	}
 }

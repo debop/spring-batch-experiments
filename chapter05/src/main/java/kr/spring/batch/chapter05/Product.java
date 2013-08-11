@@ -28,17 +28,17 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Product implements Serializable {
 
-    @Id
-    private String id;
+	@Id
+	private String id;
 
-    @Column
-    private String name;
+	@Column
+	private String name;
 
-    @Column
-    private String description;
+	@Column
+	private String description;
 
-    @Column
-    private float price;
+	@Column
+	private float price;
 
-    private static final long serialVersionUID = 8749332872056005194L;
+	private static final long serialVersionUID = 8749332872056005194L;
 }

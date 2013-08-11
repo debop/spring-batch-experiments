@@ -15,10 +15,10 @@ import org.springframework.batch.repeat.RepeatStatus;
 @Slf4j
 public class DummyTasklet implements Tasklet {
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
-        log.info("Execute Tasklet... StepName=[{}]", chunkContext.getStepContext().getStepName());
-        return RepeatStatus.FINISHED;
-    }
+		log.info("Execute Tasklet... StepName=[{}]", chunkContext.getStepContext().getStepName());
+		return RepeatStatus.FINISHED;
+	}
 }

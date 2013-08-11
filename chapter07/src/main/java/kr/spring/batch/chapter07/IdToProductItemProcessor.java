@@ -12,10 +12,10 @@ import org.springframework.batch.item.ItemProcessor;
  */
 public class IdToProductItemProcessor implements ItemProcessor<String, Product> {
 
-    @Setter private ProductRepository productRepository;
+	@Setter private ProductRepository productRepository;
 
-    @Override
-    public Product process(String productId) throws Exception {
-        return productRepository.findOne(productId);
-    }
+	@Override
+	public Product process(String productId) throws Exception {
+		return productRepository.findOne(productId);
+	}
 }

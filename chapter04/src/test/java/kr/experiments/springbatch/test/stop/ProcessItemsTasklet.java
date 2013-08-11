@@ -16,25 +16,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessItemsTasklet implements Tasklet {
 
-    @Setter private boolean stop;
+	@Setter private boolean stop;
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        if (shouldStop()) {
-            // HINT: 종료 요청이 왔으므로 종료하도록 한다.
-            chunkContext.getStepContext().getStepExecution().setTerminateOnly();
-        }
-        processItem();
-        return moreItemsToProcess() ? RepeatStatus.CONTINUABLE : RepeatStatus.FINISHED;
-    }
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		if (shouldStop()) {
+			// HINT: 종료 요청이 왔으므로 종료하도록 한다.
+			chunkContext.getStepContext().getStepExecution().setTerminateOnly();
+		}
+		processItem();
+		return moreItemsToProcess() ? RepeatStatus.CONTINUABLE : RepeatStatus.FINISHED;
+	}
 
-    private void processItem() {}
+	private void processItem() {}
 
-    private boolean moreItemsToProcess() {
-        return true;
-    }
+	private boolean moreItemsToProcess() {
+		return true;
+	}
 
-    private boolean shouldStop() {
-        return stop;
-    }
+	private boolean shouldStop() {
+		return stop;
+	}
 }

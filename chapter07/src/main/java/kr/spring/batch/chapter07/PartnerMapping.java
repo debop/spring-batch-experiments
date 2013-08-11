@@ -25,23 +25,23 @@ import java.io.Serializable;
 @Setter
 public class PartnerMapping implements Serializable {
 
-    public PartnerMapping() {}
+	public PartnerMapping() {}
 
-    public PartnerMapping(String partnerId, String partnerProductId, String storedProductId) {
-        this.partnerId = partnerId;
-        this.productId = partnerProductId;
-        this.id = storedProductId;
-    }
+	public PartnerMapping(String partnerId, String partnerProductId, String storedProductId) {
+		this.partnerId = partnerId;
+		this.productId = partnerProductId;
+		this.id = storedProductId;
+	}
 
-    @Id
-    @Column(name = "stored_product_id")
-    private String id;
+	@Id
+	@Column(name = "stored_product_id")
+	private String id;
 
-    @Column(name = "partner_id")
-    private String partnerId;
+	@Column(name = "partner_id")
+	private String partnerId;
 
-    @Column(name = "partner_productId")
-    private String productId;
+	@Column(name = "partner_productId")
+	private String productId;
 
-    private static final long serialVersionUID = 3743425567027351965L;
+	private static final long serialVersionUID = 3743425567027351965L;
 }

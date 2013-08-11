@@ -17,14 +17,14 @@ import java.util.Date;
  */
 public class JobLaunchImportProductsJob {
 
-    public static void main(String[] args) throws Exception {
-        ApplicationContext context = new AnnotationConfigApplicationContext(ImportProductsConfiguration.class);
+	public static void main(String[] args) throws Exception {
+		ApplicationContext context = new AnnotationConfigApplicationContext(ImportProductsConfiguration.class);
 
-        JobLauncher jobLauncher = context.getBean(JobLauncher.class);
-        Job job = context.getBean(Job.class);
+		JobLauncher jobLauncher = context.getBean(JobLauncher.class);
+		Job job = context.getBean(Job.class);
 
-        jobLauncher.run(job, new JobParametersBuilder().addString("inputFile", "file:./products.txt")
-                                                       .addDate("date", new Date())
-                                                       .toJobParameters());
-    }
+		jobLauncher.run(job, new JobParametersBuilder().addString("inputFile", "file:./products.txt")
+		                                               .addDate("date", new Date())
+		                                               .toJobParameters());
+	}
 }

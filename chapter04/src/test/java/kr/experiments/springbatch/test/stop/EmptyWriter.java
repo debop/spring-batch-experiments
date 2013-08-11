@@ -13,8 +13,8 @@ import java.util.List;
  */
 @Component("productItemWriter")
 public class EmptyWriter implements ItemWriter<String> {
-    @Override
-    public void write(List<? extends String> items) throws Exception {
-        // nothing to do.
-    }
+	@Override
+	public void write(List<? extends String> items) throws Exception {
+		// nothing to do.
+	}
 }

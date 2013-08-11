@@ -24,35 +24,35 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class FlatFileReaderConfiguration {
 
-    @Bean
-    @StepScope
-    public FlatFileItemReader<Product> productItemReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+	@Bean
+	@StepScope
+	public FlatFileItemReader<Product> productItemReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        reader.setResource(new ClassPathResource(inputFile));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper());
+		reader.setResource(new ClassPathResource(inputFile));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public DefaultLineMapper<Product> productLineMapper() {
-        DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
-        lineMapper.setLineTokenizer(productLineTokenizer());
-        lineMapper.setFieldSetMapper(productFieldSetMapper());
-        return lineMapper;
-    }
+	@Bean
+	public DefaultLineMapper<Product> productLineMapper() {
+		DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
+		lineMapper.setLineTokenizer(productLineTokenizer());
+		lineMapper.setFieldSetMapper(productFieldSetMapper());
+		return lineMapper;
+	}
 
-    @Bean
-    public LineTokenizer productLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer productLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
+		return tokenizer;
+	}
 
-    @Bean
-    public FieldSetMapper<Product> productFieldSetMapper() {
-        return new ProductFieldSetMapper();
-    }
+	@Bean
+	public FieldSetMapper<Product> productFieldSetMapper() {
+		return new ProductFieldSetMapper();
+	}
 }

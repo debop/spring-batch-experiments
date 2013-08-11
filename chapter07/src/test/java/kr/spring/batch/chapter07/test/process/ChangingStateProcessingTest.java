@@ -27,53 +27,53 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { ChangingStateProcessingConfiguration.class })
 public class ChangingStateProcessingTest extends AbstractJobTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    @Qualifier("readWriteJob")
-    private Job jobWithItemProcessor;
+	@Autowired
+	@Qualifier("readWriteJob")
+	private Job jobWithItemProcessor;
 
-    @Autowired
-    @Qualifier("readWriteJobPojo")
-    private Job jobWithAdapter;
+	@Autowired
+	@Qualifier("readWriteJobPojo")
+	private Job jobWithAdapter;
 
-    @Autowired
-    private ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        productRepository.deleteAll();
-    }
+	@Before
+	public void setUp() {
+		super.setUp();
+		productRepository.deleteAll();
+	}
 
-    @Test
-    public void changingState() throws Exception {
-        JobExecution exec = jobLauncher.run(jobWithItemProcessor,
-                                            new JobParametersBuilder()
-                                                .addString("inputFile", "/products.txt")
-                                                .toJobParameters());
+	@Test
+	public void changingState() throws Exception {
+		JobExecution exec = jobLauncher.run(jobWithItemProcessor,
+		                                    new JobParametersBuilder()
+				                                    .addString("inputFile", "/products.txt")
+				                                    .toJobParameters());
 
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        assertThat(productRepository.count()).isEqualTo(8);
-        for (Product product : productRepository.findAll()) {
-            assertThat(product.getId()).startsWith("PR");
-            assertThat(product.getName()).endsWith("(P1)");
-        }
-    }
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(productRepository.count()).isEqualTo(8);
+		for (Product product : productRepository.findAll()) {
+			assertThat(product.getId()).startsWith("PR");
+			assertThat(product.getName()).endsWith("(P1)");
+		}
+	}
 
-    @Test
-    public void changingStateWithAdapter() throws Exception {
-        JobExecution exec = jobLauncher.run(jobWithAdapter,
-                                            new JobParametersBuilder()
-                                                .addString("inputFile", "/products.txt")
-                                                .toJobParameters());
+	@Test
+	public void changingStateWithAdapter() throws Exception {
+		JobExecution exec = jobLauncher.run(jobWithAdapter,
+		                                    new JobParametersBuilder()
+				                                    .addString("inputFile", "/products.txt")
+				                                    .toJobParameters());
 
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        assertThat(productRepository.count()).isEqualTo(8);
-        for (Product product : productRepository.findAll()) {
-            assertThat(product.getId()).startsWith("PR");
-            assertThat(product.getName()).endsWith("(P1)");
-        }
-    }
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(productRepository.count()).isEqualTo(8);
+		for (Product product : productRepository.findAll()) {
+			assertThat(product.getId()).startsWith("PR");
+			assertThat(product.getName()).endsWith("(P1)");
+		}
+	}
 }

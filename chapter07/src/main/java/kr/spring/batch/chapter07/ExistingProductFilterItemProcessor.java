@@ -12,16 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ExistingProductFilterItemProcessor implements ItemProcessor<Product, Product> {
 
-    @Autowired
-    ProductRepository repository;
+	@Autowired
+	ProductRepository repository;
 
-    @Override
-    public Product process(Product product) throws Exception {
-        // 기존 Product가 존재하면 필터링 해버린다.
-        return needsToBeFiltered(product) ? null : product;
-    }
+	@Override
+	public Product process(Product product) throws Exception {
+		// 기존 Product가 존재하면 필터링 해버린다.
+		return needsToBeFiltered(product) ? null : product;
+	}
 
-    private boolean needsToBeFiltered(Product product) {
-        return repository.exists(product.getId());
-    }
+	private boolean needsToBeFiltered(Product product) {
+		return repository.exists(product.getId());
+	}
 }

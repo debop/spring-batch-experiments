@@ -35,50 +35,50 @@ import java.util.HashMap;
 @Import({ FlatFileReaderConfiguration.class, JpaHSqlConfiguration.class })
 public class JobClassifierCompositeItemWriterConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Autowired
-    ItemReader<Product> productItemReader;
+	@Autowired
+	ItemReader<Product> productItemReader;
 
-    @Bean
-    public Job writeProductsJob() {
-        return jobBuilders.get("writeProductJob")
-                          .start(readWriteStep())
-                          .build();
-    }
+	@Bean
+	public Job writeProductsJob() {
+		return jobBuilders.get("writeProductJob")
+		                  .start(readWriteStep())
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep() {
-        return stepBuilders.get("readWriteStep")
-                           .<Product, Product>chunk(3)
-                           .reader(productItemReader)
-                           .writer(productItemWriter())
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep() {
+		return stepBuilders.get("readWriteStep")
+		                   .<Product, Product>chunk(3)
+		                   .reader(productItemReader)
+		                   .writer(productItemWriter())
+		                   .build();
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter() {
-        BackToBackPatternClassifier classifier = new BackToBackPatternClassifier();
-        classifier.setRouterDelegate(new ProductRouterClassifier());
-        classifier.setMatcherMap(new HashMap<String, ItemWriter<? extends Product>>() {{
-            put("C", insertJpaBatchItemWriter());
-            put("U", insertJpaBatchItemWriter());
-            put("D", deleteJpaBatchItemWriter());
-        }});
+	@Bean
+	public ItemWriter<Product> productItemWriter() {
+		BackToBackPatternClassifier classifier = new BackToBackPatternClassifier();
+		classifier.setRouterDelegate(new ProductRouterClassifier());
+		classifier.setMatcherMap(new HashMap<String, ItemWriter<? extends Product>>() {{
+			put("C", insertJpaBatchItemWriter());
+			put("U", insertJpaBatchItemWriter());
+			put("D", deleteJpaBatchItemWriter());
+		}});
 
-        ClassifierCompositeItemWriter<Product> writer = new ClassifierCompositeItemWriter<Product>();
-        writer.setClassifier(classifier);
-        return writer;
-    }
+		ClassifierCompositeItemWriter<Product> writer = new ClassifierCompositeItemWriter<Product>();
+		writer.setClassifier(classifier);
+		return writer;
+	}
 
-    @Bean
-    public ItemWriter<Product> insertJpaBatchItemWriter() {
-        return new InsertProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> insertJpaBatchItemWriter() {
+		return new InsertProductItemWriter();
+	}
 
-    @Bean
-    public ItemWriter<Product> deleteJpaBatchItemWriter() {
-        return new DeleteProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> deleteJpaBatchItemWriter() {
+		return new DeleteProductItemWriter();
+	}
 }

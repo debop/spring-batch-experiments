@@ -13,6 +13,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface PartnerMappingRepository extends JpaRepository<PartnerMapping, String> {
 
-    @Query("select pm from PartnerMapping pm where pm.partnerId = :partnerId and pm.productId = :productId")
-    PartnerMapping findByPartnerIdAndProductId(@Param("partnerId") String partnerId, @Param("productId") String productId);
+	@Query("select pm from PartnerMapping pm where pm.partnerId = :partnerId and pm.productId = :productId")
+	PartnerMapping findByPartnerIdAndProductId(@Param("partnerId") String partnerId, @Param("productId") String productId);
 }

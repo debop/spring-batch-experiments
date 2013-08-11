@@ -27,34 +27,34 @@ import org.springframework.core.io.FileSystemResource;
 @Import({ FlatFileReaderConfiguration.class })
 public class JobDelimitedPassThroughFieldExtractorFlatFileConfiguration extends AbstractJobConfiguration {
 
-    public static final String OUTPUT_FILE = "target/outputs/delimited-passthroughExtractor.txt";
+	public static final String OUTPUT_FILE = "target/outputs/delimited-passthroughExtractor.txt";
 
-    @Autowired
-    FlatFileItemReader<Product> productItemReader;
+	@Autowired
+	FlatFileItemReader<Product> productItemReader;
 
-    @Bean
-    public Job writeProductJob() {
-        Step step = stepBuilders.get("readWrite")
-                                .<Product, Product>chunk(10)
-                                .reader(productItemReader)
-                                .writer(productItemWriter())
-                                .build();
+	@Bean
+	public Job writeProductJob() {
+		Step step = stepBuilders.get("readWrite")
+		                        .<Product, Product>chunk(10)
+		                        .reader(productItemReader)
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("writeProductJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("writeProductJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public FlatFileItemWriter<Product> productItemWriter() {
-        FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
-        writer.setResource(new FileSystemResource(OUTPUT_FILE));
+	@Bean
+	public FlatFileItemWriter<Product> productItemWriter() {
+		FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
+		writer.setResource(new FileSystemResource(OUTPUT_FILE));
 
-        DelimitedLineAggregator<Product> aggregator = new DelimitedLineAggregator<Product>();
-        aggregator.setFieldExtractor(new PassThroughFieldExtractor<Product>());
+		DelimitedLineAggregator<Product> aggregator = new DelimitedLineAggregator<Product>();
+		aggregator.setFieldExtractor(new PassThroughFieldExtractor<Product>());
 
-        writer.setLineAggregator(aggregator);
+		writer.setLineAggregator(aggregator);
 
-        return writer;
-    }
+		return writer;
+	}
 }

@@ -11,15 +11,15 @@ import org.springframework.batch.item.ItemProcessor;
  * @since 13. 8. 8. 오후 3:33
  */
 public class FilteringProductItemProcessor implements ItemProcessor<Product, Product> {
-    @Override
-    public Product process(Product item) throws Exception {
-        return needsToBeFiltered(item) ? null : item;
-    }
+	@Override
+	public Product process(Product item) throws Exception {
+		return needsToBeFiltered(item) ? null : item;
+	}
 
-    private boolean needsToBeFiltered(Product item) {
-        String id = item.getId();
-        String lastDigit = id.substring(id.length() - 1, id.length());
+	private boolean needsToBeFiltered(Product item) {
+		String id = item.getId();
+		String lastDigit = id.substring(id.length() - 1, id.length());
 
-        return NumberUtils.isDigits(lastDigit) && NumberUtils.toInt(lastDigit) % 2 == 1;
-    }
+		return NumberUtils.isDigits(lastDigit) && NumberUtils.toInt(lastDigit) % 2 == 1;
+	}
 }

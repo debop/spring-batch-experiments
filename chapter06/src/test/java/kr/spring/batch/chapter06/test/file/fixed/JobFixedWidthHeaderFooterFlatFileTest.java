@@ -27,19 +27,19 @@ import java.text.DecimalFormatSymbols;
 @ContextConfiguration(classes = { JobFixedWidthHeaderFooterFlatFileConfiguration.class })
 public class JobFixedWidthHeaderFooterFlatFileTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    char decimalSeparator = DecimalFormatSymbols.getInstance().getDecimalSeparator();
+	char decimalSeparator = DecimalFormatSymbols.getInstance().getDecimalSeparator();
 
-    @Test
-    public void delimitedJob() throws Exception {
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	@Test
+	public void delimitedJob() throws Exception {
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        Resource output = new FileSystemResource(JobFixedWidthHeaderFooterFlatFileConfiguration.OUTPUT_FILE);
-        AssertLine.assertLineFileEquals(output, 2, "PR....210124" + decimalSeparator + "60BlackBerry 8100 Pearl         ");
-        AssertLine.assertLineFileEquals(output, 8, "PR....216289" + decimalSeparator + "20AT&T 8525 PDA                 ");
-        AssertLine.assertLineFileEquals(output, 9, "PR....217 13" + decimalSeparator + "70Canon Digital Rebel XT 8MP    ");
-    }
+		Resource output = new FileSystemResource(JobFixedWidthHeaderFooterFlatFileConfiguration.OUTPUT_FILE);
+		AssertLine.assertLineFileEquals(output, 2, "PR....210124" + decimalSeparator + "60BlackBerry 8100 Pearl         ");
+		AssertLine.assertLineFileEquals(output, 8, "PR....216289" + decimalSeparator + "20AT&T 8525 PDA                 ");
+		AssertLine.assertLineFileEquals(output, 9, "PR....217 13" + decimalSeparator + "70Canon Digital Rebel XT 8MP    ");
+	}
 }

@@ -2,11 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:batch="http://www.springframework.org/schema/batch"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:bean="http://www.springframework.org/schema/batch"
+       xmlns:bean="http://www.springframework.org/schema/batch"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <!-- Quartz -->
@@ -37,17 +37,17 @@
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="jobDetailTrigger" />
+                <ref bean="jobDetailTrigger"/>
             </list>
         </property>
         <property name="jobFactory">
-            <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory" />
+            <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
         </property>
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
         <property name="schedulerContextAsMap">
             <map>
-                <entry key="job" value-ref="job" />
-                <entry key="jobLauncher" value-ref="jobLauncher" />
+                <entry key="job" value-ref="job"/>
+                <entry key="jobLauncher" value-ref="jobLauncher"/>
             </map>
         </property>
     </bean>

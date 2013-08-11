@@ -15,7 +15,7 @@
                 <listeners>
                     <listener ref="importProductsExecutionListener"/>
                 </listeners>
-                <chunk reader="productItemReader" writer="productItemWriter" commit-interval="100" />
+                <chunk reader="productItemReader" writer="productItemWriter" commit-interval="100"/>
             </tasklet>
         </step>
     </job>

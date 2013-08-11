@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModifyExitStatusListener extends StepExecutionListenerSupport {
 
-    @Override
-    public ExitStatus afterStep(StepExecution stepExecution) {
-        JobParameters jobParameters = stepExecution.getJobExecution().getJobParameters();
-        String exitStatus = jobParameters.getString("exit.status");
+	@Override
+	public ExitStatus afterStep(StepExecution stepExecution) {
+		JobParameters jobParameters = stepExecution.getJobExecution().getJobParameters();
+		String exitStatus = jobParameters.getString("exit.status");
 
-        if (exitStatus != null)
-            return new ExitStatus(exitStatus);
+		if (exitStatus != null)
+			return new ExitStatus(exitStatus);
 
-        return super.afterStep(stepExecution);
-    }
+		return super.afterStep(stepExecution);
+	}
 }

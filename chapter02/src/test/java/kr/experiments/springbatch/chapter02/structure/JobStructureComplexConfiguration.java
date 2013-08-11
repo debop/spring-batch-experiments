@@ -35,102 +35,102 @@ import javax.sql.DataSource;
 @Import({ RootDatabaseConfiguration.class })
 public class JobStructureComplexConfiguration {
 
-    private static final String[] FIELD_NAMES = new String[]{ "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" };
+	private static final String[] FIELD_NAMES = new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" };
 
-    private static final String OVERRIDDEN_BY_EXPRESSION = null;
+	private static final String OVERRIDDEN_BY_EXPRESSION = null;
 
-    @Autowired
-    JobBuilderFactory jobBuilders;
+	@Autowired
+	JobBuilderFactory jobBuilders;
 
-    @Autowired
-    StepBuilderFactory stepBuilders;
+	@Autowired
+	StepBuilderFactory stepBuilders;
 
-    @Autowired
-    JobRepository jobRepository;
+	@Autowired
+	JobRepository jobRepository;
 
-    @Autowired
-    JobRegistry jobRegistry;
+	@Autowired
+	JobRegistry jobRegistry;
 
-    @Autowired
-    PlatformTransactionManager transactionManager;
+	@Autowired
+	PlatformTransactionManager transactionManager;
 
-    @Autowired
-    DataSource dataSource;
+	@Autowired
+	DataSource dataSource;
 
-    @Autowired
-    JobExecutionListener loggerListener;
+	@Autowired
+	JobExecutionListener loggerListener;
 
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource);
-    }
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource);
+	}
 
-    @Bean
-    public JobExecutionDecider skippedDecider() {
-        return new SkippedDecider();
-    }
+	@Bean
+	public JobExecutionDecider skippedDecider() {
+		return new SkippedDecider();
+	}
 
-    @Bean
-    ItemReader<Product> reader() {
-        return new DummyItemReader();
-    }
+	@Bean
+	ItemReader<Product> reader() {
+		return new DummyItemReader();
+	}
 
-    @Bean
-    public ItemWriter<Product> writer() {
-        return new DummyItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> writer() {
+		return new DummyItemWriter();
+	}
 
-    @Bean
-    public Tasklet dummyTasklet() {
-        return new DummyTasklet();
-    }
+	@Bean
+	public Tasklet dummyTasklet() {
+		return new DummyTasklet();
+	}
 
-    @Bean
-    public Job importProductsJob(Tasklet dummyTasklet, ItemReader<Product> reader) {
+	@Bean
+	public Job importProductsJob(Tasklet dummyTasklet, ItemReader<Product> reader) {
 
-        Step decompress = stepBuilders.get("decompress")
-                                      .tasklet(dummyTasklet)
-                                      .repository(jobRepository)
-                                      .transactionManager(transactionManager)
-                                      .build();
+		Step decompress = stepBuilders.get("decompress")
+		                              .tasklet(dummyTasklet)
+		                              .repository(jobRepository)
+		                              .transactionManager(transactionManager)
+		                              .build();
 
-        Step readWrite = stepBuilders.get("readWriteProducts")
-                                     .<Product, Product>chunk(100)
-                                     .reader(reader)
-                                     .writer(writer())
-                                     .faultTolerant()
-                                     .skipLimit(5)
-                                     .skip(FlatFileParseException.class)
-                                     .build();
+		Step readWrite = stepBuilders.get("readWriteProducts")
+		                             .<Product, Product>chunk(100)
+		                             .reader(reader)
+		                             .writer(writer())
+		                             .faultTolerant()
+		                             .skipLimit(5)
+		                             .skip(FlatFileParseException.class)
+		                             .build();
 
-        Step generateReport = stepBuilders.get("generateReport")
-                                          .tasklet(dummyTasklet)
-                                          .repository(jobRepository)
-                                          .transactionManager(transactionManager)
-                                          .build();
+		Step generateReport = stepBuilders.get("generateReport")
+		                                  .tasklet(dummyTasklet)
+		                                  .repository(jobRepository)
+		                                  .transactionManager(transactionManager)
+		                                  .build();
 
-        Step sendReport = stepBuilders.get("sendReport")
-                                      .tasklet(dummyTasklet)
-                                      .repository(jobRepository)
-                                      .transactionManager(transactionManager)
-                                      .build();
+		Step sendReport = stepBuilders.get("sendReport")
+		                              .tasklet(dummyTasklet)
+		                              .repository(jobRepository)
+		                              .transactionManager(transactionManager)
+		                              .build();
 
-        Step clean = stepBuilders.get("clean")
-                                 .tasklet(dummyTasklet)
-                                 .repository(jobRepository)
-                                 .transactionManager(transactionManager)
-                                 .build();
+		Step clean = stepBuilders.get("clean")
+		                         .tasklet(dummyTasklet)
+		                         .repository(jobRepository)
+		                         .transactionManager(transactionManager)
+		                         .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .repository(jobRepository)
-                          .listener(loggerListener)
-                          .start(decompress)
-                          .next(readWrite)
-                          .start(skippedDecider()).from(readWrite).on("SKIPPED").to(generateReport).on("*").to(clean).end()
-                          .start(generateReport)
-                          .next(sendReport)
-                          .next(clean)
-                          .end()
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .repository(jobRepository)
+		                  .listener(loggerListener)
+		                  .start(decompress)
+		                  .next(readWrite)
+		                  .start(skippedDecider()).from(readWrite).on("SKIPPED").to(generateReport).on("*").to(clean).end()
+		                  .start(generateReport)
+		                  .next(sendReport)
+		                  .next(clean)
+		                  .end()
+		                  .build();
+	}
 }

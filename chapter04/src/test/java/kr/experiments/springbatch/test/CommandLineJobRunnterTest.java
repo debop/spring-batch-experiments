@@ -17,49 +17,49 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class CommandLineJobRunnterTest {
 
-    @Test
-    public void run() throws Exception {
+	@Test
+	public void run() throws Exception {
 
-        final Queue<Integer> exitCode = new ArrayBlockingQueue<Integer>(1);
-        CommandLineJobRunner.presetSystemExiter(new SystemExiter() {
-            @Override
-            public void exit(int status) {
-                exitCode.add(status);
-            }
-        });
+		final Queue<Integer> exitCode = new ArrayBlockingQueue<Integer>(1);
+		CommandLineJobRunner.presetSystemExiter(new SystemExiter() {
+			@Override
+			public void exit(int status) {
+				exitCode.add(status);
+			}
+		});
 
-        CommandLineJobRunner.main(new String[] {
-            "/spring/import-products-job-exit-code.xml",
-            "importProductsJob"
-        });
-        assertThat(exitCode.poll().intValue()).isEqualTo(0);
+		CommandLineJobRunner.main(new String[] {
+				"/spring/import-products-job-exit-code.xml",
+				"importProductsJob"
+		});
+		assertThat(exitCode.poll().intValue()).isEqualTo(0);
 
-        CommandLineJobRunner.main(new String[] {
-            "/spring/import-products-job-exit-code.xml",
-            "importProductsJob",
-            "exit.status=COMPLETED"
-        });
-        assertThat(exitCode.poll().intValue()).isEqualTo(0);
+		CommandLineJobRunner.main(new String[] {
+				"/spring/import-products-job-exit-code.xml",
+				"importProductsJob",
+				"exit.status=COMPLETED"
+		});
+		assertThat(exitCode.poll().intValue()).isEqualTo(0);
 
-        CommandLineJobRunner.main(new String[] {
-            "/spring/import-products-job-exit-code.xml",
-            "importProductsJob",
-            "exit.status=FAILED"
-        });
-        assertThat(exitCode.poll().intValue()).isEqualTo(1);
+		CommandLineJobRunner.main(new String[] {
+				"/spring/import-products-job-exit-code.xml",
+				"importProductsJob",
+				"exit.status=FAILED"
+		});
+		assertThat(exitCode.poll().intValue()).isEqualTo(1);
 
-        CommandLineJobRunner.main(new String[] {
-            "/spring/import-products-job-exit-code.xml",
-            "importProductsJob",
-            "exit.status=COMPLETED WITH SKIPS"
-        });
-        assertThat(exitCode.poll().intValue()).isEqualTo(3);
+		CommandLineJobRunner.main(new String[] {
+				"/spring/import-products-job-exit-code.xml",
+				"importProductsJob",
+				"exit.status=COMPLETED WITH SKIPS"
+		});
+		assertThat(exitCode.poll().intValue()).isEqualTo(3);
 
-        CommandLineJobRunner.main(new String[] {
-            "/spring/import-products-job-exit-code.xml",
-            "importProductsJob",
-            "exit.status=ANYTHING"
-        });
-        assertThat(exitCode.poll().intValue()).isEqualTo(2);
-    }
+		CommandLineJobRunner.main(new String[] {
+				"/spring/import-products-job-exit-code.xml",
+				"importProductsJob",
+				"exit.status=ANYTHING"
+		});
+		assertThat(exitCode.poll().intValue()).isEqualTo(2);
+	}
 }

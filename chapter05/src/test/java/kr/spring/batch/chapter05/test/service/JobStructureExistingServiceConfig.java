@@ -27,46 +27,46 @@ import org.springframework.core.task.TaskExecutor;
 @ComponentScan(basePackageClasses = { ProductServiceAdapter.class })
 public class JobStructureExistingServiceConfig extends AbstractJobConfiguration {
 
-    @Bean
-    @Override
-    public TaskExecutor jobTaskExecutor() throws Exception {
-        return null;
-    }
+	@Bean
+	@Override
+	public TaskExecutor jobTaskExecutor() throws Exception {
+		return null;
+	}
 
-    @Bean
-    public Job importProductsJob(ItemReader<Product> productItemReader) throws Exception {
+	@Bean
+	public Job importProductsJob(ItemReader<Product> productItemReader) throws Exception {
 
-        Step step = stepBuilders.get("importProductsJob")
-                                .<Product, Product>chunk(100)
-                                .reader(productItemReader)
-                                .writer(productItemWriter())
-                                .build();
+		Step step = stepBuilders.get("importProductsJob")
+		                        .<Product, Product>chunk(100)
+		                        .reader(productItemReader)
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public ItemReader<Product> productItemReader(ProductServiceAdapter productServiceAdapter) throws Exception {
-        ItemReaderAdapter<Product> reader = new ItemReaderAdapter<Product>();
-        reader.setTargetObject(productServiceAdapter);
-        reader.setTargetMethod("getProduct");
+	@Bean
+	public ItemReader<Product> productItemReader(ProductServiceAdapter productServiceAdapter) throws Exception {
+		ItemReaderAdapter<Product> reader = new ItemReaderAdapter<Product>();
+		reader.setTargetObject(productServiceAdapter);
+		reader.setTargetMethod("getProduct");
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ProductServiceAdapter productServiceAdapter(ProductService productService) throws Exception {
-        ProductServiceAdapter adapter = new ProductServiceAdapter();
-        adapter.setProductService(productService);
-        adapter.afterPropertiesSet();
+	@Bean
+	public ProductServiceAdapter productServiceAdapter(ProductService productService) throws Exception {
+		ProductServiceAdapter adapter = new ProductServiceAdapter();
+		adapter.setProductService(productService);
+		adapter.afterPropertiesSet();
 
-        return adapter;
-    }
+		return adapter;
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter() {
-        return new DummyProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> productItemWriter() {
+		return new DummyProductItemWriter();
+	}
 }

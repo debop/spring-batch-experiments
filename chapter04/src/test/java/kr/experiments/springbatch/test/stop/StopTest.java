@@ -27,98 +27,98 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(locations = { "classpath:/spring/stop/spring-job.xml" })
 public class StopTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job readWriteJob;
+	@Autowired
+	private Job readWriteJob;
 
-    @Autowired
-    private Job taskletJob;
+	@Autowired
+	private Job taskletJob;
 
-    @Autowired
-    private Job jobOperatorJob;
+	@Autowired
+	private Job jobOperatorJob;
 
-    @Autowired
-    private JobOperator jobOperator;
+	@Autowired
+	private JobOperator jobOperator;
 
-    @Autowired
-    private StopListener stopListener;
+	@Autowired
+	private StopListener stopListener;
 
-    @Autowired
-    private ProcessItemsTasklet tasklet;
+	@Autowired
+	private ProcessItemsTasklet tasklet;
 
-    /**
-     * Listener 에게 Job 중단을 요청합니다.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void stopReadWrite() throws Exception {
-        JobExecution jobExecution = jobLauncher.run(readWriteJob, new JobParameters());
-        assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
-        Set<Long> runningExecutions = jobOperator.getRunningExecutions(readWriteJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(1);
-        stopListener.setStop(true);
+	/**
+	 * Listener 에게 Job 중단을 요청합니다.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void stopReadWrite() throws Exception {
+		JobExecution jobExecution = jobLauncher.run(readWriteJob, new JobParameters());
+		assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
+		Set<Long> runningExecutions = jobOperator.getRunningExecutions(readWriteJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(1);
+		stopListener.setStop(true);
 
-        waitForTermination(readWriteJob);
-        runningExecutions = jobOperator.getRunningExecutions(readWriteJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(0);
-    }
+		waitForTermination(readWriteJob);
+		runningExecutions = jobOperator.getRunningExecutions(readWriteJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(0);
+	}
 
-    /**
-     * Tasklet 에게 Job 중단을 요청합니다.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void stopTasklet() throws Exception {
-        JobExecution jobExecution = jobLauncher.run(taskletJob, new JobParameters());
-        assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
-        Set<Long> runningExecutions = jobOperator.getRunningExecutions(taskletJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(1);
-        tasklet.setStop(true);
+	/**
+	 * Tasklet 에게 Job 중단을 요청합니다.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void stopTasklet() throws Exception {
+		JobExecution jobExecution = jobLauncher.run(taskletJob, new JobParameters());
+		assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
+		Set<Long> runningExecutions = jobOperator.getRunningExecutions(taskletJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(1);
+		tasklet.setStop(true);
 
-        waitForTermination(taskletJob);
-        runningExecutions = jobOperator.getRunningExecutions(taskletJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(0);
-    }
+		waitForTermination(taskletJob);
+		runningExecutions = jobOperator.getRunningExecutions(taskletJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(0);
+	}
 
-    /**
-     * JobOperator 가 Job 중단을 수행합니다.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void stopWithJobOperator() throws Exception {
-        JobExecution jobExecution = jobLauncher.run(jobOperatorJob, new JobParameters());
-        assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
-        Set<Long> runningExecutions = jobOperator.getRunningExecutions(jobOperatorJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(1);
+	/**
+	 * JobOperator 가 Job 중단을 수행합니다.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void stopWithJobOperator() throws Exception {
+		JobExecution jobExecution = jobLauncher.run(jobOperatorJob, new JobParameters());
+		assertThat(jobExecution.getStatus()).isIn(BatchStatus.STARTING, BatchStatus.STARTED);
+		Set<Long> runningExecutions = jobOperator.getRunningExecutions(jobOperatorJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(1);
 
-        Long executionId = runningExecutions.iterator().next();
-        boolean stopMessageSent = jobOperator.stop(executionId);
-        assertThat(stopMessageSent).isTrue();
+		Long executionId = runningExecutions.iterator().next();
+		boolean stopMessageSent = jobOperator.stop(executionId);
+		assertThat(stopMessageSent).isTrue();
 
-        waitForTermination(jobOperatorJob);
-        runningExecutions = jobOperator.getRunningExecutions(jobOperatorJob.getName());
-        assertThat(runningExecutions.size()).isEqualTo(0);
-    }
+		waitForTermination(jobOperatorJob);
+		runningExecutions = jobOperator.getRunningExecutions(jobOperatorJob.getName());
+		assertThat(runningExecutions.size()).isEqualTo(0);
+	}
 
-    private void waitForTermination(Job job) throws NoSuchJobException,
-        InterruptedException {
-        int timeout = 10000;
-        int current = 0;
+	private void waitForTermination(Job job) throws NoSuchJobException,
+			InterruptedException {
+		int timeout = 10000;
+		int current = 0;
 
-        while (jobOperator.getRunningExecutions(job.getName()).size() > 0 && current < timeout) {
-            Thread.sleep(100);
-            current += 100;
-        }
+		while (jobOperator.getRunningExecutions(job.getName()).size() > 0 && current < timeout) {
+			Thread.sleep(100);
+			current += 100;
+		}
 
-        if (jobOperator.getRunningExecutions(job.getName()).size() > 0) {
-            throw new IllegalStateException("the execution hasn't stopped " +
-                                                "in the expected period (timeout = " + timeout + " ms)." +
-                                                "Consider increasing the timeout before checking if it's a bug.");
-        }
-    }
+		if (jobOperator.getRunningExecutions(job.getName()).size() > 0) {
+			throw new IllegalStateException("the execution hasn't stopped " +
+					                                "in the expected period (timeout = " + timeout + " ms)." +
+					                                "Consider increasing the timeout before checking if it's a bug.");
+		}
+	}
 }

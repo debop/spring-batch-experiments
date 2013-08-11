@@ -13,21 +13,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PartnerIdMapper {
 
-    @Setter
-    private String partnerId;
+	@Setter
+	private String partnerId;
 
-    @Setter
-    private PartnerMappingRepository partnerMappingRepository;
+	@Setter
+	private PartnerMappingRepository partnerMappingRepository;
 
 
-    public Product map(Product partnerProduct) {
-        assert partnerMappingRepository != null;
-        assert partnerProduct != null;
+	public Product map(Product partnerProduct) {
+		assert partnerMappingRepository != null;
+		assert partnerProduct != null;
 
-        log.info("retrieve partnerId=[{}], productId=[{}]", partnerId, partnerProduct.getId());
-        PartnerMapping mapping = partnerMappingRepository.findByPartnerIdAndProductId(partnerId, partnerProduct.getId());
+		log.info("retrieve partnerId=[{}], productId=[{}]", partnerId, partnerProduct.getId());
+		PartnerMapping mapping = partnerMappingRepository.findByPartnerIdAndProductId(partnerId, partnerProduct.getId());
 
-        partnerProduct.setId(mapping.getId());
-        return partnerProduct;
-    }
+		partnerProduct.setId(mapping.getId());
+		return partnerProduct;
+	}
 }

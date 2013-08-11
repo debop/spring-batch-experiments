@@ -34,38 +34,38 @@ import javax.persistence.EntityManagerFactory;
 @Import({ JpaHSqlConfiguration.class })
 public class SkipBehaviorConfiguration extends AbstractRobustnessJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Autowired
-    ItemReader<String> reader;
+	@Autowired
+	ItemReader<String> reader;
 
-    @Autowired
-    ItemProcessor<String, String> processor;
+	@Autowired
+	ItemProcessor<String, String> processor;
 
-    @Autowired
-    ItemWriter<String> writer;
+	@Autowired
+	ItemWriter<String> writer;
 
-    @Autowired
-    SkipListener skipListener;
+	@Autowired
+	SkipListener skipListener;
 
-    @Bean
-    public Job importProductsJob() {
-        Step importProductsStep = stepBuilders.get("importProductsStep")
-                                              .<String, String>chunk(5)
-                                              .reader(reader)
-                                              .processor(processor)
-                                              .writer(writer)
-                                              .faultTolerant()
-                                              .skipLimit(5)
-                                              .skip(FlatFileParseException.class)
-                                              .skip(DataIntegrityViolationException.class)
-                                              .listener(skipListener)
-                                              .build();
+	@Bean
+	public Job importProductsJob() {
+		Step importProductsStep = stepBuilders.get("importProductsStep")
+		                                      .<String, String>chunk(5)
+		                                      .reader(reader)
+		                                      .processor(processor)
+		                                      .writer(writer)
+		                                      .faultTolerant()
+		                                      .skipLimit(5)
+		                                      .skip(FlatFileParseException.class)
+		                                      .skip(DataIntegrityViolationException.class)
+		                                      .listener(skipListener)
+		                                      .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(importProductsStep)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(importProductsStep)
+		                  .build();
+	}
 
 }

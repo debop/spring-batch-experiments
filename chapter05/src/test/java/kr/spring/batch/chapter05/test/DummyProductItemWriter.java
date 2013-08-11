@@ -17,10 +17,10 @@ import java.util.List;
 @Component
 public class DummyProductItemWriter implements ItemWriter<Product> {
 
-    @Getter
-    private List<Product> products = Lists.newArrayList();
+	@Getter
+	private List<Product> products = Lists.newArrayList();
 
-    public void write(List<? extends Product> items) throws Exception {
-        products.addAll(items);
-    }
+	public void write(List<? extends Product> items) throws Exception {
+		products.addAll(items);
+	}
 }

@@ -17,30 +17,30 @@ import java.util.Set;
  */
 public class BeanValidationValidator<T> implements Validator<T> {
 
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private javax.validation.Validator validator = factory.getValidator();
+	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	private javax.validation.Validator validator = factory.getValidator();
 
-    public void validate(T value) throws ValidationException {
-        Set<ConstraintViolation<T>> violations = validator.validate(value);
-        if (!violations.isEmpty()) {
-            throw new ValidationException("Validation failed for " + value + ": " + violationsToString(violations));
-        }
-    }
+	public void validate(T value) throws ValidationException {
+		Set<ConstraintViolation<T>> violations = validator.validate(value);
+		if (!violations.isEmpty()) {
+			throw new ValidationException("Validation failed for " + value + ": " + violationsToString(violations));
+		}
+	}
 
-    private String violationsToString(Set<ConstraintViolation<T>> violations) {
-        String glue = ", ";
-        StringBuilder builder = new StringBuilder();
+	private String violationsToString(Set<ConstraintViolation<T>> violations) {
+		String glue = ", ";
+		StringBuilder builder = new StringBuilder();
 
-        Iterator<ConstraintViolation<T>> iter = violations.iterator();
-        while (iter.hasNext()) {
-            ConstraintViolation<T> violation = iter.next();
-            builder.append(violation.getPropertyPath())
-                   .append(" ")
-                   .append(violation.getMessage());
+		Iterator<ConstraintViolation<T>> iter = violations.iterator();
+		while (iter.hasNext()) {
+			ConstraintViolation<T> violation = iter.next();
+			builder.append(violation.getPropertyPath())
+			       .append(" ")
+			       .append(violation.getMessage());
 
-            if (iter.hasNext())
-                builder.append(glue);
-        }
-        return builder.toString();
-    }
+			if (iter.hasNext())
+				builder.append(glue);
+		}
+		return builder.toString();
+	}
 }

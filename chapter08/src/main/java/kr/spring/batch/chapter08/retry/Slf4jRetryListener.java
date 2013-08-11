@@ -13,8 +13,8 @@ import org.springframework.retry.listener.RetryListenerSupport;
  */
 @Slf4j
 public class Slf4jRetryListener extends RetryListenerSupport {
-    @Override
-    public <T> void onError(RetryContext context, RetryCallback<T> callback, Throwable throwable) {
-        log.error("retried operation", throwable);
-    }
+	@Override
+	public <T> void onError(RetryContext context, RetryCallback<T> callback, Throwable throwable) {
+		log.error("retried operation", throwable);
+	}
 }

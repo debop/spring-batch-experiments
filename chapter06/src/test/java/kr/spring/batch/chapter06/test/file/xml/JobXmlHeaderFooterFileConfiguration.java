@@ -30,60 +30,60 @@ import java.util.HashMap;
 @Import({ FlatFileReaderConfiguration.class })
 public class JobXmlHeaderFooterFileConfiguration extends AbstractJobConfiguration {
 
-    public static final String OUTPUT_FILE = "target/outputs/products-headerfooter.xml";
+	public static final String OUTPUT_FILE = "target/outputs/products-headerfooter.xml";
 
-    @Autowired
-    FlatFileItemReader<Product> productItemReader;
+	@Autowired
+	FlatFileItemReader<Product> productItemReader;
 
-    @Bean
-    public Job writeProductJob() {
-        Step step = stepBuilders.get("readWrite")
-                                .<Product, Product>chunk(10)
-                                .reader(productItemReader)
-                                .writer(productItemWriter())
-                                .listener(footerCallback())
-                                .build();
+	@Bean
+	public Job writeProductJob() {
+		Step step = stepBuilders.get("readWrite")
+		                        .<Product, Product>chunk(10)
+		                        .reader(productItemReader)
+		                        .writer(productItemWriter())
+		                        .listener(footerCallback())
+		                        .build();
 
-        return jobBuilders.get("writeProductJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("writeProductJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public StaxEventItemWriter<Product> productItemWriter() {
-        StaxEventItemWriter<Product> writer = new StaxEventItemWriter<Product>();
-        writer.setResource(new FileSystemResource(OUTPUT_FILE));
-        writer.setMarshaller(productMarshaller());
-        writer.setRootTagName("products");
-        writer.setOverwriteOutput(true);
+	@Bean
+	public StaxEventItemWriter<Product> productItemWriter() {
+		StaxEventItemWriter<Product> writer = new StaxEventItemWriter<Product>();
+		writer.setResource(new FileSystemResource(OUTPUT_FILE));
+		writer.setMarshaller(productMarshaller());
+		writer.setRootTagName("products");
+		writer.setOverwriteOutput(true);
 
-        writer.setHeaderCallback(headerCallback());
-        writer.setFooterCallback(footerCallback());
+		writer.setHeaderCallback(headerCallback());
+		writer.setFooterCallback(footerCallback());
 
-        return writer;
-    }
+		return writer;
+	}
 
-    @Bean
-    public XStreamMarshaller productMarshaller() {
+	@Bean
+	public XStreamMarshaller productMarshaller() {
 
-        HashMap<String, Class> aliases = new HashMap<String, Class>();
-        aliases.put("product", Product.class);
+		HashMap<String, Class> aliases = new HashMap<String, Class>();
+		aliases.put("product", Product.class);
 
-        XStreamMarshaller marshaller = new XStreamMarshaller();
-        try {
-            marshaller.setAliases(aliases);
-        } catch (Exception ignored) {}
+		XStreamMarshaller marshaller = new XStreamMarshaller();
+		try {
+			marshaller.setAliases(aliases);
+		} catch (Exception ignored) {}
 
-        return marshaller;
-    }
+		return marshaller;
+	}
 
-    @Bean
-    public ProductHeaderStaxCallback headerCallback() {
-        return new ProductHeaderStaxCallback();
-    }
+	@Bean
+	public ProductHeaderStaxCallback headerCallback() {
+		return new ProductHeaderStaxCallback();
+	}
 
-    @Bean
-    public ProductFooterStaxCallback footerCallback() {
-        return new ProductFooterStaxCallback();
-    }
+	@Bean
+	public ProductFooterStaxCallback footerCallback() {
+		return new ProductFooterStaxCallback();
+	}
 }

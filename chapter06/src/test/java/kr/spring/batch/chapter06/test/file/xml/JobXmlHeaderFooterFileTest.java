@@ -26,20 +26,20 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXpathExists;
 @ContextConfiguration(classes = { JobXmlHeaderFooterFileConfiguration.class })
 public class JobXmlHeaderFooterFileTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Test
-    public void testXml() throws Exception {
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	@Test
+	public void testXml() throws Exception {
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        Resource output = new FileSystemResource(JobXmlHeaderFooterFileConfiguration.OUTPUT_FILE);
-        String content = IOUtils.toString(output.getInputStream());
-        assertXpathEvaluatesTo("8", "count(//product)", content);
-        assertXpathExists("//header", content);
-        assertXpathExists("//footer/writeCount", content);
-        assertXpathEvaluatesTo("8", "//footer/writeCount", content);
+		Resource output = new FileSystemResource(JobXmlHeaderFooterFileConfiguration.OUTPUT_FILE);
+		String content = IOUtils.toString(output.getInputStream());
+		assertXpathEvaluatesTo("8", "count(//product)", content);
+		assertXpathExists("//header", content);
+		assertXpathExists("//footer/writeCount", content);
+		assertXpathEvaluatesTo("8", "//footer/writeCount", content);
 
-    }
+	}
 }

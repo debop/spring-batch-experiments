@@ -16,18 +16,18 @@ import java.util.Date;
  */
 public class SpringSchedulingLauncher {
 
-    @Setter Job job;
+	@Setter Job job;
 
-    @Setter JobLauncher jobLauncher;
+	@Setter JobLauncher jobLauncher;
 
-    public void launch() throws Exception {
-        JobParameters jobParameters = createJobParameters();
-        jobLauncher.run(job, jobParameters);
-    }
+	public void launch() throws Exception {
+		JobParameters jobParameters = createJobParameters();
+		jobLauncher.run(job, jobParameters);
+	}
 
-    private JobParameters createJobParameters() {
-        return new JobParametersBuilder()
-            .addDate("date", new Date())
-            .toJobParameters();
-    }
+	private JobParameters createJobParameters() {
+		return new JobParametersBuilder()
+				.addDate("date", new Date())
+				.toJobParameters();
+	}
 }

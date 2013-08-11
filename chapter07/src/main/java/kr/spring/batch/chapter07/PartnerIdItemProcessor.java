@@ -11,11 +11,11 @@ import org.springframework.batch.item.ItemProcessor;
  */
 public class PartnerIdItemProcessor implements ItemProcessor<Product, Product> {
 
-    @Setter
-    private PartnerIdMapper mapper;
+	@Setter
+	private PartnerIdMapper mapper;
 
-    @Override
-    public Product process(Product item) throws Exception {
-        return mapper.map(item);
-    }
+	@Override
+	public Product process(Product item) throws Exception {
+		return mapper.map(item);
+	}
 }

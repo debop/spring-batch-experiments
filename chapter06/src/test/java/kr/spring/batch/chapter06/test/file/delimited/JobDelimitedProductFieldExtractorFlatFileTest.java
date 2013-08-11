@@ -25,17 +25,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = { JobDelimitedProductFieldExtractorFlatFileConfiguration.class })
 public class JobDelimitedProductFieldExtractorFlatFileTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Test
-    public void delimitedJob() throws Exception {
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	@Test
+	public void delimitedJob() throws Exception {
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        Resource output = new FileSystemResource(JobDelimitedProductFieldExtractorFlatFileConfiguration.OUTPUT_FILE);
-        AssertLine.assertLineFileEquals(output, 1, "BEGIN,PR....210,124.60,18.6900,BlackBerry 8100 Pearl,END");
-        AssertLine.assertLineFileEquals(output, 7, "BEGIN,PR....216,289.20,43.3800,AT&T 8525 PDA,END");
-        AssertLine.assertLineFileEquals(output, 8, "BEGIN,PR....217,13.70,2.0550,Canon Digital Rebel XT 8MP,END");
-    }
+		Resource output = new FileSystemResource(JobDelimitedProductFieldExtractorFlatFileConfiguration.OUTPUT_FILE);
+		AssertLine.assertLineFileEquals(output, 1, "BEGIN,PR....210,124.60,18.6900,BlackBerry 8100 Pearl,END");
+		AssertLine.assertLineFileEquals(output, 7, "BEGIN,PR....216,289.20,43.3800,AT&T 8525 PDA,END");
+		AssertLine.assertLineFileEquals(output, 8, "BEGIN,PR....217,13.70,2.0550,Canon Digital Rebel XT 8MP,END");
+	}
 }

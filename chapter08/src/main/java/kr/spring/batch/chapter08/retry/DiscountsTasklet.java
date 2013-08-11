@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class DiscountsTasklet implements Tasklet {
 
-    @Setter private DiscountService discountService;
-    @Setter private DiscountsHolder discountsHolder;
+	@Setter private DiscountService discountService;
+	@Setter private DiscountsHolder discountsHolder;
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        List<Discount> discounts = discountService.getDiscounts();
-        discountsHolder.setDiscounts(discounts);
-        return RepeatStatus.FINISHED;
-    }
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		List<Discount> discounts = discountService.getDiscounts();
+		discountsHolder.setDiscounts(discounts);
+		return RepeatStatus.FINISHED;
+	}
 }

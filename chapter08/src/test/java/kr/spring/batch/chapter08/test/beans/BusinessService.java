@@ -8,9 +8,9 @@ package kr.spring.batch.chapter08.test.beans;
  */
 public interface BusinessService {
 
-    String reading();
+	String reading();
 
-    void writing(String item);
+	void writing(String item);
 
-    void processing(String item);
+	void processing(String item);
 }

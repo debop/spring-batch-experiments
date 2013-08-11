@@ -16,14 +16,14 @@ import java.util.List;
 @Transactional
 public class DeleteProductItemWriter implements ItemWriter<Product> {
 
-    @Autowired
-    ProductRepository repository;
+	@Autowired
+	ProductRepository repository;
 
-    @Override
-    public void write(List<? extends Product> items) throws Exception {
-        for (Product item : items)
-            repository.delete(item.getId());
+	@Override
+	public void write(List<? extends Product> items) throws Exception {
+		for (Product item : items)
+			repository.delete(item.getId());
 
-        repository.flush();
-    }
+		repository.flush();
+	}
 }

@@ -9,14 +9,14 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
 
-    <task:executor id="executor" pool-size="1" />
+    <task:executor id="executor" pool-size="1"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-        <property name="url" value="jdbc:hsqldb:mem:test;DB_CLOSE_ON_EXIT=FALSE" />
-        <property name="username" value="sa" />
-        <property name="password" value="" />
-        <property name="initialSize" value="5" />
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:test;DB_CLOSE_ON_EXIT=FALSE"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+        <property name="initialSize" value="5"/>
         <!--		<property name="suppressClose" value="true" />-->
     </bean>
 
@@ -26,33 +26,33 @@
     </jdbc:initialize-database>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <constructor-arg ref="dataSource" />
+        <constructor-arg ref="dataSource"/>
     </bean>
 
-    <batch:job-repository id="jobRepository" data-source="dataSource" />
+    <batch:job-repository id="jobRepository" data-source="dataSource"/>
 
     <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-        <property name="jobRepository" ref="jobRepository" />
-        <property name="taskExecutor" ref="executor" />
+        <property name="jobRepository" ref="jobRepository"/>
+        <property name="taskExecutor" ref="executor"/>
     </bean>
 
     <bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
-        <property name="jobRegistry" ref="jobRegistry" />
+        <property name="jobRegistry" ref="jobRegistry"/>
     </bean>
 
     <bean id="jobRegistry"
-          class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+          class="org.springframework.batch.core.configuration.support.MapJobRegistry"/>
 
     <bean id="jobExplorer"
           class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
-        <property name="jobRepository" ref="jobRepository" />
-        <property name="jobLauncher" ref="jobLauncher" />
-        <property name="jobRegistry" ref="jobRegistry" />
-        <property name="jobExplorer" ref="jobExplorer" />
+        <property name="jobRepository" ref="jobRepository"/>
+        <property name="jobLauncher" ref="jobLauncher"/>
+        <property name="jobRegistry" ref="jobRegistry"/>
+        <property name="jobExplorer" ref="jobExplorer"/>
     </bean>
 
 </beans>

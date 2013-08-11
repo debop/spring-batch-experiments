@@ -22,22 +22,22 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { JobStructureSimpleConfiguration.class })
 public class JobStructureSimpleTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job job;
+	@Autowired
+	private Job job;
 
-    @Test
-    public void simpleJob() throws Exception {
-        log.info("Job executing...");
-        JobExecution jobExecution = jobLauncher.run(job, new JobParameters());
+	@Test
+	public void simpleJob() throws Exception {
+		log.info("Job executing...");
+		JobExecution jobExecution = jobLauncher.run(job, new JobParameters());
 
-        assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
+		assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
 
-        for(StepExecution stepExecution: jobExecution.getStepExecutions()) {
-            log.debug("Step=[{}], ExitStatus=[{}]", stepExecution.getStepName(), stepExecution.getExitStatus());
-            assertThat(stepExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
-        }
-    }
+		for (StepExecution stepExecution : jobExecution.getStepExecutions()) {
+			log.debug("Step=[{}], ExitStatus=[{}]", stepExecution.getStepName(), stepExecution.getExitStatus());
+			assertThat(stepExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
+		}
+	}
 }

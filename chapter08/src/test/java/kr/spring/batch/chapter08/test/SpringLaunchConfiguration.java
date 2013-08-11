@@ -36,98 +36,98 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 public class SpringLaunchConfiguration {
 
-    @Bean
-    public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
+	@Bean
+	public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
 
-        SpringLaunchConfiguration.log.info("create PropertyPlaceholderConfigurer");
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+		SpringLaunchConfiguration.log.info("create PropertyPlaceholderConfigurer");
+		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
 //        configurer.setLocation(new ClassPathResource("batch.properties"));
 //        configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
 //        configurer.setIgnoreUnresolvablePlaceholders(true);
 //        configurer.setOrder(1);
 
-        return configurer;
-    }
+		return configurer;
+	}
 
-    @Bean
-    public JobOperator jobOperator(JobLauncher jobLauncher,
-                                   JobRepository jobRepository,
-                                   JobExplorer jobExplorer,
-                                   JobRegistry jobRegistry) throws Exception {
-        SimpleJobOperator jobOperator = new SimpleJobOperator();
-        jobOperator.setJobLauncher(jobLauncher);
-        jobOperator.setJobRepository(jobRepository);
-        jobOperator.setJobExplorer(jobExplorer);
-        jobOperator.setJobRegistry(jobRegistry);
+	@Bean
+	public JobOperator jobOperator(JobLauncher jobLauncher,
+	                               JobRepository jobRepository,
+	                               JobExplorer jobExplorer,
+	                               JobRegistry jobRegistry) throws Exception {
+		SimpleJobOperator jobOperator = new SimpleJobOperator();
+		jobOperator.setJobLauncher(jobLauncher);
+		jobOperator.setJobRepository(jobRepository);
+		jobOperator.setJobExplorer(jobExplorer);
+		jobOperator.setJobRegistry(jobRegistry);
 
-        jobOperator.afterPropertiesSet();
-        return jobOperator;
-    }
+		jobOperator.afterPropertiesSet();
+		return jobOperator;
+	}
 
-    @Bean
-    public JobExplorer jobExplorer(@Qualifier("jobDataSource") DataSource dataSource) throws Exception {
-        JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.afterPropertiesSet();
+	@Bean
+	public JobExplorer jobExplorer(@Qualifier("jobDataSource") DataSource dataSource) throws Exception {
+		JobExplorerFactoryBean factory = new JobExplorerFactoryBean();
+		factory.setDataSource(dataSource);
+		factory.afterPropertiesSet();
 
-        return (JobExplorer) factory.getObject();
-    }
+		return (JobExplorer) factory.getObject();
+	}
 
-    @Bean
-    public JobRegistry jobRegistry() {
-        return new MapJobRegistry();
-    }
+	@Bean
+	public JobRegistry jobRegistry() {
+		return new MapJobRegistry();
+	}
 
-    @Bean
-    public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
-        JobRegistryBeanPostProcessor postProcessor = new JobRegistryBeanPostProcessor();
-        postProcessor.setJobRegistry(jobRegistry());
-        return postProcessor;
-    }
+	@Bean
+	public JobRegistryBeanPostProcessor jobRegistryBeanPostProcessor() {
+		JobRegistryBeanPostProcessor postProcessor = new JobRegistryBeanPostProcessor();
+		postProcessor.setJobRegistry(jobRegistry());
+		return postProcessor;
+	}
 
-    @Bean
-    public JobLauncher jobLauncher(JobRepository jobRepository,
-                                   @Qualifier("jobTaskExecutor") TaskExecutor taskExecutor) throws Exception {
-        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-        jobLauncher.setJobRepository(jobRepository);
-        if (taskExecutor != null)
-            jobLauncher.setTaskExecutor(taskExecutor);
+	@Bean
+	public JobLauncher jobLauncher(JobRepository jobRepository,
+	                               @Qualifier("jobTaskExecutor") TaskExecutor taskExecutor) throws Exception {
+		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+		jobLauncher.setJobRepository(jobRepository);
+		if (taskExecutor != null)
+			jobLauncher.setTaskExecutor(taskExecutor);
 
-        return jobLauncher;
-    }
+		return jobLauncher;
+	}
 
-    @Bean
-    public JobRepository jobRepository(@Qualifier("jobDataSource") DataSource dataSource,
-                                       @Qualifier("jobTransactionManager") PlatformTransactionManager transactionManager) throws Exception {
-        SpringLaunchConfiguration.log.info("create JobRepository...");
+	@Bean
+	public JobRepository jobRepository(@Qualifier("jobDataSource") DataSource dataSource,
+	                                   @Qualifier("jobTransactionManager") PlatformTransactionManager transactionManager) throws Exception {
+		SpringLaunchConfiguration.log.info("create JobRepository...");
 
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setDatabaseType(DatabaseType.HSQL.name());
-        factory.setTransactionManager(transactionManager);
+		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+		factory.setDataSource(dataSource);
+		factory.setDatabaseType(DatabaseType.HSQL.name());
+		factory.setTransactionManager(transactionManager);
 
-        // HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
-        // HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
-        factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
+		// HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
+		// HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
+		factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
 
-        factory.afterPropertiesSet();
+		factory.afterPropertiesSet();
 
-        return factory.getJobRepository();
-    }
+		return factory.getJobRepository();
+	}
 
-    @Bean
-    public JobBuilderFactory jobBuilderFactory(JobRepository jobRepository) throws Exception {
-        return new JobBuilderFactory(jobRepository);
-    }
+	@Bean
+	public JobBuilderFactory jobBuilderFactory(JobRepository jobRepository) throws Exception {
+		return new JobBuilderFactory(jobRepository);
+	}
 
-    @Bean
-    public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
-                                                 @Qualifier("jobTransactionManager")
-                                                 PlatformTransactionManager transactionManager) throws Exception {
-        return new StepBuilderFactory(jobRepository, transactionManager);
-    }
+	@Bean
+	public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
+	                                             @Qualifier("jobTransactionManager")
+	                                             PlatformTransactionManager transactionManager) throws Exception {
+		return new StepBuilderFactory(jobRepository, transactionManager);
+	}
 
-    // NOTE: JobLauncherTestUtils 는 테스트 대상 Job 이 한개만 있어야 한다.
+	// NOTE: JobLauncherTestUtils 는 테스트 대상 Job 이 한개만 있어야 한다.
 //    @Bean
 //    public JobLauncherTestUtils jobLauncherTestUtils() {
 //        return new JobLauncherTestUtils();

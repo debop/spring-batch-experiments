@@ -27,36 +27,36 @@ import org.springframework.retry.support.RetryTemplate;
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 public class RetryTemplateConfiguration {
 
-    @Bean
-    public RetryOperationsInterceptor retryAdvice() {
+	@Bean
+	public RetryOperationsInterceptor retryAdvice() {
 
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-        retryPolicy.setMaxAttempts(2);
+		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+		retryPolicy.setMaxAttempts(2);
 
-        RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setRetryPolicy(retryPolicy);
+		RetryTemplate retryTemplate = new RetryTemplate();
+		retryTemplate.setRetryPolicy(retryPolicy);
 
-        RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
-        interceptor.setRetryOperations(retryTemplate);
+		RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
+		interceptor.setRetryOperations(retryTemplate);
 
-        return interceptor;
-    }
+		return interceptor;
+	}
 
-    @Bean
-    public Tasklet discountsTasklet() {
-        DiscountsTasklet tasklet = new DiscountsTasklet();
-        tasklet.setDiscountService(discountService());
-        tasklet.setDiscountsHolder(discountsHolder());
-        return tasklet;
-    }
+	@Bean
+	public Tasklet discountsTasklet() {
+		DiscountsTasklet tasklet = new DiscountsTasklet();
+		tasklet.setDiscountService(discountService());
+		tasklet.setDiscountsHolder(discountsHolder());
+		return tasklet;
+	}
 
-    @Bean
-    public DiscountService discountService() {
-        return Mockito.mock(DiscountService.class);
-    }
+	@Bean
+	public DiscountService discountService() {
+		return Mockito.mock(DiscountService.class);
+	}
 
-    @Bean
-    public DiscountsHolder discountsHolder() {
-        return Mockito.mock(DiscountsHolder.class);
-    }
+	@Bean
+	public DiscountsHolder discountsHolder() {
+		return Mockito.mock(DiscountsHolder.class);
+	}
 }

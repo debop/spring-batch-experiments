@@ -14,17 +14,17 @@ import java.util.List;
  */
 public class ProductServiceAdapter implements InitializingBean {
 
-    @Setter private ProductService productService;
+	@Setter private ProductService productService;
 
-    private List<Product> products;
+	private List<Product> products;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        assert productService != null;
-        this.products = productService.getProducts();
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		assert productService != null;
+		this.products = productService.getProducts();
+	}
 
-    public Product getProduct() {
-        return (products.size() > 0) ? products.remove(0) : null;
-    }
+	public Product getProduct() {
+		return (products.size() > 0) ? products.remove(0) : null;
+	}
 }

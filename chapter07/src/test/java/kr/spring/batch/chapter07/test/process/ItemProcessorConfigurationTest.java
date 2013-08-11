@@ -26,23 +26,23 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { ItemProcessorConfiguration.class })
 public class ItemProcessorConfigurationTest extends AbstractJobTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job job;
+	@Autowired
+	private Job job;
 
-    private String targetFile = "target/output.txt";
+	private String targetFile = "target/output.txt";
 
-    @Test
-    public void itemProcessConfiguration() throws Exception {
-        assertThat(productRepository.count()).isEqualTo(9);
+	@Test
+	public void itemProcessConfiguration() throws Exception {
+		assertThat(productRepository.count()).isEqualTo(9);
 
-        JobExecution exec = jobLauncher.run(job,
-                                            new JobParametersBuilder().addString("targetFile", targetFile)
-                                                                      .toJobParameters());
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        Resource resource = new FileSystemResource(targetFile);
-        assertThat(FileUtils.readLines(resource.getFile()).size()).isEqualTo(5);
-    }
+		JobExecution exec = jobLauncher.run(job,
+		                                    new JobParametersBuilder().addString("targetFile", targetFile)
+		                                                              .toJobParameters());
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		Resource resource = new FileSystemResource(targetFile);
+		assertThat(FileUtils.readLines(resource.getFile()).size()).isEqualTo(5);
+	}
 }

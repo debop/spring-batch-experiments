@@ -32,42 +32,42 @@ import javax.sql.DataSource;
 @Import({ SpringLaunchConfiguration.class })
 public class AbstractJobConfiguration {
 
-    @Autowired
-    protected JobBuilderFactory jobBuilders;
+	@Autowired
+	protected JobBuilderFactory jobBuilders;
 
-    @Autowired
-    protected StepBuilderFactory stepBuilders;
+	@Autowired
+	protected StepBuilderFactory stepBuilders;
 
-    @Autowired
-    protected JobExplorer jobExplorer;
+	@Autowired
+	protected JobExplorer jobExplorer;
 
-    @Autowired
-    protected JobOperator jobOperator;
+	@Autowired
+	protected JobOperator jobOperator;
 
-    @Autowired
-    protected JobRegistry jobRegistry;
+	@Autowired
+	protected JobRegistry jobRegistry;
 
-    @Bean
-    public DataSource dataSource() {
-        log.info("create DataSource");
+	@Bean
+	public DataSource dataSource() {
+		log.info("create DataSource");
 
-        return new EmbeddedDatabaseBuilder()
-            .setType(EmbeddedDatabaseType.HSQL)
-            .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-            .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-            .build();
-    }
+		return new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+				.addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+				.build();
+	}
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
-    }
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource());
+	}
 
-    @Bean
-    public TaskExecutor taskExecutor() throws Exception {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setMaxPoolSize(8);
-        executor.afterPropertiesSet();
-        return executor;
-    }
+	@Bean
+	public TaskExecutor taskExecutor() throws Exception {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setMaxPoolSize(8);
+		executor.afterPropertiesSet();
+		return executor;
+	}
 }

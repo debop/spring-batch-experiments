@@ -17,18 +17,18 @@ import javax.persistence.PersistenceContext;
 @Slf4j
 public class DatabaseSkipListener extends SkipListenerSupport {
 
-    @PersistenceContext
-    EntityManager em;
+	@PersistenceContext
+	EntityManager em;
 
-    @Override
-    public void onSkipInRead(Throwable t) {
-        if (t instanceof FlatFileParseException) {
-            FlatFileParseException ffpe = (FlatFileParseException) t;
-            SkippedProduct product = new SkippedProduct();
-            product.setInput(ffpe.getInput());
-            product.setLineNumber(ffpe.getLineNumber());
-            em.persist(product);
-            em.flush();
-        }
-    }
+	@Override
+	public void onSkipInRead(Throwable t) {
+		if (t instanceof FlatFileParseException) {
+			FlatFileParseException ffpe = (FlatFileParseException) t;
+			SkippedProduct product = new SkippedProduct();
+			product.setInput(ffpe.getInput());
+			product.setLineNumber(ffpe.getLineNumber());
+			em.persist(product);
+			em.flush();
+		}
+	}
 }

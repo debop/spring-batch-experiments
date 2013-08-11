@@ -13,11 +13,11 @@ import org.springframework.batch.item.file.FlatFileParseException;
 @Slf4j
 public class Slf4jSkipListener extends SkipListenerSupport<String, String> {
 
-    @Override
-    public void onSkipInRead(Throwable t) {
-        if (t instanceof FlatFileParseException) {
-            FlatFileParseException ffpe = (FlatFileParseException) t;
-            log.error(ffpe.getInput(), t);
-        }
-    }
+	@Override
+	public void onSkipInRead(Throwable t) {
+		if (t instanceof FlatFileParseException) {
+			FlatFileParseException ffpe = (FlatFileParseException) t;
+			log.error(ffpe.getInput(), t);
+		}
+	}
 }

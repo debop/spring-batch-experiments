@@ -8,8 +8,8 @@ package kr.spring.batch.chapter06.jpa.config;
  */
 public abstract class HSqlConfigBase extends JpaConfigBase {
 
-    @Override
-    public String getDialect() {
-        return "org.hibernate.dialect.HSQLDialect";
-    }
+	@Override
+	public String getDialect() {
+		return "org.hibernate.dialect.HSQLDialect";
+	}
 }

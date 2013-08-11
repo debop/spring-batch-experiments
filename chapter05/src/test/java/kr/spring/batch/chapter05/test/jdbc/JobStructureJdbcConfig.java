@@ -36,73 +36,73 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class JobStructureJdbcConfig extends AbstractJobConfiguration {
 
-    @Override
-    public TaskExecutor jobTaskExecutor() throws Exception {
-        return null;
-    }
+	@Override
+	public TaskExecutor jobTaskExecutor() throws Exception {
+		return null;
+	}
 
-    @Bean(name = "productDataSource")
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setName("ProductDB")
-                .setType(EmbeddedDatabaseType.HSQL)
-                .addScript("classpath:create-tables.sql")
-                .build();
-    }
+	@Bean(name = "productDataSource")
+	public DataSource dataSource() {
+		return new EmbeddedDatabaseBuilder()
+				.setName("ProductDB")
+				.setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:create-tables.sql")
+				.build();
+	}
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new ResourcelessTransactionManager();
-    }
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new ResourcelessTransactionManager();
+	}
 
-    @Bean
-    public Job importProductsJob(ItemReader<Product> reader,
-                                 ItemWriter<Product> writer) throws Exception {
+	@Bean
+	public Job importProductsJob(ItemReader<Product> reader,
+	                             ItemWriter<Product> writer) throws Exception {
 
-        Step step = stepBuilders.get("importProductsJob")
-                                .<Product, Product>chunk(100)
-                                .reader(reader)
-                                .writer(writer)
-                                .build();
+		Step step = stepBuilders.get("importProductsJob")
+		                        .<Product, Product>chunk(100)
+		                        .reader(reader)
+		                        .writer(writer)
+		                        .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public ItemReader<Product> productItemReader(@Qualifier("productDataSource") DataSource dataSource,
-                                                 PagingQueryProvider productQueryProvider) throws Exception {
-        JdbcPagingItemReader<Product> reader = new JdbcPagingItemReader<Product>();
+	@Bean
+	public ItemReader<Product> productItemReader(@Qualifier("productDataSource") DataSource dataSource,
+	                                             PagingQueryProvider productQueryProvider) throws Exception {
+		JdbcPagingItemReader<Product> reader = new JdbcPagingItemReader<Product>();
 
-        reader.setDataSource(dataSource);
-        reader.setQueryProvider(productQueryProvider);
-        reader.setPageSize(5);
-        reader.setRowMapper(productRowMapper());
-        reader.afterPropertiesSet();
+		reader.setDataSource(dataSource);
+		reader.setQueryProvider(productQueryProvider);
+		reader.setPageSize(5);
+		reader.setRowMapper(productRowMapper());
+		reader.afterPropertiesSet();
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public PagingQueryProvider productQueryProvider(@Qualifier("productDataSource") DataSource dataSource) throws Exception {
-        SqlPagingQueryProviderFactoryBean factoryBean = new SqlPagingQueryProviderFactoryBean();
-        factoryBean.setDataSource(dataSource);
-        factoryBean.setSelectClause("select id, name, description, price");
-        factoryBean.setFromClause("from product");
-        factoryBean.setSortKey("id");
+	@Bean
+	public PagingQueryProvider productQueryProvider(@Qualifier("productDataSource") DataSource dataSource) throws Exception {
+		SqlPagingQueryProviderFactoryBean factoryBean = new SqlPagingQueryProviderFactoryBean();
+		factoryBean.setDataSource(dataSource);
+		factoryBean.setSelectClause("select id, name, description, price");
+		factoryBean.setFromClause("from product");
+		factoryBean.setSortKey("id");
 
-        return (PagingQueryProvider) factoryBean.getObject();
-    }
+		return (PagingQueryProvider) factoryBean.getObject();
+	}
 
-    @Bean
-    public RowMapper<Product> productRowMapper() {
-        return new ProductRowMapper();
-    }
+	@Bean
+	public RowMapper<Product> productRowMapper() {
+		return new ProductRowMapper();
+	}
 
-    @Bean
-    public ItemWriter<Product> productItemWriter() {
-        return new DummyProductItemWriter();
-    }
+	@Bean
+	public ItemWriter<Product> productItemWriter() {
+		return new DummyProductItemWriter();
+	}
 }
 

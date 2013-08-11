@@ -26,32 +26,32 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(classes = { CompositeProcessingConfiguration.class })
 public class CompositeProcessingTest extends AbstractJobTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job jobWithItemProcessor;
+	@Autowired
+	private Job jobWithItemProcessor;
 
-    @Autowired
-    private ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        productRepository.deleteAll();
-    }
+	@Before
+	public void setUp() {
+		super.setUp();
+		productRepository.deleteAll();
+	}
 
-    @Test
-    public void changingState() throws Exception {
-        JobExecution exec = jobLauncher.run(jobWithItemProcessor,
-                                            new JobParametersBuilder()
-                                                .addString("inputFile", "/partner-products.txt")
-                                                .toJobParameters());
+	@Test
+	public void changingState() throws Exception {
+		JobExecution exec = jobLauncher.run(jobWithItemProcessor,
+		                                    new JobParametersBuilder()
+				                                    .addString("inputFile", "/partner-products.txt")
+				                                    .toJobParameters());
 
-        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-        assertThat(productRepository.count()).isEqualTo(8);
-        for (Product product : productRepository.findAll()) {
-            assertThat(product.getId()).startsWith("PR");
-        }
-    }
+		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(productRepository.count()).isEqualTo(8);
+		for (Product product : productRepository.findAll()) {
+			assertThat(product.getId()).startsWith("PR");
+		}
+	}
 }

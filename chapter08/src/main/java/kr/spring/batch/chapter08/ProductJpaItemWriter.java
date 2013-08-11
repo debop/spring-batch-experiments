@@ -14,15 +14,15 @@ import java.util.List;
  */
 public class ProductJpaItemWriter implements ItemWriter<Product> {
 
-    @PersistenceContext
-    EntityManager em;
+	@PersistenceContext
+	EntityManager em;
 
-    @Override
-    public void write(List<? extends Product> items) throws Exception {
-        for (Product item : items) {
-            if (item != null)
-                em.persist(item);
-        }
-        em.flush();
-    }
+	@Override
+	public void write(List<? extends Product> items) throws Exception {
+		for (Product item : items) {
+			if (item != null)
+				em.persist(item);
+		}
+		em.flush();
+	}
 }

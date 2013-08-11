@@ -41,68 +41,68 @@ import javax.persistence.EntityManagerFactory;
 @Import({ JpaHSqlConfiguration.class })
 public class FilteringExistingProductConfiguration extends AbstractJobConfiguration {
 
-    @Autowired
-    EntityManagerFactory emf;
+	@Autowired
+	EntityManagerFactory emf;
 
-    @Bean
-    public Job readWriteJob(Step readWriteStep) {
-        return jobBuilders.get("readWriteJob")
-                          .start(readWriteStep)
-                          .build();
-    }
+	@Bean
+	public Job readWriteJob(Step readWriteStep) {
+		return jobBuilders.get("readWriteJob")
+		                  .start(readWriteStep)
+		                  .build();
+	}
 
-    @Bean
-    public Step readWriteStep(FlatFileItemReader<Product> reader) {
-        return stepBuilders.get("readWrite")
-                           .<Product, Product>chunk(2)
-                           .reader(reader)
-                           .processor(processor())
-                           .writer(writer())
-                           .build();
-    }
+	@Bean
+	public Step readWriteStep(FlatFileItemReader<Product> reader) {
+		return stepBuilders.get("readWrite")
+		                   .<Product, Product>chunk(2)
+		                   .reader(reader)
+		                   .processor(processor())
+		                   .writer(writer())
+		                   .build();
+	}
 
-    @Bean
-    @StepScope
-    public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
+	@Bean
+	@StepScope
+	public FlatFileItemReader<Product> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
 
-        reader.setResource(new ClassPathResource(inputFile));
-        reader.setLinesToSkip(1);
-        reader.setLineMapper(productLineMapper());
+		reader.setResource(new ClassPathResource(inputFile));
+		reader.setLinesToSkip(1);
+		reader.setLineMapper(productLineMapper());
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public DefaultLineMapper<Product> productLineMapper() {
-        DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
-        lineMapper.setLineTokenizer(productLineTokenizer());
-        lineMapper.setFieldSetMapper(productFieldSetMapper());
-        return lineMapper;
-    }
+	@Bean
+	public DefaultLineMapper<Product> productLineMapper() {
+		DefaultLineMapper<Product> lineMapper = new DefaultLineMapper<Product>();
+		lineMapper.setLineTokenizer(productLineTokenizer());
+		lineMapper.setFieldSetMapper(productFieldSetMapper());
+		return lineMapper;
+	}
 
-    @Bean
-    public LineTokenizer productLineTokenizer() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
-        tokenizer.setNames(new String[]{ "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
-        return tokenizer;
-    }
+	@Bean
+	public LineTokenizer productLineTokenizer() {
+		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
+		tokenizer.setNames(new String[] { "PRODUCT_ID", "NAME", "DESCRIPTION", "PRICE" });
+		return tokenizer;
+	}
 
-    @Bean
-    public FieldSetMapper<Product> productFieldSetMapper() {
-        return new ProductFieldSetMapper();
-    }
+	@Bean
+	public FieldSetMapper<Product> productFieldSetMapper() {
+		return new ProductFieldSetMapper();
+	}
 
-    @Bean
-    public ItemProcessor<Product, Product> processor() {
-        return new ExistingProductFilterItemProcessor();
-    }
+	@Bean
+	public ItemProcessor<Product, Product> processor() {
+		return new ExistingProductFilterItemProcessor();
+	}
 
-    @Bean
-    @StepScope
-    public JpaItemWriter<Product> writer() {
-        JpaItemWriter<Product> writer = new JpaItemWriter<Product>();
-        writer.setEntityManagerFactory(emf);
-        return writer;
-    }
+	@Bean
+	@StepScope
+	public JpaItemWriter<Product> writer() {
+		JpaItemWriter<Product> writer = new JpaItemWriter<Product>();
+		writer.setEntityManagerFactory(emf);
+		return writer;
+	}
 }

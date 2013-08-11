@@ -24,18 +24,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = { JobStructureComplexConfiguration.class })
 public class JobStructureComplexTest {
 
-    @Autowired
-    private JobLauncher jobLauncher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    private Job job;
+	@Autowired
+	private Job job;
 
-    @Test
-    public void simpleJob() throws Exception {
-        log.info("Job executing...");
+	@Test
+	public void simpleJob() throws Exception {
+		log.info("Job executing...");
 
-        JobExecution jobExecution = jobLauncher.run(job, new JobParameters());
+		JobExecution jobExecution = jobLauncher.run(job, new JobParameters());
 
-        Assertions.assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
-    }
+		Assertions.assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
+	}
 }

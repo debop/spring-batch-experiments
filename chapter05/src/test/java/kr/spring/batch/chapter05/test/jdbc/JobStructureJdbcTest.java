@@ -16,19 +16,19 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = { JobStructureJdbcConfig.class })
 public class JobStructureJdbcTest extends AbstractJobStructureTest {
 
-    @Test
-    public void jdbcPagingJob() throws Exception {
-        jobLauncher.run(job, new JobParameters());
-        checkProducts(writer.getProducts(),
-                      new String[] {
-                              "PR....210",
-                              "PR....211",
-                              "PR....212",
-                              "PR....213",
-                              "PR....214",
-                              "PR....215",
-                              "PR....216",
-                              "PR....217"
-                      });
-    }
+	@Test
+	public void jdbcPagingJob() throws Exception {
+		jobLauncher.run(job, new JobParameters());
+		checkProducts(writer.getProducts(),
+		              new String[] {
+				              "PR....210",
+				              "PR....211",
+				              "PR....212",
+				              "PR....213",
+				              "PR....214",
+				              "PR....215",
+				              "PR....216",
+				              "PR....217"
+		              });
+	}
 }

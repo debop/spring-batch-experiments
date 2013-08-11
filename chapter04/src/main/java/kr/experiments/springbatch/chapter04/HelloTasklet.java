@@ -19,18 +19,18 @@ import java.util.Map;
 @Slf4j
 public class HelloTasklet implements Tasklet {
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        JobParameters jobParameters = chunkContext.getStepContext().getStepExecution().getJobParameters();
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		JobParameters jobParameters = chunkContext.getStepContext().getStepExecution().getJobParameters();
 
-        if (jobParameters.isEmpty()) {
-            log.info("No job parameters!");
-        } else {
-            log.info("Job parameters:");
-            for (Map.Entry<String, JobParameter> p : jobParameters.getParameters().entrySet()) {
-                log.info("[{}]=[{}] ({})", p.getKey(), p.getValue().getValue(), p.getValue().getType());
-            }
-        }
-        return RepeatStatus.FINISHED;
-    }
+		if (jobParameters.isEmpty()) {
+			log.info("No job parameters!");
+		} else {
+			log.info("Job parameters:");
+			for (Map.Entry<String, JobParameter> p : jobParameters.getParameters().entrySet()) {
+				log.info("[{}]=[{}] ({})", p.getKey(), p.getValue().getValue(), p.getValue().getType());
+			}
+		}
+		return RepeatStatus.FINISHED;
+	}
 }

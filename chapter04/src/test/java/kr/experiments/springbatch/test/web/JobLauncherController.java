@@ -13,11 +13,11 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class JobLauncherController {
 
-    private JobLauncher jobLauncher;
-    private JobRegistry jobRegistry;
+	private JobLauncher jobLauncher;
+	private JobRegistry jobRegistry;
 
-    public JobLauncherController(JobLauncher jobLauncher, JobRegistry jobRegistry) {
-        this.jobLauncher = jobLauncher;
-        this.jobRegistry = jobRegistry;
-    }
+	public JobLauncherController(JobLauncher jobLauncher, JobRegistry jobRegistry) {
+		this.jobLauncher = jobLauncher;
+		this.jobRegistry = jobRegistry;
+	}
 }

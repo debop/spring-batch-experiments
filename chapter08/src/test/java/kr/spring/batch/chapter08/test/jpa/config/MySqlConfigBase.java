@@ -11,16 +11,16 @@ import javax.sql.DataSource;
 public abstract class MySqlConfigBase extends JpaConfigBase {
 
 
-    @Override
-    public DataSource dataSource() {
-        return getTomcatDataSource("com.mysql.jdbc.Driver",
-                                   "jdbc:mysql://localhost/" + getDatabaseName(),
-                                   "root",
-                                   "root");
-    }
+	@Override
+	public DataSource dataSource() {
+		return getTomcatDataSource("com.mysql.jdbc.Driver",
+		                           "jdbc:mysql://localhost/" + getDatabaseName(),
+		                           "root",
+		                           "root");
+	}
 
-    @Override
-    public String getDialect() {
-        return "org.hibernate.dialect.MySQL5InnoDBDialect";
-    }
+	@Override
+	public String getDialect() {
+		return "org.hibernate.dialect.MySQL5InnoDBDialect";
+	}
 }

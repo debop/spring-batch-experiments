@@ -20,11 +20,11 @@ import java.util.concurrent.CountDownLatch;
 @Component
 public class CountDownTasklet implements Tasklet {
 
-    @Setter CountDownLatch countDownLatch;
+	@Setter CountDownLatch countDownLatch;
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        countDownLatch.countDown();
-        return RepeatStatus.FINISHED;
-    }
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		countDownLatch.countDown();
+		return RepeatStatus.FINISHED;
+	}
 }

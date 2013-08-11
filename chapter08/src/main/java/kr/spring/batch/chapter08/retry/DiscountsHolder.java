@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class DiscountsHolder {
 
-    @Getter
-    @Setter
-    private List<Discount> discounts;
+	@Getter
+	@Setter
+	private List<Discount> discounts;
 
 
 }

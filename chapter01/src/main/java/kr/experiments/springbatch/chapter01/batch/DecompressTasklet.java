@@ -28,53 +28,53 @@ import java.util.zip.ZipInputStream;
 @Slf4j
 public class DecompressTasklet implements Tasklet {
 
-    @Setter private Resource inputResource;
-    @Setter private String targetDirectory;
-    @Setter private String targetFile;
+	@Setter private Resource inputResource;
+	@Setter private String targetDirectory;
+	@Setter private String targetFile;
 
-    private void setParameters(JobParameters jobParameters) {
+	private void setParameters(JobParameters jobParameters) {
 
-        if (inputResource == null)
-            inputResource = new ClassPathResource((String) jobParameters.getString("inputResource"));
+		if (inputResource == null)
+			inputResource = new ClassPathResource((String) jobParameters.getString("inputResource"));
 
-        if (StringUtils.isEmpty(targetDirectory))
-            targetDirectory = jobParameters.getString("targetDirectory");
+		if (StringUtils.isEmpty(targetDirectory))
+			targetDirectory = jobParameters.getString("targetDirectory");
 
-        if (StringUtils.isEmpty(targetFile))
-            targetFile = jobParameters.getString("targetFile");
-    }
+		if (StringUtils.isEmpty(targetFile))
+			targetFile = jobParameters.getString("targetFile");
+	}
 
-    @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        if (chunkContext != null)
-            setParameters(chunkContext.getStepContext().getStepExecution().getJobParameters());
+	@Override
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		if (chunkContext != null)
+			setParameters(chunkContext.getStepContext().getStepExecution().getJobParameters());
 
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(inputResource.getInputStream()));
+		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(inputResource.getInputStream()));
 
-        File targetDirectoryAsFile = new File(targetDirectory);
-        if (!targetDirectoryAsFile.exists()) {
-            FileUtils.forceMkdir(targetDirectoryAsFile);
-        }
+		File targetDirectoryAsFile = new File(targetDirectory);
+		if (!targetDirectoryAsFile.exists()) {
+			FileUtils.forceMkdir(targetDirectoryAsFile);
+		}
 
-        File target = new File(targetDirectory, targetFile);
+		File target = new File(targetDirectory, targetFile);
 
-        BufferedOutputStream dest = null;
-        while (zis.getNextEntry() != null) {
-            if (!target.exists()) {
-                target.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(target);
-            dest = new BufferedOutputStream(fos);
-            IOUtils.copy(zis, dest);
-            dest.flush();
-            dest.close();
-        }
-        zis.close();
+		BufferedOutputStream dest = null;
+		while (zis.getNextEntry() != null) {
+			if (!target.exists()) {
+				target.createNewFile();
+			}
+			FileOutputStream fos = new FileOutputStream(target);
+			dest = new BufferedOutputStream(fos);
+			IOUtils.copy(zis, dest);
+			dest.flush();
+			dest.close();
+		}
+		zis.close();
 
-        if (!target.exists()) {
-            throw new IllegalStateException("Could not decompress anything from the archive!");
-        }
+		if (!target.exists()) {
+			throw new IllegalStateException("Could not decompress anything from the archive!");
+		}
 
-        return RepeatStatus.FINISHED;
-    }
+		return RepeatStatus.FINISHED;
+	}
 }

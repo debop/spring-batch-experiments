@@ -11,17 +11,17 @@ import org.springframework.validation.BindException;
  * @since 13. 8. 8. 오후 3:11
  */
 public class PartnerProductFieldSetMapper implements FieldSetMapper<PartnerProduct> {
-    @Override
-    public PartnerProduct mapFieldSet(FieldSet fieldSet) throws BindException {
-        PartnerProduct product = new PartnerProduct();
-        product.setId(fieldSet.readString("PRODUCT_ID"));
-        product.setTitle(fieldSet.readString("TITLE"));
-        product.setDetails(fieldSet.readString("DETAILS"));
-        product.setPrice(fieldSet.readBigDecimal("PRICE"));
-        product.setReleaseDate(fieldSet.readDate("RELEASE_DATE"));
+	@Override
+	public PartnerProduct mapFieldSet(FieldSet fieldSet) throws BindException {
+		PartnerProduct product = new PartnerProduct();
+		product.setId(fieldSet.readString("PRODUCT_ID"));
+		product.setTitle(fieldSet.readString("TITLE"));
+		product.setDetails(fieldSet.readString("DETAILS"));
+		product.setPrice(fieldSet.readBigDecimal("PRICE"));
+		product.setReleaseDate(fieldSet.readDate("RELEASE_DATE"));
 
-        return product;
-    }
+		return product;
+	}
 }
 
 

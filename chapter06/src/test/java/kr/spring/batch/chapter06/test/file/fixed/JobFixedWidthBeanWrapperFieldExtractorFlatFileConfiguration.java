@@ -27,43 +27,43 @@ import org.springframework.core.io.FileSystemResource;
 @Import({ FlatFileReaderConfiguration.class })
 public class JobFixedWidthBeanWrapperFieldExtractorFlatFileConfiguration extends AbstractJobConfiguration {
 
-    public static final String OUTPUT_FILE = "target/outputs/fixedwidth-beanwrapperextractor.txt";
+	public static final String OUTPUT_FILE = "target/outputs/fixedwidth-beanwrapperextractor.txt";
 
-    @Autowired
-    FlatFileItemReader<Product> productItemReader;
+	@Autowired
+	FlatFileItemReader<Product> productItemReader;
 
-    @Bean
-    public Job writeProductJob() {
-        Step step = stepBuilders.get("readWrite")
-                                .<Product, Product>chunk(10)
-                                .reader(productItemReader)
-                                .writer(productItemWriter())
-                                .build();
+	@Bean
+	public Job writeProductJob() {
+		Step step = stepBuilders.get("readWrite")
+		                        .<Product, Product>chunk(10)
+		                        .reader(productItemReader)
+		                        .writer(productItemWriter())
+		                        .build();
 
-        return jobBuilders.get("writeProductJob")
-                          .start(step)
-                          .build();
-    }
+		return jobBuilders.get("writeProductJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public FlatFileItemWriter<Product> productItemWriter() {
-        FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
-        writer.setResource(new FileSystemResource(OUTPUT_FILE));
-        writer.setLineAggregator(lineAggregator());
+	@Bean
+	public FlatFileItemWriter<Product> productItemWriter() {
+		FlatFileItemWriter<Product> writer = new FlatFileItemWriter<Product>();
+		writer.setResource(new FileSystemResource(OUTPUT_FILE));
+		writer.setLineAggregator(lineAggregator());
 
-        return writer;
-    }
+		return writer;
+	}
 
-    @Bean
-    public FormatterLineAggregator<Product> lineAggregator() {
+	@Bean
+	public FormatterLineAggregator<Product> lineAggregator() {
 
-        BeanWrapperFieldExtractor<Product> extractor = new BeanWrapperFieldExtractor<Product>();
-        extractor.setNames(new String[]{ "id", "price", "name" });
+		BeanWrapperFieldExtractor<Product> extractor = new BeanWrapperFieldExtractor<Product>();
+		extractor.setNames(new String[] { "id", "price", "name" });
 
-        FormatterLineAggregator<Product> lineAggregator = new FormatterLineAggregator<Product>();
-        lineAggregator.setFieldExtractor(extractor);
-        lineAggregator.setFormat("%-9s%6.2f%-30s");
+		FormatterLineAggregator<Product> lineAggregator = new FormatterLineAggregator<Product>();
+		lineAggregator.setFieldExtractor(extractor);
+		lineAggregator.setFormat("%-9s%6.2f%-30s");
 
-        return lineAggregator;
-    }
+		return lineAggregator;
+	}
 }

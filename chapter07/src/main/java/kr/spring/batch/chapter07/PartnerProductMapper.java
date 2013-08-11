@@ -8,6 +8,6 @@ package kr.spring.batch.chapter07;
  */
 public interface PartnerProductMapper {
 
-    Product map(PartnerProduct partnerProduct);
+	Product map(PartnerProduct partnerProduct);
 
 }

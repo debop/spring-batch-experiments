@@ -25,28 +25,28 @@ import java.math.BigDecimal;
 @ContextConfiguration(classes = { JobClassifierCompositeItemWriterConfiguration.class })
 public class JobClassifierCompositeItemWriterTest {
 
-    @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+	@Autowired
+	private JobLauncherTestUtils jobLauncherTestUtils;
 
-    @Autowired
-    private ProductRepository repository;
+	@Autowired
+	private ProductRepository repository;
 
-    @Before
-    public void setup() {
-        repository.deleteAll();
-        repository.flush();
+	@Before
+	public void setup() {
+		repository.deleteAll();
+		repository.flush();
 
-        repository.save(new Product("PR....211", "Sony Ericsson W810i", "", new BigDecimal(139.45), ""));
-        repository.save(new Product("PR....212", "Samsung MM-A900M Ace", "", new BigDecimal(97.80), ""));
-        repository.flush();
-    }
+		repository.save(new Product("PR....211", "Sony Ericsson W810i", "", new BigDecimal(139.45), ""));
+		repository.save(new Product("PR....212", "Samsung MM-A900M Ace", "", new BigDecimal(97.80), ""));
+		repository.flush();
+	}
 
-    @Test
-    public void testClassifier() throws Exception {
-        JobExecution exec = jobLauncherTestUtils.launchJob();
-        Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	@Test
+	public void testClassifier() throws Exception {
+		JobExecution exec = jobLauncherTestUtils.launchJob();
+		Assertions.assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        // 미리 2개 넣고, 8건 추가 시 삭제 1건, Update 1건, 6건 추가 => 7건 남음
-        Assertions.assertThat(repository.count()).isEqualTo(7);
-    }
+		// 미리 2개 넣고, 8건 추가 시 삭제 1건, Update 1건, 6건 추가 => 7건 남음
+		Assertions.assertThat(repository.count()).isEqualTo(7);
+	}
 }

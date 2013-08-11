@@ -23,15 +23,15 @@ import javax.sql.DataSource;
 @Import(LaunchConfiguration.class)
 public class RootDatabaseConfiguration {
 
-    @Bean
-    public DataSource dataSource() {
-        log.info("create DataSource");
+	@Bean
+	public DataSource dataSource() {
+		log.info("create DataSource");
 
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.HSQL)
-                .addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-                .addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-                .addScript("classpath:/create-tables.sql")
-                .build();
-    }
+		return new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.HSQL)
+				.addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+				.addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+				.addScript("classpath:/create-tables.sql")
+				.build();
+	}
 }
