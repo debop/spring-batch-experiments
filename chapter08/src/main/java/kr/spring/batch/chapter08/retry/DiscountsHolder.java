@@ -16,6 +16,4 @@ public class DiscountsHolder {
 	@Getter
 	@Setter
 	private List<Discount> discounts;
-
-
 }
