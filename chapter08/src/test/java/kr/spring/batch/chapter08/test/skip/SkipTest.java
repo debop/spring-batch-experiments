@@ -2,6 +2,7 @@ package kr.spring.batch.chapter08.test.skip;
 
 import kr.spring.batch.chapter08.jpa.repositories.ProductRepository;
 import kr.spring.batch.chapter08.jpa.repositories.SkippedProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.*;
@@ -18,6 +19,7 @@ import static org.fest.assertions.Assertions.assertThat;
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 9. 오후 3:09
  */
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { SkipConfiguration.class })
 public class SkipTest {

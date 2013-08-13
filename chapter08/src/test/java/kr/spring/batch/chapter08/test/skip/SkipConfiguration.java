@@ -48,18 +48,18 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 	EntityManagerFactory emf;
 
 	@Autowired
-	ItemReader<Product> reader;
+	ItemReader<Product> productReader;
 
 	@Bean
 	public Job importProductsJob() {
 		Step importProductsStep = stepBuilders.get("importProductsStep")
 		                                      .<Product, Product>chunk(3)
-		                                      .reader(reader)
-				.writer(productItemWriter())
-						//.faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
-						//.listener(slf4jSkipListener())
-						//.listener(databaseSkipListener())
-				.build();
+		                                      .reader(productReader)
+		                                      .writer(productItemWriter())
+		                                      .faultTolerant().skipLimit(2).skip(FlatFileParseException.class)
+		                                      .listener(slf4jSkipListener())
+		                                      .listener(databaseSkipListener())
+		                                      .build();
 
 		return jobBuilders.get("importProductsJob")
 		                  .start(importProductsStep)
@@ -71,7 +71,7 @@ public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
 		Step importProductsStepWithSkipPolicy = stepBuilders.get("importProductsStepWithSkipPolicy")
 		                                                    .<Product, Product>chunk(3)
 		                                                    .faultTolerant().skipPolicy(skipPolicy())
-		                                                    .reader(reader)
+		                                                    .reader(productReader)
 		                                                    .writer(productItemWriter())
 		                                                    .build();
 

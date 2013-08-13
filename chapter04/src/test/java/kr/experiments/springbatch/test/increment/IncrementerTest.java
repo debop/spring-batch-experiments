@@ -50,7 +50,7 @@ public class IncrementerTest {
 				.toJobParameters();
 
 		JobExecution exec1 = jobLauncher.run(job, jobParams);
-		assertThat(exec1.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
+		assertThat(exec1.getExitStatus().getExitCode()).isEqualTo(ExitStatus.COMPLETED.getExitCode());
 		assertThat(getJobInstanceCount()).isEqualTo(1);
 
 		Long idExec2 = jobOperator.startNextInstance(job.getName());

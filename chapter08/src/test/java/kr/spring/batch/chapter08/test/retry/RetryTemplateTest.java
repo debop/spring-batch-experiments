@@ -99,6 +99,7 @@ public class RetryTemplateTest {
 		try {
 			discountsTasklet.execute(null, null);
 			Assert.fail();
+
 		} catch (TransientDataAccessResourceException e) {
 			// OK
 		}

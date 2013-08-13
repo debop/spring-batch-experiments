@@ -42,7 +42,7 @@ public class LaunchConfiguration {
 
 	@Bean
 	public DataSource dataSource() {
-		LaunchConfiguration.log.info("create DataSource");
+		log.info("create DataSource");
 
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.HSQL)

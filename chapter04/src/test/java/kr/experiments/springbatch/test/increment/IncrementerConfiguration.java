@@ -1,16 +1,16 @@
 package kr.experiments.springbatch.test.increment;
 
-import kr.experiments.springbatch.configuration.LaunchConfiguration;
+import kr.experiments.springbatch.AbstractJobConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersIncrementer;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 
 /**
  * kr.experiments.springbatch.test.increment.IncrementerConfiguration
@@ -21,9 +21,18 @@ import org.springframework.context.annotation.ImportResource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-@Import(LaunchConfiguration.class)
-@ImportResource({ "classpath:/spring/incrementer-job.xml" })
-public class IncrementerConfiguration {
+public class IncrementerConfiguration extends AbstractJobConfiguration {
+
+	@Bean
+	public Job incrementerJob() {
+		Step step = stepBuilders.get("step")
+		                        .tasklet(tasklet())
+		                        .build();
+
+		return jobBuilders.get("job")
+		                  .start(step)
+		                  .build();
+	}
 
 	@Bean
 	public Tasklet tasklet() {

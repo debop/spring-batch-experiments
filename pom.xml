@@ -199,6 +199,14 @@
             <scope>runtime</scope>
         </dependency>
 
+
+        <!-- Hibernate Testing -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-testing</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
