@@ -14,19 +14,19 @@ import java.util.List;
 @Slf4j
 public class DummyItemWriter implements ItemWriter<String> {
 
-	private BusinessService service;
+    private BusinessService service;
 
-	public DummyItemWriter(BusinessService service) {
-		this.service = service;
-	}
+    public DummyItemWriter(BusinessService service) {
+        this.service = service;
+    }
 
-	@Override
-	public void write(List<? extends String> items) throws Exception {
+    @Override
+    public void write(List<? extends String> items) throws Exception {
 
-		for (String item : items) {
-			DummyItemWriter.log.debug("writing [{}]", item);
-			service.writing(item);
-			DummyItemWriter.log.debug("item written [{}]", item);
-		}
-	}
+        for (String item : items) {
+            log.debug("writing [{}]", item);
+            service.writing(item);
+            log.debug("item written [{}]", item);
+        }
+    }
 }
