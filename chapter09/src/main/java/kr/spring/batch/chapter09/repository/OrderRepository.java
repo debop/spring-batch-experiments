@@ -10,4 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 13. 8. 15. 오전 10:09
  */
 public interface OrderRepository extends JpaRepository<Order, String> {
+
+	Order findByOrderId(String orderId);
 }

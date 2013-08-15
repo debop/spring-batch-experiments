@@ -83,7 +83,7 @@ public abstract class AbstractJobConfiguration {
 		ds.setSuppressClose(true);
 
 		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-		populator.addScript(new ClassPathResource("/org/springframework/batch/core/schema-drop-hsqldb.sql"));
+		// populator.addScript(new ClassPathResource("/org/springframework/batch/core/schema-drop-hsqldb.sql"));
 		populator.addScript(new ClassPathResource("/org/springframework/batch/core/schema-hsqldb.sql"));
 		DatabasePopulatorUtils.execute(populator, ds);
 

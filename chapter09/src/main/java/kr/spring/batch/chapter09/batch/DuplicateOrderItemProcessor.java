@@ -46,6 +46,7 @@ public class DuplicateOrderItemProcessor implements ItemProcessor<Message, Order
 	}
 
 	private boolean orderAlreadyProcessed(Order order) {
-		return (order != null) && orderRepository.exists(order.getId());
+		return order != null &&
+				orderRepository.findByOrderId(order.getOrderId()) != null;
 	}
 }

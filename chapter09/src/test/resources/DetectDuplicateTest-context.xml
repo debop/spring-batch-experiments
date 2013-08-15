@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="vm://embedded?broker.persistent=false&amp;broker.useShutdownHook=false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="orderQueue"/>
+        <property name="receiveTimeout" value="100"/>
+        <property name="sessionTransacted" value="true"/>
+    </bean>
+
+    <bean id="orderQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="sbia.queue.order"/>
+    </bean>
+
+
+    <bean id="orderQueueView" class="org.springframework.jmx.access.MBeanProxyFactoryBean">
+        <property name="proxyInterface" value="org.apache.activemq.broker.jmx.QueueViewMBean"/>
+        <property name="objectName" value="org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=sbia.queue.order"/>
+    </bean>
+
+</beans>

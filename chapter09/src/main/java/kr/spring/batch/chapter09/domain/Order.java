@@ -29,13 +29,16 @@ public class Order implements Serializable {
 
 	public Order() {}
 
-	public Order(String id, boolean shipped) {
-		this.id = id;
+	public Order(String orderId, boolean shipped) {
+		this.orderId = orderId;
 		this.shipped = shipped;
 	}
 
 	@Id
-	private String id;
+	@GeneratedValue
+	private Long id;
+
+	private String orderId;
 
 	private Boolean shipped;
 

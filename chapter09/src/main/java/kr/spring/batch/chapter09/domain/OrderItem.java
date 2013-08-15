@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public class OrderItem implements Serializable {
 	}
 
 	@Id
+	@GeneratedValue
 	private Long id;
 
 	@ManyToOne

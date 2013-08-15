@@ -6,6 +6,7 @@ import kr.spring.batch.chapter09.domain.Order;
 import kr.spring.batch.chapter09.domain.OrderItem;
 import kr.spring.batch.chapter09.repository.InventoryOrderRepository;
 import kr.spring.batch.chapter09.repository.InventoryRepository;
+import kr.spring.batch.chapter09.repository.OrderRepository;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,8 +27,12 @@ public class InventoryOrderWriter implements ItemWriter<Order> {
 	@Autowired
 	InventoryOrderRepository inventoryOrderRepository;
 
+	@Autowired
+	OrderRepository orderRepository;
+
 	@Override
 	public void write(List<? extends Order> orders) throws Exception {
+		orderRepository.save(orders);
 		for (Order order : orders) {
 			updateInventory(order);
 			track(order);

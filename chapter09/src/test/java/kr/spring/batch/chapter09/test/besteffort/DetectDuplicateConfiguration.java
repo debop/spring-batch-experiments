@@ -27,6 +27,7 @@ import org.springframework.jmx.access.MBeanProxyFactoryBean;
 
 import javax.jms.Message;
 import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.persistence.EntityManagerFactory;
 
 /**
@@ -40,6 +41,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { OrderRepository.class })
 @Import({ JpaHSqlConfiguration.class })
+// @ImportResource({ "classpath:DetectDuplicateTest-context.xml" })
 public class DetectDuplicateConfiguration extends AbstractJobConfiguration {
 
 	@Autowired
@@ -71,10 +73,13 @@ public class DetectDuplicateConfiguration extends AbstractJobConfiguration {
 		                  .build();
 	}
 
+	@Autowired
+	JmsTemplate jmsTemplate;
+
 	@Bean
 	public JmsItemReader<Message> orderReader() {
 		JmsItemReader<Message> reader = new JmsItemReader<Message>();
-		reader.setJmsTemplate(jmsTemplate());
+		reader.setJmsTemplate(jmsTemplate);
 		reader.setItemType(javax.jms.Message.class);
 
 		return reader;
@@ -121,16 +126,20 @@ public class DetectDuplicateConfiguration extends AbstractJobConfiguration {
 		return new ActiveMQQueue("spring.batch.queue.order");
 	}
 
+	//
+	// HINT: http://java.dzone.com/articles/managing-activemq-jmx-apis
+	// HINT: http://icodingclub.blogspot.kr/2011/09/spring-jms-with-embeded-activemq-in.html
 	@Bean
 	public QueueViewMBean orderQueueView() {
 		MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
-		bean.setProxyInterface(QueueViewMBean.class);
 		try {
-			bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.order");
+			bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
+			bean.setObjectName(new ObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.order"));
 			bean.afterPropertiesSet();
 		} catch (MalformedObjectNameException e) {
 			log.error("에러", e);
 		}
+		bean.prepare();
 		return (QueueViewMBean) bean.getObject();
 	}
 }
