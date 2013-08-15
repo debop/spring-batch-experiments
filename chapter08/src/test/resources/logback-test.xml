@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <logger name="kr.experiments.springbatch" level="TRACE"/>
+    <logger name="kr.spring.batch" level="TRACE"/>
 
     <root level="DEBUG">
         <appender-ref ref="console"/>
