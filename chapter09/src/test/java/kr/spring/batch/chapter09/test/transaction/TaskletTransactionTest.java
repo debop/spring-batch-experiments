@@ -1,5 +1,6 @@
 package kr.spring.batch.chapter09.test.transaction;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 15. 오후 1:40
  */
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TaskletTransactionConfiguration.class })
 public class TaskletTransactionTest {
@@ -81,7 +83,7 @@ public class TaskletTransactionTest {
 		assertThat(TransactionSynchronizationManager.isActualTransactionActive()).isTrue();
 	}
 
-	private class myTasklet implements Tasklet {
+	private class MyTasklet implements Tasklet {
 		@Override
 		public RepeatStatus execute(StepContribution contribution,
 		                            ChunkContext chunkContext) throws Exception {

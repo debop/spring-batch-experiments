@@ -1,12 +1,21 @@
 package kr.spring.batch.chapter09.test;
 
+import kr.spring.batch.chapter09.test.beans.BusinessService;
+import kr.spring.batch.chapter09.test.beans.DummyItemProcessor;
+import kr.spring.batch.chapter09.test.beans.DummyItemReader;
+import kr.spring.batch.chapter09.test.beans.DummyItemWriter;
 import lombok.extern.slf4j.Slf4j;
+import org.mockito.Mockito;
+import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +37,7 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-@Import({ SpringLaunchConfiguration.class })
+@Import({ SpringLaunchConfiguration.class, JpaHSqlConfiguration.class })
 public abstract class AbstractJobConfiguration {
 
 	@Autowired
@@ -74,5 +83,31 @@ public abstract class AbstractJobConfiguration {
 	@Bean(name = "jobTaskExecutor")
 	public TaskExecutor jobTaskExecutor() throws Exception {
 		return null;
+	}
+
+
+	@Bean
+	public SkipListener skipListener() {
+		return Mockito.mock(SkipListener.class);
+	}
+
+	@Bean
+	public BusinessService service() {
+		return Mockito.mock(BusinessService.class);
+	}
+
+	@Bean
+	public ItemReader<String> reader() {
+		return new DummyItemReader(service());
+	}
+
+	@Bean
+	public ItemProcessor<String, String> processor() {
+		return new DummyItemProcessor(service());
+	}
+
+	@Bean
+	public ItemWriter<String> writer() {
+		return new DummyItemWriter(service());
 	}
 }
