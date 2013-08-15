@@ -4,6 +4,7 @@ import kr.experiments.springbatch.chapter01.domain.Product;
 import kr.spring.batch.chapter09.test.AbstractJobConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -47,10 +48,7 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 	public Job noRollbackJob() {
 		Step step = stepBuilders.get("noRollbackStep")
 		                        .<String, String>chunk(5)
-		                        .faultTolerant()
-		                        .skipLimit(5)
-		                        .skip(ValidationException.class)
-		                        .noRollback(ValidationException.class)
+		                        .faultTolerant().skipLimit(5).skip(ValidationException.class).noRollback(ValidationException.class)
 		                        .reader(reader())
 		                        .processor(processor())
 		                        .writer(writer())
@@ -78,10 +76,8 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 	public Job transactionalReaderJob() {
 		Step step = stepBuilders.get("transactionalReaderStep")
 		                        .<String, String>chunk(5)
-				.readerIsTransactionalQueue()                   // Tx를 위해 reader 정보를 Queue에 넣습니다.
-				.faultTolerant()
-				.skipLimit(5)
-				.skip(DeadlockLoserDataAccessException.class)
+				.readerIsTransactionalQueue()       // Tx를 위해 reader 정보를 Queue에 넣습니다.s
+				.faultTolerant().skipLimit(5).skip(DeadlockLoserDataAccessException.class)
 				.reader(reader())
 				.processor(processor())
 				.writer(writer())
@@ -120,15 +116,19 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 	}
 
 	@Bean
-	public MBeanProxyFactoryBean productQueueView() {
-		MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
-		bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
+	public QueueViewMBean productQueueView() {
 		try {
+			MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
+			bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
 			bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.product");
+			bean.afterPropertiesSet();
+			return (QueueViewMBean) bean.getObject();
 		} catch (MalformedObjectNameException e) {
 			log.error("ActiveMQ의 ObjectName이 잘못되었습니다.", e);
+			throw new RuntimeException(e);
+		} catch (Exception e) {
+			log.error("QueueViewMBean 을 생성하는데 실패했습니다.", e);
+			throw new RuntimeException(e);
 		}
-		return bean;
 	}
-
 }

@@ -1,7 +1,6 @@
 package kr.spring.batch.chapter09.test;
 
 import kr.spring.batch.chapter09.test.beans.BusinessService;
-import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -14,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * kr.spring.batch.chapter08.test.AbstractRobustnessTest
@@ -51,39 +52,39 @@ public abstract class AbstractRobustnessTest {
 		Mockito.when(service.reading()).thenReturn("1", args.toArray(new String[0]));
 	}
 
-	protected void assertRead(int read, JobExecution exec) {
+	protected void assertRead(int expectedRead, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getReadCount()).isEqualTo(read);
+		assertThat(stepExec.getReadCount()).isEqualTo(expectedRead);
 	}
 
-	protected void assertWrite(int write, JobExecution exec) {
+	protected void assertWrite(int expectedWrite, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getWriteCount()).isEqualTo(write);
+		assertThat(stepExec.getWriteCount()).isEqualTo(expectedWrite);
 	}
 
-	protected void assertProcessSkip(int processSkip, JobExecution exec) {
+	protected void assertProcessSkip(int expectedProcessSkip, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getProcessSkipCount()).isEqualTo(processSkip);
+		assertThat(stepExec.getProcessSkipCount()).isEqualTo(expectedProcessSkip);
 	}
 
-	protected void assertReadSkip(int readSkip, JobExecution exec) {
+	protected void assertReadSkip(int expectedReadSkip, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getReadSkipCount()).isEqualTo(readSkip);
+		assertThat(stepExec.getReadSkipCount()).isEqualTo(expectedReadSkip);
 	}
 
-	protected void assertWriteSkip(int writeSkip, JobExecution exec) {
+	protected void assertWriteSkip(int expectedWriteSkip, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getWriteSkipCount()).isEqualTo(writeSkip);
+		assertThat(stepExec.getWriteSkipCount()).isEqualTo(expectedWriteSkip);
 	}
 
-	protected void assertCommit(int commit, JobExecution exec) {
+	protected void assertCommit(int expectedCommit, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getCommitCount()).isEqualTo(commit);
+		assertThat(stepExec.getCommitCount()).isEqualTo(expectedCommit);
 	}
 
-	protected void assertRollback(int rollback, JobExecution exec) {
+	protected void assertRollback(int expectedRollback, JobExecution exec) {
 		StepExecution stepExec = getStepExecution(exec);
-		Assertions.assertThat(stepExec.getRollbackCount()).isEqualTo(rollback);
+		assertThat(stepExec.getRollbackCount()).isEqualTo(expectedRollback);
 	}
 
 	protected StepExecution getStepExecution(JobExecution exec) {

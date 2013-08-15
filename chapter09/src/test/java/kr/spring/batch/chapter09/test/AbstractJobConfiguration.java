@@ -37,7 +37,7 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-@Import({ SpringLaunchConfiguration.class, JpaHSqlConfiguration.class })
+@Import({ SpringLaunchConfiguration.class })
 public abstract class AbstractJobConfiguration {
 
 	@Autowired
