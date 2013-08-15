@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -23,17 +24,23 @@ import java.util.Objects;
 @Setter
 public class OrderItem implements Serializable {
 
-	@Id
-	private String productId;
-
-	private Integer quantity;
-
 	public OrderItem() {}
 
 	public OrderItem(String productId, Integer quantity) {
 		this.productId = productId;
 		this.quantity = quantity;
 	}
+
+	@Id
+	private Long id;
+
+	@ManyToOne
+	private Order order;
+
+	private String productId;
+
+	private Integer quantity;
+
 
 	@Override
 	public boolean equals(Object obj) {

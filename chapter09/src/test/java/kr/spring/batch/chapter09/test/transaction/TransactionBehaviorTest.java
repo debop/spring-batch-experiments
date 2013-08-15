@@ -22,12 +22,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
-/**
- * kr.spring.batch.chapter09.test.transaction.TransactionBehaviorTest
- *
- * @author 배성혁 sunghyouk.bae@gmail.com
- * @since 13. 8. 15. 오후 3:20
- */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TransactionBehaviorConfiguration.class })
@@ -162,6 +156,7 @@ public class TransactionBehaviorTest extends AbstractRobustnessTest {
 	private QueueViewMBean productQueueView;
 
 	@Test
+	//@Ignore("예제는 제대로 되는데... 왜 productQueueView 작업을 수행하려면 예외가 발생한다. xml 로 만들었는데도 그렇다.")
 	public void transactionalReader() throws Exception {
 
 		while (jmsTemplate.receive() != null) {}

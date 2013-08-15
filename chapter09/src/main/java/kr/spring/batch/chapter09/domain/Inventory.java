@@ -24,6 +24,13 @@ import java.util.Objects;
 @Setter
 public class Inventory implements Serializable {
 
+	public Inventory() {}
+
+	public Inventory(String productId, Integer quantity) {
+		this.productId = productId;
+		this.quantity = quantity;
+	}
+
 	@Id
 	@GeneratedValue
 	private Long id;

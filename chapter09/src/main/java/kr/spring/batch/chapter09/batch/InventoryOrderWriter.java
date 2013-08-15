@@ -6,8 +6,8 @@ import kr.spring.batch.chapter09.domain.Order;
 import kr.spring.batch.chapter09.domain.OrderItem;
 import kr.spring.batch.chapter09.repository.InventoryOrderRepository;
 import kr.spring.batch.chapter09.repository.InventoryRepository;
-import lombok.Setter;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
@@ -20,8 +20,11 @@ import java.util.List;
  */
 public class InventoryOrderWriter implements ItemWriter<Order> {
 
-	@Setter InventoryRepository inventoryRepository;
-	@Setter InventoryOrderRepository inventoryOrderRepository;
+	@Autowired
+	InventoryRepository inventoryRepository;
+
+	@Autowired
+	InventoryOrderRepository inventoryOrderRepository;
 
 	@Override
 	public void write(List<? extends Order> orders) throws Exception {

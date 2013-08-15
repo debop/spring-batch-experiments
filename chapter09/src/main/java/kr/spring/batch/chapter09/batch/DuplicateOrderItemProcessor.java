@@ -2,8 +2,8 @@ package kr.spring.batch.chapter09.batch;
 
 import kr.spring.batch.chapter09.domain.Order;
 import kr.spring.batch.chapter09.repository.OrderRepository;
-import lombok.Setter;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.support.converter.MessageConversionException;
 
 import javax.jms.JMSException;
@@ -18,7 +18,7 @@ import javax.jms.ObjectMessage;
  */
 public class DuplicateOrderItemProcessor implements ItemProcessor<Message, Order> {
 
-	@Setter
+	@Autowired
 	OrderRepository orderRepository;
 
 	@Override
@@ -46,6 +46,6 @@ public class DuplicateOrderItemProcessor implements ItemProcessor<Message, Order
 	}
 
 	private boolean orderAlreadyProcessed(Order order) {
-		return (order != null) && orderRepository.exists(order.getOrderId());
+		return (order != null) && orderRepository.exists(order.getId());
 	}
 }
