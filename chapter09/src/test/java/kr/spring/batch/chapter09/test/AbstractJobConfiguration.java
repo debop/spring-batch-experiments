@@ -17,14 +17,17 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 
@@ -55,20 +58,40 @@ public abstract class AbstractJobConfiguration {
 	@Autowired
 	protected JobRegistry jobRegistry;
 
+
+	@Value("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+	private Resource batchDropSchemaScript;
+	@Value("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+	private Resource batchCreateSchemaScript;
+
 	@Bean(name = "jobDataSource")
 	public DataSource jobDataSource() {
 		log.info("create DataSource");
 
-		return new EmbeddedDatabaseBuilder()
-				.setName("JobRepository")
-				.setType(EmbeddedDatabaseType.HSQL)
-				.addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
-				.addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
-				.build();
+//		return new EmbeddedDatabaseBuilder()
+//				.setName("JobRepository")
+//				.setType(EmbeddedDatabaseType.HSQL)
+//				.addScript("classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql")
+//				.addScript("classpath:/org/springframework/batch/core/schema-hsqldb.sql")
+//				.build();
+
+		SingleConnectionDataSource ds = new SingleConnectionDataSource();
+		ds.setDriverClassName("org.hsqldb.jdbcDriver");
+		ds.setUrl("jdbc:hsqldb:mem:test;MVCC=1;");
+		ds.setUsername("sa");
+		ds.setPassword("");
+		ds.setSuppressClose(true);
+
+		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.addScript(new ClassPathResource("/org/springframework/batch/core/schema-drop-hsqldb.sql"));
+		populator.addScript(new ClassPathResource("/org/springframework/batch/core/schema-hsqldb.sql"));
+		DatabasePopulatorUtils.execute(populator, ds);
+
+		return ds;
 	}
 
 	@Bean(name = "jobTransactionManager")
-	public PlatformTransactionManager jobTransactionManager() {
+	public DataSourceTransactionManager jobTransactionManager() {
 		return new DataSourceTransactionManager(jobDataSource());
 	}
 

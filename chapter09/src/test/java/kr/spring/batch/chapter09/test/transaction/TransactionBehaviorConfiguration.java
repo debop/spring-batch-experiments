@@ -20,15 +20,10 @@ import org.springframework.jmx.access.MBeanProxyFactoryBean;
 
 import javax.management.MalformedObjectNameException;
 
-/**
- * kr.spring.batch.chapter09.test.transaction.TransactionBehaviorConfiguration
- *
- * @author 배성혁 sunghyouk.bae@gmail.com
- * @since 13. 8. 15. 오후 3:20
- */
 @Slf4j
 @Configuration
 @EnableBatchProcessing
+// @ImportResource({ "classpath:kr/spring/batch/chapter09/transaction/queue-context.xml" })
 public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 
 	@Bean
@@ -74,14 +69,15 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 
 	@Bean
 	public Job transactionalReaderJob() {
+		// Tx를 위해 reader 정보를 Queue에 넣습니다.
 		Step step = stepBuilders.get("transactionalReaderStep")
 		                        .<String, String>chunk(5)
-				.readerIsTransactionalQueue()       // Tx를 위해 reader 정보를 Queue에 넣습니다.s
-				.faultTolerant().skipLimit(5).skip(DeadlockLoserDataAccessException.class)
-				.reader(reader())
-				.processor(processor())
-				.writer(writer())
-				.build();
+		                        .readerIsTransactionalQueue()
+		                        .faultTolerant().skipLimit(5).skip(DeadlockLoserDataAccessException.class)
+		                        .reader(reader())
+		                        .processor(processor())
+		                        .writer(writer())
+		                        .build();
 
 		return jobBuilders.get("transactionalReaderJob").start(step).build();
 	}
@@ -95,7 +91,7 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 
 	@Bean
 	public ActiveMQQueue productQueue() {
-		return new ActiveMQQueue("spring.batch.queue.product");
+		return new ActiveMQQueue("sbia.queue.product");
 	}
 
 	@Bean
@@ -117,18 +113,15 @@ public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 
 	@Bean
 	public QueueViewMBean productQueueView() {
+		MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
 		try {
-			MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
 			bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
-			bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.product");
+			bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=sbia.queue.product");
 			bean.afterPropertiesSet();
-			return (QueueViewMBean) bean.getObject();
 		} catch (MalformedObjectNameException e) {
 			log.error("ActiveMQ의 ObjectName이 잘못되었습니다.", e);
 			throw new RuntimeException(e);
-		} catch (Exception e) {
-			log.error("QueueViewMBean 을 생성하는데 실패했습니다.", e);
-			throw new RuntimeException(e);
 		}
+		return (QueueViewMBean) bean.getObject();
 	}
 }

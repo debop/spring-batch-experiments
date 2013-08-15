@@ -3,7 +3,6 @@ package kr.spring.batch.chapter09.test.transaction;
 import kr.spring.batch.chapter09.test.AbstractRobustnessTest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Test;
@@ -160,28 +159,11 @@ public class TransactionBehaviorTest extends AbstractRobustnessTest {
 	private JmsTemplate jmsTemplate;
 
 	@Autowired
-	ActiveMQQueue productQueue;
-
-	@Autowired
 	private QueueViewMBean productQueueView;
 
 	@Test
-	public void productQueueConfigurationTest() {
-		assertThat(jmsTemplate).isNotNull();
-		assertThat(productQueue).isNotNull();
-		assertThat(productQueueView).isNotNull();
+	public void transactionalReader() throws Exception {
 
-		while (jmsTemplate.receive() != null) {}
-
-		int read = 12;
-		for (int i = 1; i <= read; i++) {
-			jmsTemplate.convertAndSend(String.valueOf(i));
-		}
-		assertThat(productQueueView.getQueueSize()).isEqualTo(read);
-	}
-
-	@Test
-	public void transactionlReader() throws Exception {
 		while (jmsTemplate.receive() != null) {}
 
 		int read = 12;
@@ -207,6 +189,7 @@ public class TransactionBehaviorTest extends AbstractRobustnessTest {
 				new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters()
 		);
 		assertThat(exec.getExitStatus().getExitCode()).isEqualTo(ExitStatus.COMPLETED.getExitCode());
+
 		int expectedWritten = 5;
 		int stillOnQueue = (int) productQueueView.getQueueSize();
 		assertRead(10, exec);
