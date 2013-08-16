@@ -1,9 +1,10 @@
 package kr.spring.batch.chapter09.batch;
 
-import kr.spring.batch.chapter09.domain.Order;
-import kr.spring.batch.chapter09.repository.OrderRepository;
-import lombok.Setter;
+import kr.spring.batch.chapter09.domain.OrderEntity;
+import kr.spring.batch.chapter09.repository.OrderEntityRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -13,16 +14,19 @@ import java.util.List;
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 15. 오전 9:50
  */
-public class ShippedOrderWriter implements ItemWriter<Order> {
+@Slf4j
+public class ShippedOrderWriter implements ItemWriter<OrderEntity> {
 
-	@Setter OrderRepository orderRepository;
+    @Autowired
+    OrderEntityRepository orderEntityRepository;
 
-	@Override
-	public void write(List<? extends Order> orders) throws Exception {
-		for (Order order : orders) {
-			order.setShipped(true);
-			orderRepository.save(order);
-		}
-		orderRepository.flush();
-	}
+    @Override
+    public void write(List<? extends OrderEntity> orders) throws Exception {
+        for (OrderEntity order : orders) {
+            log.debug("OrderEntity is shipped... OrderId=[{}]", order.getOrderId());
+            order.setShipped(true);
+            orderEntityRepository.save(order);
+        }
+        orderEntityRepository.flush();
+    }
 }

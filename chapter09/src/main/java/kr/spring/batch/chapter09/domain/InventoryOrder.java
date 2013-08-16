@@ -23,32 +23,32 @@ import java.util.Objects;
 @Setter
 public class InventoryOrder implements Serializable {
 
-	public InventoryOrder() {}
+    public InventoryOrder() {}
 
-	public InventoryOrder(Order order, Date processingDate) {
-		this.order = order;
-		this.processingDate = processingDate;
-	}
+    public InventoryOrder(OrderEntity order, Date processingDate) {
+        this.order = order;
+        this.processingDate = processingDate;
+    }
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@ManyToOne
-	private Order order;
+    @ManyToOne
+    private OrderEntity order;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date processingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date processingDate;
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj != null) && (obj instanceof InventoryOrder) && (hashCode() == obj.hashCode());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return (obj != null) && (obj instanceof InventoryOrder) && (hashCode() == obj.hashCode());
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 
-	private static final long serialVersionUID = 311757910742231517L;
+    private static final long serialVersionUID = 311757910742231517L;
 }

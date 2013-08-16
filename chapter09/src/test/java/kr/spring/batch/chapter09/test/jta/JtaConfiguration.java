@@ -3,7 +3,7 @@ package kr.spring.batch.chapter09.test.jta;
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
-import kr.spring.batch.chapter09.repository.OrderRepository;
+import kr.spring.batch.chapter09.repository.OrderEntityRepository;
 import kr.spring.batch.chapter09.test.JpaHSqlConfiguration;
 import kr.spring.batch.chapter09.test.SpringLaunchConfiguration;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -31,7 +31,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableBatchProcessing
-@EnableJpaRepositories(basePackageClasses = { OrderRepository.class })
+@EnableJpaRepositories(basePackageClasses = { OrderEntityRepository.class })
 @Import({ SpringLaunchConfiguration.class, JpaHSqlConfiguration.class })
 @ImportResource({ "classpath:job-context.xml" })
 public class JtaConfiguration {

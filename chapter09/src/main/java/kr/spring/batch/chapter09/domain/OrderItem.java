@@ -25,34 +25,34 @@ import java.util.Objects;
 @Setter
 public class OrderItem implements Serializable {
 
-	public OrderItem() {}
+    public OrderItem() {}
 
-	public OrderItem(String productId, Integer quantity) {
-		this.productId = productId;
-		this.quantity = quantity;
-	}
+    public OrderItem(String productId, Integer quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@ManyToOne
-	private Order order;
+    @ManyToOne
+    private OrderEntity order;
 
-	private String productId;
+    private String productId;
 
-	private Integer quantity;
+    private Integer quantity;
 
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj != null) && (obj instanceof OrderItem) && (hashCode() == obj.hashCode());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return (obj != null) && (obj instanceof OrderItem) && (hashCode() == obj.hashCode());
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(productId);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(productId);
+    }
 
-	private static final long serialVersionUID = 3079230828084336402L;
+    private static final long serialVersionUID = 3079230828084336402L;
 }

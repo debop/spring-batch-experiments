@@ -15,16 +15,16 @@ import org.springframework.batch.item.UnexpectedInputException;
 @Slf4j
 public class DummyItemReader implements ItemReader<String> {
 
-	private BusinessService service;
+    private BusinessService service;
 
-	public DummyItemReader(BusinessService service) {
-		this.service = service;
-	}
+    public DummyItemReader(BusinessService service) {
+        this.service = service;
+    }
 
-	@Override
-	public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		String read = service.reading();
-		log.debug("read [{}]", read);
-		return read;
-	}
+    @Override
+    public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+        String read = service.reading();
+        log.debug("dummy read [{}]", read);
+        return read;
+    }
 }

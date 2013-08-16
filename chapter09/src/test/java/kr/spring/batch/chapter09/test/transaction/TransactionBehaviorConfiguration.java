@@ -1,6 +1,5 @@
 package kr.spring.batch.chapter09.test.transaction;
 
-import kr.experiments.springbatch.chapter01.domain.Product;
 import kr.spring.batch.chapter09.test.AbstractJobConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -26,102 +25,102 @@ import javax.management.MalformedObjectNameException;
 // @ImportResource({ "classpath:kr/spring/batch/chapter09/transaction/queue-context.xml" })
 public class TransactionBehaviorConfiguration extends AbstractJobConfiguration {
 
-	@Bean
-	public Job job() {
-		Step step = stepBuilders.get("step")
-		                        .<String, String>chunk(5)
-		                        .faultTolerant().skipLimit(5).skip(ValidationException.class)
-		                        .reader(reader())
-		                        .processor(processor())
-		                        .writer(writer())
-		                        .build();
+    @Bean
+    public Job job() {
+        Step step = stepBuilders.get("step")
+                                .<String, String>chunk(5)
+                                .faultTolerant().skipLimit(5).skip(ValidationException.class)
+                                .reader(reader())
+                                .processor(processor())
+                                .writer(writer())
+                                .build();
 
-		return jobBuilders.get("job").start(step).build();
-	}
+        return jobBuilders.get("job").start(step).build();
+    }
 
-	@Bean
-	public Job noRollbackJob() {
-		Step step = stepBuilders.get("noRollbackStep")
-		                        .<String, String>chunk(5)
-		                        .faultTolerant().skipLimit(5).skip(ValidationException.class).noRollback(ValidationException.class)
-		                        .reader(reader())
-		                        .processor(processor())
-		                        .writer(writer())
-		                        .build();
+    @Bean
+    public Job noRollbackJob() {
+        Step step = stepBuilders.get("noRollbackStep")
+                                .<String, String>chunk(5)
+                                .faultTolerant().skipLimit(5).skip(ValidationException.class).noRollback(ValidationException.class)
+                                .reader(reader())
+                                .processor(processor())
+                                .writer(writer())
+                                .build();
 
-		return jobBuilders.get("noRollbackJob").start(step).build();
-	}
+        return jobBuilders.get("noRollbackJob").start(step).build();
+    }
 
-	@Bean
-	public Job notTransactionalReaderJob() {
-		Step step = stepBuilders.get("notTransactionalReaderStep")
-		                        .<String, String>chunk(5)
-		                        .faultTolerant()
-		                        .skipLimit(5)
-		                        .skip(ValidationException.class)
-		                        .reader(reader())
-		                        .processor(processor())
-		                        .writer(writer())
-		                        .build();
+    @Bean
+    public Job notTransactionalReaderJob() {
+        Step step = stepBuilders.get("notTransactionalReaderStep")
+                                .<String, String>chunk(5)
+                                .faultTolerant()
+                                .skipLimit(5)
+                                .skip(ValidationException.class)
+                                .reader(reader())
+                                .processor(processor())
+                                .writer(writer())
+                                .build();
 
-		return jobBuilders.get("notTransactionalReaderJob").start(step).build();
-	}
+        return jobBuilders.get("notTransactionalReaderJob").start(step).build();
+    }
 
-	@Bean
-	public Job transactionalReaderJob() {
-		// Tx를 위해 reader 정보를 Queue에 넣습니다.
-		Step step = stepBuilders.get("transactionalReaderStep")
-		                        .<String, String>chunk(5)
-		                        .readerIsTransactionalQueue()
-		                        .faultTolerant().skipLimit(5).skip(DeadlockLoserDataAccessException.class)
-		                        .reader(reader())
-		                        .processor(processor())
-		                        .writer(writer())
-		                        .build();
+    @Bean
+    public Job transactionalReaderJob() {
+        // Tx를 위해 reader 정보를 Queue에 넣습니다.
+        Step step = stepBuilders.get("transactionalReaderStep")
+                                .<String, String>chunk(5)
+                                .readerIsTransactionalQueue()
+                                .faultTolerant().skipLimit(5).skip(DeadlockLoserDataAccessException.class)
+                                .reader(jmsReader())
+                                .processor(processor())
+                                .writer(writer())
+                                .build();
 
-		return jobBuilders.get("transactionalReaderJob").start(step).build();
-	}
+        return jobBuilders.get("transactionalReaderJob").start(step).build();
+    }
 
-	@Bean
-	public CachingConnectionFactory connectionFactory() {
-		CachingConnectionFactory ccf = new CachingConnectionFactory();
-		ccf.setTargetConnectionFactory(new ActiveMQConnectionFactory("vm://embedded?broker.persistent=false"));
-		return ccf;
-	}
+    @Bean
+    public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory ccf = new CachingConnectionFactory();
+        ccf.setTargetConnectionFactory(new ActiveMQConnectionFactory("vm://embedded?broker.persistent=false"));
+        return ccf;
+    }
 
-	@Bean
-	public ActiveMQQueue productQueue() {
-		return new ActiveMQQueue("sbia.queue.product");
-	}
+    @Bean
+    public ActiveMQQueue productQueue() {
+        return new ActiveMQQueue("sbia.queue.product");
+    }
 
-	@Bean
-	public JmsTemplate jmsTemplate() {
-		JmsTemplate jmsTemplate = new JmsTemplate();
-		jmsTemplate.setConnectionFactory(connectionFactory());
-		jmsTemplate.setSessionTransacted(true);
-		jmsTemplate.setDefaultDestination(productQueue());
-		jmsTemplate.setReceiveTimeout(100);
-		return jmsTemplate;
-	}
+    @Bean
+    public JmsTemplate jmsTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+        jmsTemplate.setConnectionFactory(connectionFactory());
+        jmsTemplate.setSessionTransacted(true);
+        jmsTemplate.setDefaultDestination(productQueue());
+        jmsTemplate.setReceiveTimeout(100);
+        return jmsTemplate;
+    }
 
-	@Bean
-	public JmsItemReader<Product> jmsReader() {
-		JmsItemReader<Product> reader = new JmsItemReader<Product>();
-		reader.setJmsTemplate(jmsTemplate());
-		return reader;
-	}
+    @Bean
+    public JmsItemReader jmsReader() {
+        JmsItemReader reader = new JmsItemReader();
+        reader.setJmsTemplate(jmsTemplate());
+        return reader;
+    }
 
-	@Bean
-	public QueueViewMBean productQueueView() {
-		MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
-		try {
-			bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
-			bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=sbia.queue.product");
-			bean.afterPropertiesSet();
-		} catch (MalformedObjectNameException e) {
-			log.error("ActiveMQ의 ObjectName이 잘못되었습니다.", e);
-			throw new RuntimeException(e);
-		}
-		return (QueueViewMBean) bean.getObject();
-	}
+    @Bean
+    public QueueViewMBean productQueueView() {
+        MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
+        try {
+            bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
+            bean.setObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=sbia.queue.product");
+            bean.afterPropertiesSet();
+        } catch (MalformedObjectNameException e) {
+            log.error("ActiveMQ의 ObjectName이 잘못되었습니다.", e);
+            throw new RuntimeException(e);
+        }
+        return (QueueViewMBean) bean.getObject();
+    }
 }
