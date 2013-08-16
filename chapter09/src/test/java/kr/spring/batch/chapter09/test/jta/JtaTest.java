@@ -27,45 +27,45 @@ import javax.sql.DataSource;
 @ContextConfiguration(classes = { JtaConfiguration.class })
 public class JtaTest {
 
-	@Autowired
-	private JobLauncher jobLauncher;
+    @Autowired
+    private JobLauncher jobLauncher;
 
-	@Autowired
-	private Job job;
+    @Autowired
+    private Job job;
 
-	private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+    @Autowired
+    public void setDataSource(DataSource applicationDataSource) {
+        jdbcTemplate = new JdbcTemplate(applicationDataSource);
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		jdbcTemplate.update("delete from product");
-		jdbcTemplate.update(
-				"insert into product (id,name,description,price) values(?,?,?,?)",
-				"PR....214", "Nokia 2610 Phone", "", 102.23
-		);
-	}
+    @Before
+    public void setUp() throws Exception {
+        jdbcTemplate.update("delete from product");
+        jdbcTemplate.update(
+            "insert into product (id,name,description,price) values(?,?,?,?)",
+            "PR....214", "Nokia 2610 Phone", "", 102.23
+        );
+    }
 
-	@Test
-	public void batchTablesAndApplicationTablesOnDifferentDb() throws Exception {
-		int initial = getProductCount();
+    @Test
+    public void batchTablesAndApplicationTablesOnDifferentDb() throws Exception {
+        int initial = getProductCount();
 
-		JobParameters params =
-				new JobParametersBuilder()
-						.addString("inputResource", "classpath:kr/spring/batch/chapter09/jta/products.zip")
-						.addString("targetDirectory", ".target/importproductsbatch/")
-						.addString("targetFile", "products.txt")
-						.addLong("timestamp", System.currentTimeMillis())
-						.toJobParameters();
-		jobLauncher.run(job, params);
+        JobParameters params =
+            new JobParametersBuilder()
+                .addString("inputResource", "classpath:kr/spring/batch/chapter09/jta/products.zip")
+                .addString("targetDirectory", ".target/importproductsbatch/")
+                .addString("targetFile", "products.txt")
+                .addLong("timestamp", System.currentTimeMillis())
+                .toJobParameters();
+        jobLauncher.run(job, params);
 
-		Assertions.assertThat(getProductCount()).isEqualTo(initial + 7);
-	}
+        Assertions.assertThat(getProductCount()).isEqualTo(initial + 7);
+    }
 
-	private int getProductCount() {
-		return jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
-	}
+    private int getProductCount() {
+        return jdbcTemplate.queryForObject("select count(1) from product", Integer.class);
+    }
 }
