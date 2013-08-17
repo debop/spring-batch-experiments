@@ -1,4 +1,4 @@
-package kr.spring.batch.chapter05;
+package kr.spring.batch.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -15,7 +15,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -29,7 +28,7 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-@Import({ SpringLaunchConfiguration.class })
+@Import({ SpringBatchInfrastructureConfiguration.class })
 public class AbstractJobConfiguration {
 
 	@Autowired
@@ -79,10 +78,10 @@ public class AbstractJobConfiguration {
 		// NOTE: 테스트 시에는 작업 진행 중에 테스트가 종료될 수 있으므로 옳바른 테스트 결과가 안나올 수 있습니다.
 		// HINT: 테스트 시에는 null 을 주시면 동기방식으로 처리되어 모든 작업이 끝나야 테스트 메소드가 종료됩니다.
 
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setMaxPoolSize(32);
-		executor.afterPropertiesSet();
-		return executor;
-//        return null;
+//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//		executor.setMaxPoolSize(32);
+//		executor.afterPropertiesSet();
+//		return executor;
+		return null;
 	}
 }

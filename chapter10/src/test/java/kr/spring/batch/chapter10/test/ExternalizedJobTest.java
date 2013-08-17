@@ -18,8 +18,9 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 8. 17. 오전 10:56
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
-		                      "classpath:kr/spring/batch/chapter10/externalized-job.xml" })
+//@ContextConfiguration({ "classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
+//		                      "classpath:kr/spring/batch/chapter10/externalized-job.xml" })
+@ContextConfiguration(classes = { ExternalizedJobConfiguration.class })
 public class ExternalizedJobTest extends AbstractJobTest {
 
 	@Autowired

@@ -11,12 +11,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since 13. 8. 16. 오후 8:41
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
-                        "classpath:kr/spring/batch/chapter10/externalized-flow.xml" })
+//@ContextConfiguration({ "classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
+//                        "classpath:kr/spring/batch/chapter10/externalized-flow.xml" })
+@ContextConfiguration(classes = { ExternalizedFlowConfiguration.class })
 public class ExternalizedFlowTest extends AbstractJobTest {
 
-    @Override
-    protected int getExpectedNbOfInvocationFileExists() {
-        return 2;
-    }
+	@Override
+	protected int getExpectedNbOfInvocationFileExists() {
+		return 2;
+	}
 }
