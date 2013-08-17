@@ -13,8 +13,11 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 8. 17. 오전 11:38
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
-		                      "classpath:kr/spring/batch/chapter10/transmit-data-step-context-job.xml" })
+@ContextConfiguration(
+		{
+				"classpath:kr/spring/batch/chapter10/batch-infrastructure.xml",
+				"classpath:kr/spring/batch/chapter10/transmit-data-step-context-job.xml"
+		})
 public class TransmitDataStepContextTest extends AbstractJobTest {
 
 	@Override
