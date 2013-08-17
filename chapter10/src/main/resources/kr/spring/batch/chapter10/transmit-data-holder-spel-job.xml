@@ -3,10 +3,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-       http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <import resource="tasklet-definition.xml"/>
+
+    <bean id="trackImportTasklet" class="kr.spring.batch.chapter10.tasklet.TrackImportTasklet" scope="step">
+        <property name="batchService" ref="batchService"/>
+        <property name="importId" value="#{importMetadataHolder.get().getImportId()}"/>
+    </bean>
 
     <job id="importProductsJob" xmlns="http://www.springframework.org/schema/batch">
         <step id="downloadStep" next="someFileDownloadedDecision">
