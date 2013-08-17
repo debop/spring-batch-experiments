@@ -14,17 +14,17 @@ import org.springframework.batch.core.StepExecutionListener;
  */
 public class FileExistsStepListener implements StepExecutionListener {
 
-    @Setter BatchService batchService;
-    @Setter private String targetFile;
+	@Setter BatchService batchService;
+	@Setter String targetFile;
 
-    @Override
-    public void beforeStep(StepExecution stepExecution) {}
+	@Override
+	public void beforeStep(StepExecution stepExecution) {}
 
-    @Override
-    public ExitStatus afterStep(StepExecution stepExecution) {
-        if (batchService.exists(targetFile)) {
-            return new ExitStatus("FILE EXISTS");
-        }
-        return new ExitStatus("NO FILE");
-    }
+	@Override
+	public ExitStatus afterStep(StepExecution stepExecution) {
+		if (batchService.exists(targetFile)) {
+			return new ExitStatus("FILE EXISTS");
+		}
+		return new ExitStatus("NO FILE");
+	}
 }

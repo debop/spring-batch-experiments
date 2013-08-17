@@ -74,6 +74,6 @@
 
     <bean id="skippedItemsDecider" class="kr.spring.batch.chapter10.decider.SkippedItemsDecider"/>
 
-    <jdbc:embedded-database id="dataSource" type="HSQL"/>
+    <!--<jdbc:embedded-database id="dataSource" type="HSQL"/>-->
 
 </beans>

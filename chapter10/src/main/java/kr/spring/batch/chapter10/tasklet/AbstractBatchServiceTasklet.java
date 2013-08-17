@@ -15,21 +15,21 @@ import org.springframework.batch.item.ExecutionContext;
  */
 public abstract class AbstractBatchServiceTasklet implements Tasklet {
 
-    public AbstractBatchServiceTasklet() {}
+	public AbstractBatchServiceTasklet() {}
 
-    public AbstractBatchServiceTasklet(BatchService batchService) {
-        this.batchService = batchService;
-    }
+	public AbstractBatchServiceTasklet(BatchService batchService) {
+		this.batchService = batchService;
+	}
 
-    @Getter
-    @Setter
-    private BatchService batchService;
+	@Getter
+	@Setter
+	private BatchService batchService;
 
-    public final ExecutionContext getJobExecutionContext(ChunkContext chunkContext) {
-        return chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
-    }
+	public ExecutionContext getJobExecutionContext(ChunkContext chunkContext) {
+		return chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
+	}
 
-    public ExecutionContext getStepExecutionContext(ChunkContext chunkContext) {
-        return chunkContext.getStepContext().getStepExecution().getExecutionContext();
-    }
+	public ExecutionContext getStepExecutionContext(ChunkContext chunkContext) {
+		return chunkContext.getStepContext().getStepExecution().getExecutionContext();
+	}
 }

@@ -15,15 +15,15 @@ import org.springframework.batch.core.job.flow.JobExecutionDecider;
  */
 public class FileExistsDecider implements JobExecutionDecider {
 
-    @Setter private BatchService batchService;
+	@Setter BatchService batchService;
 
-    @Override
-    public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
-        String targetFile = jobExecution.getJobParameters().getString("archiveFile");
-        if (batchService.exists(targetFile)) {
-            return new FlowExecutionStatus("FILE EXISTS");
-        } else {
-            return new FlowExecutionStatus("NO FILE");
-        }
-    }
+	@Override
+	public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
+		String targetFile = jobExecution.getJobParameters().getString("archiveFile");
+		if (batchService.exists(targetFile)) {
+			return new FlowExecutionStatus("FILE EXISTS");
+		} else {
+			return new FlowExecutionStatus("NO FILE");
+		}
+	}
 }

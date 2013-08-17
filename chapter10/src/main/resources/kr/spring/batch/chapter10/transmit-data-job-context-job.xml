@@ -9,17 +9,6 @@
 
     <import resource="tasklet-definition.xml"/>
 
-    <!-- xmlns:batch 가 IntelliJ로부터 제거되는 것을 막기위해 -->
-    <batch:job id="dummyJob">
-        <batch:step id="dummyStep">
-            <batch:tasklet ref="dummyTasklet"/>
-        </batch:step>
-    </batch:job>
-    <bean id="dummyTasklet" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.springframework.batch.core.step.tasklet.Tasklet"/>
-    </bean>
-
-
     <bean id="verifyTasklet" class="kr.spring.batch.chapter10.tasklet.VerifyStoreInJobContextTasklet" scope="step">
         <property name="batchService" ref="batchService"/>
         <property name="outputDirectory" value="#{jobParameters['workingDirectory']}"/>
@@ -69,7 +58,5 @@
     </bean>
 
     <bean id="skippedItemsDecider" class="kr.spring.batch.chapter10.decider.SkippedItemsDecider"/>
-
-    <jdbc:embedded-database id="dataSource" type="HSQL"/>
 
 </beans>
