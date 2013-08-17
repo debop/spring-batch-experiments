@@ -19,7 +19,6 @@
         <module>chapter09</module>
         <module>chapter10</module>
         <module>chapter11</module>
-        <module>chapter12</module>
     </modules>
 
     <name>spring-batch-experiments</name>
