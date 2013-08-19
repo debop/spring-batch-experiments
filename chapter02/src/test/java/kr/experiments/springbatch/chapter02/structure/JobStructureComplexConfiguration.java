@@ -110,10 +110,8 @@ public class JobStructureComplexConfiguration {
                           .listener(loggerListener)
                           .start(decompress)
                           .next(readWrite)
-                          .next(skippedDecider()).from(readWrite).on("SKIPPED").to(generateReport).next(sendReport)
-                          .on("*").to(clean)
-                          .next(clean)
-                          .build()
+                          .next(skippedDecider()).on("SKIPPED").to(generateReport).next(sendReport)
+                          .from(skippedDecider()).on("*").to(clean).end()
                           .build();
 
     }
