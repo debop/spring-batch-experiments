@@ -19,35 +19,34 @@ import static org.mockito.Mockito.*;
  */
 public class ProductItemListenerTest {
 
-	private Product p = null;
-	private FlatFileItemWriter<Product> writer = null;
-	private List<Product> products = null;
+    private Product p = null;
+    private FlatFileItemWriter<Product> writer = null;
+    private List<Product> products = null;
 
-	@Before
-	public void setUp() {
-		p = new Product();
-		p.setId("211");
-		p.setName("BlackBerry");
-		products = Arrays.asList(p);
-		writer = mock(FlatFileItemWriter.class);
-	}
+    @Before
+    public void setUp() {
+        p = new Product();
+        p.setId("211");
+        p.setName("BlackBerry");
+        products = Arrays.asList(p);
+        writer = mock(FlatFileItemWriter.class);
+    }
 
-	@Test
-	public void afterProcess() throws Exception {
-		ProductItemListener listener = new ProductItemListener();
-		listener.setExcludeWriter(writer);
-		listener.afterProcess(p, null);
+    @Test
+    public void afterProcess() throws Exception {
+        ProductItemListener listener = new ProductItemListener();
+        listener.setExcludeWriter(writer);
+        listener.afterProcess(p, null);
 
-		verify(writer, times(1)).write(products);
-	}
+        verify(writer, times(1)).write(products);
+    }
 
-	@Test
-	public void afterProcessResult() throws Exception {
-		ProductItemListener listener = new ProductItemListener();
-		listener.setExcludeWriter(writer);
-		listener.afterProcess(p, p);
+    @Test
+    public void afterProcessResult() throws Exception {
+        ProductItemListener listener = new ProductItemListener();
+        listener.setExcludeWriter(writer);
+        listener.afterProcess(p, p);
 
-		verify(writer, never()).write(products);
-	}
-
+        verify(writer, never()).write(products);
+    }
 }

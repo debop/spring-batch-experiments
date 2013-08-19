@@ -17,33 +17,33 @@ import java.util.List;
  */
 public class ImportValidator implements JobParametersValidator, ResourceLoaderAware {
 
-	public static final String PARAM_INPUT_RESOURCE = "inputResource";
-	public static final String PARAM_REPORT_RESOURCE = "reportResource";
-	private ResourceLoader resourceLoader;
+    public static final String PARAM_INPUT_RESOURCE = "inputResource";
+    public static final String PARAM_REPORT_RESOURCE = "reportResource";
+    private ResourceLoader resourceLoader;
 
-	@Override
-	public void validate(JobParameters parameters) throws JobParametersInvalidException {
-		List<String> missing = new ArrayList<String>();
-		checkParameter(PARAM_INPUT_RESOURCE, parameters, missing);
-		checkParameter(PARAM_REPORT_RESOURCE, parameters, missing);
+    @Override
+    public void validate(JobParameters parameters) throws JobParametersInvalidException {
+        List<String> missing = new ArrayList<String>();
+        checkParameter(PARAM_INPUT_RESOURCE, parameters, missing);
+        checkParameter(PARAM_REPORT_RESOURCE, parameters, missing);
 
-		if (!missing.isEmpty()) {
-			throw new JobParametersInvalidException("Missing parameters: " + missing);
-		}
-		if (!resourceLoader.getResource(parameters.getString(PARAM_INPUT_RESOURCE)).exists()) {
-			throw new JobParametersInvalidException(
-					"The input file: " + parameters.getString(PARAM_INPUT_RESOURCE) + " does not exist");
-		}
-	}
+        if (!missing.isEmpty()) {
+            throw new JobParametersInvalidException("Missing parameters: " + missing);
+        }
+        if (!resourceLoader.getResource(parameters.getString(PARAM_INPUT_RESOURCE)).exists()) {
+            throw new JobParametersInvalidException(
+                "The input file: " + parameters.getString(PARAM_INPUT_RESOURCE) + " does not exist");
+        }
+    }
 
-	@Override
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
-	private void checkParameter(String key, JobParameters parameters, List<String> missing) {
-		if (parameters.getParameters().containsKey(key)) {
-			missing.add(key);
-		}
-	}
+    private void checkParameter(String key, JobParameters parameters, List<String> missing) {
+        if (!parameters.getParameters().containsKey(key)) {
+            missing.add(key);
+        }
+    }
 }
