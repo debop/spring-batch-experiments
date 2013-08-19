@@ -128,7 +128,5 @@ public class JobWithDecidersWithJavaConfigTest extends AbstractJobTest {
             return new SkippedItemsDecider();
         }
     }
-
-
 }
 
