@@ -48,7 +48,7 @@ public class AbstractJobConfiguration {
 
     @Bean(name = "jobDataSource")
     public DataSource jobDataSource() {
-        AbstractJobConfiguration.log.info("create DataSource");
+        log.info("create DataSource");
 
         return new EmbeddedDatabaseBuilder()
             .setName("JobRepository")

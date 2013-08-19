@@ -15,15 +15,16 @@ import java.util.Arrays;
  */
 public class ProductItemListener extends ItemListenerSupport<Product, Product> {
 
-	@Setter
-	private FlatFileItemWriter<Product> excludeWriter;
+    @Setter
+    private FlatFileItemWriter<Product> excludeWriter;
 
-	@Override
-	public void afterProcess(Product item, Product result) {
-		if (result == null) {
-			try {
-				excludeWriter.write(Arrays.asList(item));
-			} catch (Exception ignored) {}
-		}
-	}
+
+    @Override
+    public void afterProcess(Product item, Product result) {
+        if (result == null) {
+            try {
+                excludeWriter.write(Arrays.asList(item));
+            } catch (Exception ignored) {}
+        }
+    }
 }

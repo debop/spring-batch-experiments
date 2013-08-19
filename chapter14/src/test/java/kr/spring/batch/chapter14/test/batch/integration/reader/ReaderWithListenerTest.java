@@ -2,7 +2,6 @@ package kr.spring.batch.chapter14.test.batch.integration.reader;
 
 import kr.spring.batch.chapter14.batch.ImportValidator;
 import kr.spring.batch.chapter14.domain.Product;
-import kr.spring.batch.chapter14.test.batch.integration.BatchConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,8 @@ import static org.fest.assertions.Assertions.assertThat;
         StepScopeTestExecutionListener.class
     })
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { BatchConfiguration.class })
+// @ContextConfiguration(classes = { BatchConfiguration.class })
+@ContextConfiguration({ "classpath:spring-batch-job.xml" })
 public class ReaderWithListenerTest {
 
     String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";

@@ -15,4 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //                        "classpath:kr/spring/batch/chapter10/job-with-deciders.xml" })
 @ContextConfiguration(classes = { JobWithDecidersConfiguration.class })
 public class JobWithDecidersTest extends AbstractJobTest {
+
+
 }

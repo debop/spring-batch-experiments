@@ -3,6 +3,7 @@ package kr.spring.batch.chapter14.test.batch.integration;
 import kr.spring.batch.chapter14.config.AbstractJobConfiguration;
 import kr.spring.batch.chapter14.config.JpaHSqlConfiguration;
 import kr.spring.batch.chapter14.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 19. 오전 11:43
  */
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
