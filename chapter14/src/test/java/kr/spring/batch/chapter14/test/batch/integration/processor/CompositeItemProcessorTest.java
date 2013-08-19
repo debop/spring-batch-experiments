@@ -1,17 +1,12 @@
-package kr.spring.batch.chapter14.test.batch.integration.reader;
+package kr.spring.batch.chapter14.test.batch.integration.processor;
 
-import kr.spring.batch.chapter14.batch.ImportValidator;
 import kr.spring.batch.chapter14.domain.Product;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.item.ExecutionContext;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemStream;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +16,15 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import java.math.BigDecimal;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
- * kr.spring.batch.chapter14.test.batch.integration.reader.ReaderWithListenerTest
+ * kr.spring.batch.chapter14.test.batch.integration.processor.CompositeItemProcessorTest
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
- * @since 13. 8. 19. 오전 11:07
+ * @since 13. 8. 19. 오후 10:07
  */
 @TestExecutionListeners(
 		{
@@ -36,46 +33,55 @@ import static org.fest.assertions.Assertions.assertThat;
 		})
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring/spring-batch-job.xml" })
-public class ReaderWithListenerTest {
-
-	String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
+public class CompositeItemProcessorTest {
 
 	@Autowired
-	private ItemReader<Product> reader;
+	private ItemProcessor<Product, Product> processor;
 
 	public StepExecution getStepExecution() {
 		JobParameters jobParameters = new JobParametersBuilder()
-				.addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
+				.addDouble("maxPrice", 200.00d)
 				.toJobParameters();
 
 		StepExecution execution = MetaDataInstanceFactory.createStepExecution(jobParameters);
 		return execution;
 	}
 
-	@Before
-	public void setUp() {
-		((ItemStream) reader).open(new ExecutionContext());
-	}
+	@Test
+	@DirtiesContext
+	public void testProcessor() throws Exception {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(100.0f));
 
-	@After
-	public void tearDown() {
-		((ItemStream) reader).close();
+		Product p2 = processor.process(p1);
+		assertThat(p2).isNotNull();
 	}
 
 	@Test
 	@DirtiesContext
-	public void testReader() throws Exception {
-		Product p = reader.read();
-		assertThat(p).isNotNull();
-		assertThat(p.getId()).isEqualTo("211");
-		assertThat(reader.read()).isNotNull();   // 2
-		assertThat(reader.read()).isNotNull();  // 3
-		assertThat(reader.read()).isNotNull();  // 4
-		assertThat(reader.read()).isNotNull();  // 5
-		assertThat(reader.read()).isNotNull();  // 6
-		assertThat(reader.read()).isNotNull();  // 7
-		assertThat(reader.read()).isNotNull();  // 8
+	public void testZeroPriceFailure() throws Exception {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(0.0f));
 
-		assertThat(reader.read()).isNull();
+		Product p2 = processor.process(p1);
+		assertThat(p2).isNull();
+	}
+
+	@Test
+	@DirtiesContext
+	public void testNegativePriceFailure() throws Exception {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(-100.0f));
+
+		Product p2 = processor.process(p1);
+		assertThat(p2).isNull();
+	}
+
+	@Test
+	@DirtiesContext
+	public void testEmptyProductFailure() throws Exception {
+		Product p1 = new Product();
+		Product p2 = processor.process(p1);
+		assertThat(p2).isNull();
 	}
 }

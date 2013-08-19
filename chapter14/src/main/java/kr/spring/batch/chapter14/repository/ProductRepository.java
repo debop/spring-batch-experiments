@@ -2,6 +2,7 @@ package kr.spring.batch.chapter14.repository;
 
 import kr.spring.batch.chapter14.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * kr.spring.batch.chapter14.repository.ProductRepository
@@ -10,4 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 13. 8. 18. 오후 9:32
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+	@Query("select avg(price) from Product")
+	Double getAverage();
 }
