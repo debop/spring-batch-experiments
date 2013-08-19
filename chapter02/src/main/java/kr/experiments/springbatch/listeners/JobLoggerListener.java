@@ -13,19 +13,19 @@ import org.springframework.batch.core.JobExecutionListener;
  */
 public class JobLoggerListener implements JobExecutionListener {
 
-	private static final Logger log = LoggerFactory.getLogger(JobLoggerListener.class);
+    private static final Logger log = LoggerFactory.getLogger(JobLoggerListener.class);
 
-	@Override
-	public void beforeJob(JobExecution jobExecution) {
-		log.debug("잡 [{}]을 실행합니다...인자=[{}]",
-		          jobExecution.getJobInstance().getJobName(), jobExecution.getJobParameters());
-	}
+    @Override
+    public void beforeJob(JobExecution jobExecution) {
+        log.info("잡 [{}]을 실행합니다...인자=[{}]",
+                 jobExecution.getJobInstance().getJobName(), jobExecution.getJobParameters());
+    }
 
-	@Override
-	public void afterJob(JobExecution jobExecution) {
+    @Override
+    public void afterJob(JobExecution jobExecution) {
 
-		log.debug("잡 [{}]을 종료했습니다. 종료 상태=[{}]",
-		          jobExecution.getJobInstance().getJobName(), jobExecution.getStatus());
+        log.info("잡 [{}]을 종료했습니다. 종료 상태=[{}]",
+                 jobExecution.getJobInstance().getJobName(), jobExecution.getStatus());
 
-	}
+    }
 }
