@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch
+       http://www.springframework.org/schema/batch/spring-batch.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<import resource="classpath:spring/spring-batch-infrastructure.xml"/>
+	<import resource="classpath:spring/spring-data-jpa.xml"/>
+
+	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils"/>
+
+	<jpa:repositories base-package="kr.spring.batch.chapter13.repository"/>
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="maxPoolSize" value="5"/>
+	</bean>
+
+	<batch:job id="partitionImportProductsJob">
+		<batch:step id="readWriteProducts">
+			<batch:partition step="partitionReadWriteProducts" partitioner="partitioner">
+				<batch:handler grid-size="2" task-executor="taskExecutor"/>
+			</batch:partition>
+		</batch:step>
+	</batch:job>
+
+	<batch:step id="partitionReadWriteProducts">
+		<batch:tasklet>
+			<batch:chunk reader="productItemReader" writer="writer" commit-interval="10"/>
+		</batch:tasklet>
+	</batch:step>
+
+	<bean id="productItemReader" class="kr.spring.batch.chapter13.WrappedItemReaderForColumnRange">
+		<property name="delegate" ref="productItemReaderTarget"/>
+	</bean>
+
+	<bean id="productItemReaderTarget" scope="step" class="org.springframework.batch.item.database.JpaPagingItemReader">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+		<property name="queryString"
+		          value="select p from ProductForColumnRange p where p.id&gt;=:minValue and p.id&lt;=:maxValue"/>
+		<property name="parameterValues">
+			<map>
+				<entry key="minValue" value="#{stepExecutionContext[minValue]}"/>
+				<entry key="maxValue" value="#{stepExecutionContext[maxValue]}"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="writer" class="kr.spring.batch.chapter13.DummyProductForColumnRangeWriter" scope="step"/>
+
+	<bean id="partitioner" class="kr.spring.batch.chapter13.partition.ColumnRangePartitioner">
+		<property name="entityName" value="ProductForColumnRange"/>
+		<property name="propertyName" value="id"/>
+	</bean>
+
+</beans>

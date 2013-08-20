@@ -18,28 +18,32 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class NextDeciderTest {
 
-	StepExecution stepExecution = null;
-	JobExecution jobExecution = null;
-	NextDecider decider = null;
+    StepExecution stepExecution = null;
+    JobExecution jobExecution = null;
+    NextDecider decider = null;
 
-	@Before
-	public void setUp() {
-		stepExecution = MetaDataInstanceFactory.createStepExecution();
-		jobExecution = MetaDataInstanceFactory.createJobExecution();
-		decider = new NextDecider();
-	}
+    @Before
+    public void setUp() {
+        // Job 전체를 생성하지 않고, 특정 Step만을 Dummy로 생성하여 테스트 할 수 있다.
 
-	@Test
-	public void testNextStatus() {
-		stepExecution.setWriteCount(5);
-		FlowExecutionStatus status = decider.decide(jobExecution, stepExecution);
-		assertThat(status.getName()).isEqualTo("NEXT");
-	}
+        stepExecution = MetaDataInstanceFactory.createStepExecution();
+        jobExecution = MetaDataInstanceFactory.createJobExecution();
+        decider = new NextDecider();
+    }
 
-	@Test
-	public void testCompletedStatus() {
-		stepExecution.setWriteCount(0);
-		FlowExecutionStatus status = decider.decide(jobExecution, stepExecution);
-		assertThat(status).isEqualTo(FlowExecutionStatus.COMPLETED);
-	}
+    @Test
+    public void testNextStatus() {
+        // Step 에서 Write 작업이 5번 일어났다면...
+        stepExecution.setWriteCount(5);
+        FlowExecutionStatus status = decider.decide(jobExecution, stepExecution);
+        assertThat(status.getName()).isEqualTo("NEXT");
+    }
+
+    @Test
+    public void testCompletedStatus() {
+        // Step에서 Write 작업이 한번도 일어나지 않았다면... 더 이상 할 일이 없다...
+        stepExecution.setWriteCount(0);
+        FlowExecutionStatus status = decider.decide(jobExecution, stepExecution);
+        assertThat(status).isEqualTo(FlowExecutionStatus.COMPLETED);
+    }
 }

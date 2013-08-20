@@ -39,7 +39,6 @@ public class ProductItemWriterMockTest {
 
     @Test
     public void testWriteProduct() throws Exception {
-        //when(productRepository.save(anyListOf(Product.class))).thenReturn(anyListOf(Product.class));
         writer.write(items);
 
         verify(productRepository, times(1)).save(anyListOf(Product.class));

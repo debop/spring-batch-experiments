@@ -22,6 +22,7 @@ public class CleanTaskletTest {
 
     @Test
     public void clean() throws Exception {
+
         StepExecution stepExecution = MetaDataInstanceFactory.createStepExecution();
         StepContribution contrib = new StepContribution(stepExecution);
         ChunkContext context = new ChunkContext(new StepContext(stepExecution));

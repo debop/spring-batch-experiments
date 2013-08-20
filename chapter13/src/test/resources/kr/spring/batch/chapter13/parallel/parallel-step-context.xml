@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch
+       http://www.springframework.org/schema/batch/spring-batch.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<import resource="classpath:spring/spring-batch-infrastructure.xml"/>
+	<import resource="classpath:spring/spring-data-jpa.xml"/>
+
+	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils"/>
+
+	<jpa:repositories base-package="kr.spring.batch.chapter13.repository"/>
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="maxPoolSize" value="5"/>
+	</bean>
+
+	<!--
+		readWriteBookProduct 와 readWriteMobileProduct 두 개를 독립적인 작업으로 병렬로 수행합니다.
+	-->
+	<batch:job id="parallelImportProductsJob">
+		<batch:split id="readWrite" task-executor="taskExecutor">
+			<batch:flow>
+				<batch:step id="readWriteBookProduct">
+					<batch:tasklet>
+						<batch:chunk reader="bookProductItemReader" writer="writer" commit-interval="10"/>
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="readWriteMobileProduct">
+					<batch:tasklet>
+						<batch:chunk reader="mobileProductItemReader" writer="writer" commit-interval="10"/>
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+		</batch:split>
+	</batch:job>
+
+	<bean id="bookProductItemReader" class="kr.spring.batch.chapter13.WrappedItemReader">
+		<property name="delegate" ref="bookProductItemReaderTarget"/>
+	</bean>
+
+	<bean id="bookProductItemReaderTarget" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="classpath:/kr/spring/batch/chapter13/input/book-products-delimited.txt"/>
+		<property name="linesToSkip" value="1"/>
+		<property name="lineMapper" ref="productLineMapper"/>
+	</bean>
+
+	<bean id="mobileProductItemReader" class="kr.spring.batch.chapter13.WrappedItemReader">
+		<property name="delegate" ref="mobileProductItemReaderTarget"/>
+	</bean>
+	<bean id="mobileProductItemReaderTarget" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="classpath:/kr/spring/batch/chapter13/input/mobile-products-delimited.txt"/>
+		<property name="linesToSkip" value="1"/>
+		<property name="lineMapper" ref="productLineMapper"/>
+	</bean>
+
+	<bean id="productLineMapper" class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+		<property name="lineTokenizer" ref="productLineTokenizer"/>
+		<property name="fieldSetMapper" ref="productFieldSetMapper"/>
+	</bean>
+
+	<bean id="productLineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+		<property name="delimiter" value=","/>
+		<property name="names" value="id,name,description,specific,price"/>
+	</bean>
+
+	<bean id="productFieldSetMapper" class="kr.spring.batch.chapter13.ProductFieldSetMapper"/>
+
+	<bean id="writer" class="kr.spring.batch.chapter13.DummyProductWriter" scope="step"/>
+
+</beans>

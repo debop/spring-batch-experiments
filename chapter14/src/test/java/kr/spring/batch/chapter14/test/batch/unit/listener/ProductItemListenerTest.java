@@ -36,6 +36,8 @@ public class ProductItemListenerTest {
     public void afterProcess() throws Exception {
         ProductItemListener listener = new ProductItemListener();
         listener.setExcludeWriter(writer);
+
+        // afterProcess에서 result 가 null 이므로, 제외하는 작업을 수행합니다.
         listener.afterProcess(p, null);
 
         verify(writer, times(1)).write(products);

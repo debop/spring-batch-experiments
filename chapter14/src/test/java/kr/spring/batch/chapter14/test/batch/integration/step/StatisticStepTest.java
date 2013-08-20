@@ -28,46 +28,49 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration("classpath:spring/spring-batch-job.xml")
 public class StatisticStepTest {
 
-	String STATISTIC_REF_PATH = "classpath:kr/spring/batch/chapter14/output/statistic-summary.txt";
-	String STATISTIC_PATH = "./target/statistic-summary.txt";
+    String STATISTIC_REF_PATH = "classpath:kr/spring/batch/chapter14/output/statistic-summary.txt";
+    String STATISTIC_PATH = "./target/statistic-summary.txt";
 
-	@Autowired
-	JobLauncherTestUtils jobLauncherTestUtils;
+    @Autowired
+    JobLauncherTestUtils jobLauncherTestUtils;
 
-	@Autowired
-	private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-	@Before
-	public void setup() {
-		Product product = new Product();
-		product.setId("1");
-		product.setDescription("");
-		product.setPrice(new BigDecimal(10.0f));
+    @Before
+    public void setup() {
+        productRepository.deleteAll();
+        productRepository.flush();
 
-		productRepository.saveAndFlush(product);
+        Product product = new Product();
+        product.setId("1");
+        product.setDescription("");
+        product.setPrice(new BigDecimal(10.0f));
 
-		product = new Product();
-		product.setId("2");
-		product.setDescription("");
-		product.setPrice(new BigDecimal(30.0f));
+        productRepository.saveAndFlush(product);
 
-		productRepository.saveAndFlush(product);
-	}
+        product = new Product();
+        product.setId("2");
+        product.setDescription("");
+        product.setPrice(new BigDecimal(30.0f));
 
-	@Test
-	@DirtiesContext
-	public void integration() throws Exception {
-		JobParameters jobParameters = new JobParametersBuilder()
-				.addString("reportResource", "file:" + STATISTIC_PATH)
-				.toJobParameters();
+        productRepository.saveAndFlush(product);
+    }
 
-		JobExecution exec = jobLauncherTestUtils.launchStep("statisticStep", jobParameters);
+    @Test
+    @DirtiesContext
+    public void integration() throws Exception {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addString("reportResource", "file:" + STATISTIC_PATH)
+            .toJobParameters();
 
-		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-		StepExecution stepExecution = exec.getStepExecutions().iterator().next();
-		assertThat(stepExecution.getWriteCount()).isEqualTo(1);
+        JobExecution exec = jobLauncherTestUtils.launchStep("statisticStep", jobParameters);
 
-		AssertFile.assertFileEquals(ResourceUtils.getFile(STATISTIC_REF_PATH),
-		                            ResourceUtils.getFile(STATISTIC_PATH));
-	}
+        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+        StepExecution stepExecution = exec.getStepExecutions().iterator().next();
+        assertThat(stepExecution.getWriteCount()).isEqualTo(1);
+
+        AssertFile.assertFileEquals(ResourceUtils.getFile(STATISTIC_REF_PATH),
+                                    ResourceUtils.getFile(STATISTIC_PATH));
+    }
 }

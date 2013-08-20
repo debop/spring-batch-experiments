@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
@@ -22,16 +23,20 @@ import java.io.Serializable;
 @Setter
 public class ProductForColumnRange implements Serializable {
 
-	@Id
-	private Long id;
-	private String name;
-	private String description;
-	private float price;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@Override
-	public String toString() {
-		return "ProductForColumnRange# id=[" + id + "], name=[" + name + "]";
-	}
+    private String name;
 
-	private static final long serialVersionUID = -4686885077293578413L;
+    private String description;
+
+    private float price;
+
+    @Override
+    public String toString() {
+        return "ProductForColumnRange# id=[" + id + "], name=[" + name + "]";
+    }
+
+    private static final long serialVersionUID = -4686885077293578413L;
 }

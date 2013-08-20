@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "productType")
 @DiscriminatorValue("Product")
 @DynamicInsert
 @DynamicUpdate
@@ -23,25 +24,27 @@ import java.io.Serializable;
 @Setter
 public class Product implements Serializable {
 
-	public Product() {}
+    public Product() {}
 
-	public Product(String id) {
-		this.id = id;
-	}
+    public Product(String id) {
+        this.id = id;
+    }
 
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private float price;
+    private float price;
 
-	@Override
-	public String toString() {
-		return "Product# id=[" + id + "], name=[" + name + "]";
-	}
+    private boolean processed;
 
-	private static final long serialVersionUID = 7647304969032217912L;
+    @Override
+    public String toString() {
+        return "Product# id=[" + id + "], name=[" + name + "]";
+    }
+
+    private static final long serialVersionUID = 7647304969032217912L;
 }
