@@ -30,6 +30,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableBatchProcessing
 @EnableTransactionManagement
 @Import(HSqlConfig.class)
+// @ImportResource({ "classpath:kr/spring/batch/chapter05/test/jpa/jobstructure-jpa.xml" })
 public class JobStructureJpaConfig extends AbstractJobConfiguration {
 
 	@Autowired EntityManagerFactory emf;
@@ -48,9 +49,7 @@ public class JobStructureJpaConfig extends AbstractJobConfiguration {
 		                        .writer(productItemWriter())
 		                        .build();
 
-		return jobBuilders.get("importProductsJob")
-		                  .start(step)
-		                  .build();
+		return jobBuilders.get("importProductsJob").start(step).build();
 	}
 
 	@Bean

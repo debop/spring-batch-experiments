@@ -59,7 +59,7 @@ public class JobStructureDelimitedMultiFlatFileConfig extends AbstractJobConfigu
 	@Bean
 	public ItemReader<Product> productItemReader() throws Exception {
 		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-		reader.setResource(new ClassPathResource("/input/multi-products-delimited.txt"));
+		reader.setResource(new ClassPathResource("/kr/spring/batch/chapter05/test/input/multi-products-delimited.txt"));
 		reader.setLinesToSkip(1);
 		reader.setLineMapper(productLineMapper());
 

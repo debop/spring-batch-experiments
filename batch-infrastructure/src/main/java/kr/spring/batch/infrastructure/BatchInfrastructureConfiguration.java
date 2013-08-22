@@ -1,4 +1,4 @@
-package kr.spring.batch.chapter05;
+package kr.spring.batch.infrastructure;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -34,12 +34,12 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-public class SpringLaunchConfiguration {
+public class BatchInfrastructureConfiguration {
 
 	@Bean
 	public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
 
-		SpringLaunchConfiguration.log.info("create PropertyPlaceholderConfigurer");
+		log.info("create PropertyPlaceholderConfigurer");
 		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
 //        configurer.setLocation(new ClassPathResource("batch.properties"));
 //        configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
@@ -90,6 +90,7 @@ public class SpringLaunchConfiguration {
 	                               @Qualifier("jobTaskExecutor") TaskExecutor taskExecutor) throws Exception {
 		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
 		jobLauncher.setJobRepository(jobRepository);
+
 		if (taskExecutor != null)
 			jobLauncher.setTaskExecutor(taskExecutor);
 
@@ -109,7 +110,6 @@ public class SpringLaunchConfiguration {
 		// HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
 		// HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
 		factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
-
 		factory.afterPropertiesSet();
 
 		return factory.getJobRepository();
@@ -121,9 +121,9 @@ public class SpringLaunchConfiguration {
 	}
 
 	@Bean
-	public StepBuilderFactory stepBuilderFactory(JobRepository jobRepository,
-	                                             @Qualifier("jobTransactionManager")
-	                                             PlatformTransactionManager transactionManager) throws Exception {
+	public StepBuilderFactory stepBuilderFactory(
+			JobRepository jobRepository,
+			@Qualifier("jobTransactionManager") PlatformTransactionManager transactionManager) throws Exception {
 		return new StepBuilderFactory(jobRepository, transactionManager);
 	}
 

@@ -9,57 +9,56 @@
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
-	<!-- Quartz -->
-	<batch:job id="job">
-		<batch:step id="step">
-			<bean:tasklet>
-				<bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
-					<property name="countDownLatch" ref="countDownLatch"/>
-				</bean>
-			</bean:tasklet>
-		</batch:step>
-	</batch:job>
+    <!-- Quartz -->
+    <batch:job id="job">
+        <batch:step id="step">
+            <bean:tasklet>
+                <bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
+                    <property name="countDownLatch" ref="countDownLatch"/>
+                </bean>
+            </bean:tasklet>
+        </batch:step>
+    </batch:job>
 
-	<bean id="countDownLatch" class="java.util.concurrent.CountDownLatch">
-		<constructor-arg value="5"/>
-	</bean>
+    <bean id="countDownLatch" class="java.util.concurrent.CountDownLatch">
+        <constructor-arg value="5"/>
+    </bean>
 
-	<bean id="jobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="kr.spring.batch.chapter04.test.QuartzLauncher"/>
-	</bean>
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="kr.spring.batch.chapter04.test.QuartzLauncher"/>
+    </bean>
 
-	<bean id="jobDetailTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail" ref="jobDetail"/>
-		<property name="cronExpression" value="* * * * * ?"/>
-	</bean>
+    <bean id="jobDetailTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="jobDetail"/>
+        <property name="cronExpression" value="* * * * * ?"/>
+    </bean>
 
-	<bean id="schedulerFactoryBean"
-	      class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="jobDetailTrigger"/>
-			</list>
-		</property>
-		<property name="jobFactory">
-			<bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
-		</property>
-		<property name="dataSource" ref="dataSource"/>
-		<property name="schedulerContextAsMap">
-			<map>
-				<entry key="job" value-ref="job"/>
-				<entry key="jobLauncher" value-ref="jobLauncher"/>
-			</map>
-		</property>
-	</bean>
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="jobDetailTrigger"/>
+            </list>
+        </property>
+        <property name="jobFactory">
+            <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
+        </property>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="schedulerContextAsMap">
+            <map>
+                <entry key="job" value-ref="job"/>
+                <entry key="jobLauncher" value-ref="jobLauncher"/>
+            </map>
+        </property>
+    </bean>
 
-	<!-- batch infrastructure -->
+    <!-- batch infrastructure -->
 
-	<import resource="classpath:spring/infrastructure-batch.xml"/>
+    <import resource="classpath:spring/infrastructure-batch.xml"/>
 
-	<jdbc:embedded-database id="dataSource" type="H2">
-		<jdbc:script location="classpath:/kr/spring/batch/chapter04/test/tables_h2.sql"/>
-	</jdbc:embedded-database>
+    <jdbc:embedded-database id="dataSource" type="H2">
+        <jdbc:script location="classpath:/kr/spring/batch/chapter04/test/tables_h2.sql"/>
+    </jdbc:embedded-database>
 
-	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+    <bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
 
 </beans>

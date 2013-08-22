@@ -54,7 +54,7 @@ public class JobStructureFixedFlatFileConfig extends AbstractJobConfiguration {
 	@Bean
 	public ItemReader<Product> productItemReader() {
 		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-		reader.setResource(new ClassPathResource("/input/products-fixed.txt"));
+		reader.setResource(new ClassPathResource("/kr/spring/batch/chapter05/test/input/products-fixed.txt"));
 		reader.setLinesToSkip(1);
 		reader.setLineMapper(productLineMapper());
 

@@ -54,7 +54,7 @@ public class JobStructureJsonFlatFileConfig extends AbstractJobConfiguration {
 	@Bean
 	public ItemReader<Product> productItemReader() {
 		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-		reader.setResource(new ClassPathResource("/input/products.json"));
+		reader.setResource(new ClassPathResource("/kr/spring/batch/chapter05/test/input/products.json"));
 		reader.setRecordSeparatorPolicy(productRecordSeparatorPolicy());
 		reader.setLineMapper(productLineMapper());
 

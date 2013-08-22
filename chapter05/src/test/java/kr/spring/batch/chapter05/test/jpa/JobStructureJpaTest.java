@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @ContextConfiguration(classes = { JobStructureJpaConfig.class })
+//@ContextConfiguration
 public class JobStructureJpaTest extends AbstractJobStructureTest {
 
 	@Autowired

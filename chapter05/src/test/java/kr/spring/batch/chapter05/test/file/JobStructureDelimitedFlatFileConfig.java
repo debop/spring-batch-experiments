@@ -53,7 +53,7 @@ public class JobStructureDelimitedFlatFileConfig extends AbstractJobConfiguratio
 	@Bean
 	public ItemReader<Product> productItemReader() {
 		FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-		reader.setResource(new ClassPathResource("/input/products-delimited.txt"));
+		reader.setResource(new ClassPathResource("/kr/spring/batch/chapter05/test/input/products-delimited.txt"));
 		reader.setLinesToSkip(1);
 		reader.setLineMapper(productLineMapper());
 
