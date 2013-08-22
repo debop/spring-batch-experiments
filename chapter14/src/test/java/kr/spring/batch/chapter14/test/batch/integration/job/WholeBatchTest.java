@@ -23,37 +23,37 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 8. 19. 오후 10:17
  */
 @TestExecutionListeners(
-		{
-				DependencyInjectionTestExecutionListener.class,
-				StepScopeTestExecutionListener.class
-		})
+    {
+        DependencyInjectionTestExecutionListener.class,
+        StepScopeTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring/spring-batch-job.xml" })
+@ContextConfiguration({ "classpath:spring/infrastructure-job.xml" })
 public class WholeBatchTest {
 
-	String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
-	String STATISTIC_PATH = "file:./target/statistic.txt";
+    String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
+    String STATISTIC_PATH = "file:./target/statistic.txt";
 
-	@Autowired
-	private JobLauncherTestUtils jobLauncherTestUtils;
+    @Autowired
+    private JobLauncherTestUtils jobLauncherTestUtils;
 
-	@Autowired
-	private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-	@Test
-	@DirtiesContext
-	public void integration() throws Exception {
-		JobParameters jobParameters = new JobParametersBuilder()
-				.addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
-				.addString(ImportValidator.PARAM_REPORT_RESOURCE, STATISTIC_PATH)
-				.toJobParameters();
+    @Test
+    @DirtiesContext
+    public void integration() throws Exception {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
+            .addString(ImportValidator.PARAM_REPORT_RESOURCE, STATISTIC_PATH)
+            .toJobParameters();
 
-		JobExecution exec = jobLauncherTestUtils.launchJob(jobParameters);
-		assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+        JobExecution exec = jobLauncherTestUtils.launchJob(jobParameters);
+        assertThat(exec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-		StepExecution stepExec = exec.getStepExecutions().iterator().next();
-		assertThat(stepExec.getFilterCount()).isEqualTo(2);     // 하나는 NULL, 하나는 음수
-		assertThat(stepExec.getWriteCount()).isEqualTo(6);      // 총 8개 중에 2개 제외
-		assertThat(productRepository.count()).isEqualTo(6);
-	}
+        StepExecution stepExec = exec.getStepExecutions().iterator().next();
+        assertThat(stepExec.getFilterCount()).isEqualTo(2);     // 하나는 NULL, 하나는 음수
+        assertThat(stepExec.getWriteCount()).isEqualTo(6);      // 총 8개 중에 2개 제외
+        assertThat(productRepository.count()).isEqualTo(6);
+    }
 }

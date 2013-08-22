@@ -10,8 +10,8 @@
        http://www.springframework.org/schema/data/jpa
        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-	<import resource="classpath:spring/spring-batch-infrastructure.xml"/>
-	<import resource="classpath:spring/spring-data-jpa.xml"/>
+	<import resource="classpath:spring/infrastructure-batch.xml"/>
+	<import resource="classpath:spring/infrastructure-jpa.xml"/>
 
 	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils"/>
 

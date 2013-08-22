@@ -30,52 +30,52 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 8. 19. 오전 11:07
  */
 @TestExecutionListeners(
-		{
-				DependencyInjectionTestExecutionListener.class,
-				StepScopeTestExecutionListener.class
-		})
+    {
+        DependencyInjectionTestExecutionListener.class,
+        StepScopeTestExecutionListener.class
+    })
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring/spring-batch-job.xml" })
+@ContextConfiguration({ "classpath:spring/infrastructure-job.xml" })
 public class ReaderWithListenerTest {
 
-	String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
+    String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
 
-	@Autowired
-	private ItemReader<Product> reader;
+    @Autowired
+    private ItemReader<Product> reader;
 
-	public StepExecution getStepExecution() {
-		JobParameters jobParameters = new JobParametersBuilder()
-				.addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
-				.toJobParameters();
+    public StepExecution getStepExecution() {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
+            .toJobParameters();
 
-		StepExecution execution = MetaDataInstanceFactory.createStepExecution(jobParameters);
-		return execution;
-	}
+        StepExecution execution = MetaDataInstanceFactory.createStepExecution(jobParameters);
+        return execution;
+    }
 
-	@Before
-	public void setUp() {
-		((ItemStream) reader).open(new ExecutionContext());
-	}
+    @Before
+    public void setUp() {
+        ((ItemStream) reader).open(new ExecutionContext());
+    }
 
-	@After
-	public void tearDown() {
-		((ItemStream) reader).close();
-	}
+    @After
+    public void tearDown() {
+        ((ItemStream) reader).close();
+    }
 
-	@Test
-	@DirtiesContext
-	public void testReader() throws Exception {
-		Product p = reader.read();
-		assertThat(p).isNotNull();
-		assertThat(p.getId()).isEqualTo("211");
-		assertThat(reader.read()).isNotNull();   // 2
-		assertThat(reader.read()).isNotNull();  // 3
-		assertThat(reader.read()).isNotNull();  // 4
-		assertThat(reader.read()).isNotNull();  // 5
-		assertThat(reader.read()).isNotNull();  // 6
-		assertThat(reader.read()).isNotNull();  // 7
-		assertThat(reader.read()).isNotNull();  // 8
+    @Test
+    @DirtiesContext
+    public void testReader() throws Exception {
+        Product p = reader.read();
+        assertThat(p).isNotNull();
+        assertThat(p.getId()).isEqualTo("211");
+        assertThat(reader.read()).isNotNull();   // 2
+        assertThat(reader.read()).isNotNull();  // 3
+        assertThat(reader.read()).isNotNull();  // 4
+        assertThat(reader.read()).isNotNull();  // 5
+        assertThat(reader.read()).isNotNull();  // 6
+        assertThat(reader.read()).isNotNull();  // 7
+        assertThat(reader.read()).isNotNull();  // 8
 
-		assertThat(reader.read()).isNull();
-	}
+        assertThat(reader.read()).isNull();
+    }
 }

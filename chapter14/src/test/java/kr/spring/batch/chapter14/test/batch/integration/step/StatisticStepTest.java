@@ -25,7 +25,7 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 8. 19. 오후 9:29
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring/spring-batch-job.xml")
+@ContextConfiguration("classpath:spring/infrastructure-job.xml")
 public class StatisticStepTest {
 
     String STATISTIC_REF_PATH = "classpath:kr/spring/batch/chapter14/output/statistic-summary.txt";

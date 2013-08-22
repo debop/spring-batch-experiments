@@ -2,37 +2,35 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/jdbc
-       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<tx:annotation-driven/>
+	<context:component-scan base-package="kr.spring.batch.chapter14"/>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>
 	</bean>
 
+	<!-- 나머지 Hibernate 관련 설정은 META-INF/persistence.xml 에서 설정해 주세요 -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="generateDdl" value="true"/>
-				<property name="database" value="HSQL"/>
-			</bean>
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
-				<prop key="hibernate.format_sql">true</prop>
-				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.connection.autocommit">true</prop>
-				<prop key="hibernate.jdbc.batch_size">30</prop>
-				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-				<!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>-->
-			</props>
-		</property>
-		<!-- 프로젝트별로 변경해야 할 내용입니다. -->
-		<!--<property name="persistenceUnitName" value="kr.spring.batch.chapter13.persistenceUnit"/>-->
-		<property name="packagesToScan" value="kr.spring.batch.chapter13.domain"/>
+
+		<!-- 나머지 Hibernate 관련 설정은 META-INF/persistence.xml 에서 설정해 주세요 -->
+		<property name="persistenceUnitName" value="kr.spring.batch.chapter14.persistenceUnit"/>
+		<!-- Entity Scan -->
+		<property name="packagesToScan" value="kr.spring.batch.chapter14.domain"/>
 	</bean>
 
 	<bean id="hibernateExceptionTranslator" class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
@@ -40,10 +38,10 @@
 	<!--<jdbc:embedded-database id="dataSource" type="HSQL"/>-->
 
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
-		<constructor-arg name="poolProperties" ref="hsqldb-Properties"/>
+		<constructor-arg name="poolProperties" ref="hsqldb-properties"/>
 	</bean>
 
-	<bean id="hsqldb-Properties" class="org.apache.tomcat.jdbc.pool.PoolProperties">
+	<bean id="hsqldb-properties" class="org.apache.tomcat.jdbc.pool.PoolProperties">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
 		<property name="url" value="jdbc:hsqldb:mem:hibernate;MVCC=true;"/>
 		<property name="username" value="sa"/>

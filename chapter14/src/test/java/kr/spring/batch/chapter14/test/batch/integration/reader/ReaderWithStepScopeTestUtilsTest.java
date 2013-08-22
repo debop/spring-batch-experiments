@@ -29,46 +29,46 @@ import java.util.concurrent.Callable;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "/spring/spring-batch-job.xml" })
+@ContextConfiguration({ "/spring/infrastructure-job.xml" })
 public class ReaderWithStepScopeTestUtilsTest {
 
-	String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
+    String PRODUCTS_PATH = "classpath:kr/spring/batch/chapter14/input/products.txt";
 
-	@Autowired
-	private ItemReader<Product> reader;
+    @Autowired
+    private ItemReader<Product> reader;
 
-	public StepExecution getStepExecution() {
-		JobParameters jobParameters = new JobParametersBuilder()
-				.addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
-				.toJobParameters();
-		StepExecution execution = MetaDataInstanceFactory.createStepExecution(jobParameters);
-		return execution;
-	}
+    public StepExecution getStepExecution() {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addString(ImportValidator.PARAM_INPUT_RESOURCE, PRODUCTS_PATH)
+            .toJobParameters();
+        StepExecution execution = MetaDataInstanceFactory.createStepExecution(jobParameters);
+        return execution;
+    }
 
-	@Test
-	@DirtiesContext
-	public void testReader() throws Exception {
-		int count = StepScopeTestUtils.doInStepScope(
-				getStepExecution(),
-				new Callable<Integer>() {
-					@Override
-					public Integer call() throws Exception {
-						int count = 0;
-						try {
-							((ItemStream) reader).open(new ExecutionContext());
-							Object line = null;
-							while ((line = reader.read()) != null) {
-								log.info("Read Item=[{}]", line);
-								count++;
-							}
-							return count;
-						} finally {
-							((ItemStream) reader).close();
-						}
-					}
-				});
+    @Test
+    @DirtiesContext
+    public void testReader() throws Exception {
+        int count = StepScopeTestUtils.doInStepScope(
+            getStepExecution(),
+            new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    int count = 0;
+                    try {
+                        ((ItemStream) reader).open(new ExecutionContext());
+                        Object line = null;
+                        while ((line = reader.read()) != null) {
+                            log.info("Read Item=[{}]", line);
+                            count++;
+                        }
+                        return count;
+                    } finally {
+                        ((ItemStream) reader).close();
+                    }
+                }
+            });
 
-		Assertions.assertThat(count).isEqualTo(8);
+        Assertions.assertThat(count).isEqualTo(8);
 
-	}
+    }
 }

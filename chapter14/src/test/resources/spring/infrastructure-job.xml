@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch
+       http://www.springframework.org/schema/batch/spring-batch.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<import resource="classpath:spring/infrastructure-batch.xml"/>
+	<import resource="classpath:spring/infrastructure-jpa.xml"/>
+
+	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils"/>
+
+	<jpa:repositories base-package="kr.spring.batch.chapter14.repository"/>
+
+	<batch:job id="import">
+		<batch:validator ref="jobValidator"/>
+		<batch:step id="productsStep" next="nextDecision">
+			<batch:tasklet>
+				<batch:chunk reader="reader" processor="processor" writer="writer" commit-interval="2">
+					<batch:streams>
+						<batch:stream ref="excludeWriter"/>
+					</batch:streams>
+				</batch:chunk>
+				<batch:listeners>
+					<batch:listener ref="productItemListener"/>
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+		<batch:decision id="nextDecision" decider="nextDecider">
+			<batch:next on="NEXT" to="statisticStep"/>
+			<batch:next on="*" to="cleanStep"/>
+		</batch:decision>
+		<batch:step id="statisticStep" next="cleanStep">
+			<batch:tasklet>
+				<batch:chunk reader="statisticReader" writer="statisticWriter" commit-interval="2"/>
+			</batch:tasklet>
+		</batch:step>
+		<batch:step id="cleanStep">
+			<batch:tasklet ref="cleanTasklet"/>
+		</batch:step>
+	</batch:job>
+
+	<bean id="jobValidator" class="kr.spring.batch.chapter14.batch.ImportValidator"/>
+
+	<bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="resource" value="#{jobParameters['inputResource']}"/>
+		<property name="linesToSkip" value="1"/>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="lineTokenizer">
+					<bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="names" value="ID,NAME,DESCRIPTION,PRICE"/>
+					</bean>
+				</property>
+				<property name="fieldSetMapper">
+					<bean class="kr.spring.batch.chapter14.batch.ProductFieldSetMapper"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="processor" class="org.springframework.batch.item.support.CompositeItemProcessor" scope="step">
+		<property name="delegates">
+			<list>
+				<bean class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="filter" value="true"/>
+					<property name="validator">
+						<bean class="kr.spring.batch.chapter14.batch.validation.PriceMandatoryValidator"/>
+					</property>
+				</bean>
+				<bean class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="filter" value="true"/>
+					<property name="validator">
+						<bean class="kr.spring.batch.chapter14.batch.validation.PositivePriceValidator"/>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="productItemListener" class="kr.spring.batch.chapter14.batch.ProductItemListener">
+		<property name="excludeWriter" ref="excludeWriter"/>
+	</bean>
+
+	<bean id="writer" class="kr.spring.batch.chapter14.batch.ProductItemWriter">
+		<property name="productRepository" ref="productRepository"/>
+	</bean>
+
+	<bean id="excludeWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+		<property name="resource" value="file:./target/excludes.txt"/>
+		<property name="lineAggregator">
+			<bean class="org.springframework.batch.item.file.transform.PassThroughLineAggregator"/>
+		</property>
+	</bean>
+
+	<bean id="nextDecider" class="kr.spring.batch.chapter14.batch.NextDecider"/>
+
+	<bean id="statisticReader" class="kr.spring.batch.chapter14.batch.ProductAvgReader">
+		<property name="productRepository" ref="productRepository"/>
+	</bean>
+
+	<bean id="statisticWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+		<property name="resource" value="#{jobParameters['reportResource']}"/>
+		<property name="lineAggregator">
+			<bean class="org.springframework.batch.item.file.transform.PassThroughLineAggregator"/>
+		</property>
+	</bean>
+
+	<bean id="cleanTasklet" class="kr.spring.batch.chapter14.batch.CleanTasklet"/>
+</beans>

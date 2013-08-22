@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/batch
        http://www.springframework.org/schema/batch/spring-batch.xsd">
 
-	<import resource="classpath:spring/spring-batch-infrastructure.xml"/>
+	<import resource="classpath:spring/infrastructure-batch.xml"/>
 
 	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
 
