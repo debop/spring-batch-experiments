@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch
+       http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<import resource="classpath:/spring/infrastructure-batch.xml"/>
+
+	<alias name="jobDataSource" alias="dataSource"/>
+	<alias name="jobTransactionManager" alias="transactionManager"/>
+
+	<batch:job id="job" incrementer="incrementer">
+		<batch:step id="step">
+			<batch:tasklet ref="tasklet"/>
+		</batch:step>
+	</batch:job>
+
+	<bean id="tasklet" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="org.springframework.batch.core.step.tasklet.Tasklet"/>
+	</bean>
+
+	<bean id="incrementer" class="org.springframework.batch.core.launch.support.RunIdIncrementer"/>
+
+</beans>

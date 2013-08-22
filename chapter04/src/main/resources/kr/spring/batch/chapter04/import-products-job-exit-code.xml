@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch
+       http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<batch:job id="importProductsJob">
+		<batch:step id="importProductsStep">
+			<batch:tasklet ref="tasklet">
+				<batch:listeners>
+					<batch:listener ref="listener"/>
+				</batch:listeners>
+			</batch:tasklet>
+			<batch:end on="COMPLETED" exit-code="COMPLETED"/>
+			<batch:end on="FAILED" exit-code="FAILED"/>
+			<batch:end on="COMPLETED WITH SKIPS" exit-code="COMPLETED WITH SKIPS"/>
+			<batch:end on="*" exit-code="UNKNOWN"/>
+		</batch:step>
+	</batch:job>
+
+	<bean id="listener" class="kr.spring.batch.chapter04.ModifyExitStatusListener"/>
+
+	<bean class="kr.spring.batch.chapter04.SkippedAwareExitCodeMapper"/>
+
+	<bean id="tasklet" class="kr.spring.batch.chapter04.HelloTasklet"/>
+
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository"/>
+	</bean>
+
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManager"/>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+
+</beans>

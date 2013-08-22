@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<batch:job id="readWriteJob">
+		<batch:step id="readWriteStep">
+			<batch:tasklet>
+				<batch:chunk reader="reader" writer="writer" commit-interval="10"/>
+				<batch:listeners>
+					<batch:listener ref="stopListener"/>
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<bean id="reader" class="kr.spring.batch.chapter04.test.stop.InfiniteReader"/>
+	<bean id="writer" class="kr.spring.batch.chapter04.test.stop.EmptyWriter"/>
+
+	<bean id="stopListener" class="kr.spring.batch.chapter04.test.stop.StopListener"/>
+
+	<batch:job id="taskletJob">
+		<batch:step id="taskletStep">
+			<batch:tasklet ref="tasklet"/>
+		</batch:step>
+	</batch:job>
+
+	<bean id="tasklet" class="kr.spring.batch.chapter04.test.stop.ProcessItemsTasklet"/>
+
+	<batch:job id="jobOperatorJob">
+		<batch:step id="jobOperatorStep">
+			<batch:tasklet>
+				<batch:chunk reader="reader" writer="writer" commit-interval="10"/>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<!-- some JMX -->
+	<bean class="org.springframework.jmx.export.MBeanExporter">
+		<property name="beans">
+			<map>
+				<entry key="com.manning.sbia:name=jobOperator" value-ref="jobOperator"/>
+			</map>
+		</property>
+	</bean>
+
+	<jdbc:embedded-database id="dataSource" type="HSQL">
+		<jdbc:script location="classpath:/org/springframework/batch/core/schema-hsqldb.sql"/>
+	</jdbc:embedded-database>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<constructor-arg ref="dataSource"/>
+	</bean>
+
+	<batch:job-repository id="jobRepository" data-source="dataSource" isolation-level-for-create="READ_COMMITTED"/>
+
+	<task:executor id="executor" pool-size="1"/>
+
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository"/>
+		<property name="taskExecutor" ref="executor"/>
+	</bean>
+
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry"/>
+	</bean>
+
+	<bean id="jobRegistry"
+	      class="org.springframework.batch.core.configuration.support.MapJobRegistry"/>
+
+	<bean id="jobExplorer"
+	      class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
+		<property name="jobRepository" ref="jobRepository"/>
+		<property name="jobLauncher" ref="jobLauncher"/>
+		<property name="jobRegistry" ref="jobRegistry"/>
+		<property name="jobExplorer" ref="jobExplorer"/>
+	</bean>
+
+
+</beans>
