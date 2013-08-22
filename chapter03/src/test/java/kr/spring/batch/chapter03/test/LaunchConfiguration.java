@@ -1,8 +1,6 @@
-package kr.spring.batch.chapter01.config;
+package kr.spring.batch.chapter03.test;
 
-import kr.spring.batch.chapter01.listeners.JobLoggerListener;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -17,10 +15,10 @@ import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
+import org.springframework.batch.support.DatabaseType;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -44,7 +42,7 @@ public class LaunchConfiguration {
 
 	@Bean
 	public DataSource dataSource() {
-		log.info("create DataSource");
+		LaunchConfiguration.log.info("create DataSource");
 
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.HSQL)
@@ -62,12 +60,12 @@ public class LaunchConfiguration {
 	@Bean
 	public PropertyPlaceholderConfigurer placeHolderProperties() throws Exception {
 
-		log.info("create PropertyPlaceholderConfigurer");
+		LaunchConfiguration.log.info("create PropertyPlaceholderConfigurer");
 		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-		configurer.setLocation(new ClassPathResource("batch.properties"));
-		configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
-		configurer.setIgnoreUnresolvablePlaceholders(true);
-		configurer.setOrder(1);
+//        configurer.setLocation(new ClassPathResource("batch.properties"));
+//        configurer.setSystemPropertiesModeName("SYSTEM_PROPERTIES_MODE_OVERRIDE");
+//        configurer.setIgnoreUnresolvablePlaceholders(true);
+//        configurer.setOrder(1);
 
 		return configurer;
 	}
@@ -130,6 +128,7 @@ public class LaunchConfiguration {
 
 		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
 		factory.setDataSource(dataSource());
+		factory.setDatabaseType(DatabaseType.HSQL.name());
 		factory.setTransactionManager(transactionManager());
 		factory.afterPropertiesSet();
 
@@ -144,10 +143,5 @@ public class LaunchConfiguration {
 	@Bean
 	public StepBuilderFactory stepBuilderFactory() throws Exception {
 		return new StepBuilderFactory(jobRepository(), transactionManager());
-	}
-
-	@Bean
-	public JobExecutionListener jobLoggerListener() {
-		return new JobLoggerListener();
 	}
 }

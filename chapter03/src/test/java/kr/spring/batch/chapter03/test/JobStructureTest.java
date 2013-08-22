@@ -12,11 +12,12 @@ import org.springframework.test.context.ContextConfiguration;
  * @since 13. 7. 31. 오후 1:09
  */
 @Slf4j
-@ContextConfiguration({ "classpath:/spring/infrastructure-job.xml" })
+@ContextConfiguration(classes = { JobStructureConfiguration.class })
+//@ContextConfiguration({ "classpath:/spring/infrastructure-job.xml" })
 public class JobStructureTest extends AbstractJobStructureTest {
 
-    @Test
-    public void delimitedJob() throws Exception {
-        jobLauncher.run(job, new JobParameters());
-    }
+	@Test
+	public void delimitedJob() throws Exception {
+		jobLauncher.run(job, new JobParameters());
+	}
 }
