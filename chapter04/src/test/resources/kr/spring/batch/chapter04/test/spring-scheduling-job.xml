@@ -8,62 +8,66 @@
        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-	<!-- scheduling infrastructure -->
-	<task:scheduler id="scheduler" pool-size="10"/>
+    <!-- scheduling infrastructure -->
+    <task:scheduler id="scheduler" pool-size="10"/>
 
-	<!-- xml scheduling -->
-	<task:scheduled-tasks scheduler="scheduler">
-		<task:scheduled ref="springSchedulingLauncher" method="launch" fixed-rate="1000"/>
-	</task:scheduled-tasks>
+    <!-- xml scheduling -->
+    <task:scheduled-tasks scheduler="scheduler">
+        <task:scheduled ref="springSchedulingLauncher" method="launch" fixed-rate="1000"/>
+    </task:scheduled-tasks>
 
-	<batch:job id="xmlJob">
-		<batch:step id="xmlStep">
-			<bean:tasklet>
-				<bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
-					<property name="countDownLatch" ref="xmlCountDownLatch"/>
-				</bean>
-			</bean:tasklet>
-		</batch:step>
-	</batch:job>
+    <!--
+        HINT: @Scheduled annotation을 이용하려면, 이 것을 지정해줘야 작동합니다.
+    -->
+    <task:annotation-driven scheduler="scheduler"/>
 
-	<bean id="xmlCountDownLatch" class="java.util.concurrent.CountDownLatch">
-		<constructor-arg value="2"/>
-	</bean>
+    <batch:job id="xmlJob" job-repository="jobRepository">
+        <batch:step id="xmlStep">
+            <bean:tasklet>
+                <bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
+                    <property name="countDownLatch" ref="xmlCountDownLatch"/>
+                </bean>
+            </bean:tasklet>
+        </batch:step>
+    </batch:job>
 
-	<bean id="springSchedulingLauncher" class="kr.spring.batch.chapter04.test.SpringSchedulingLauncher">
-		<property name="job" ref="xmlJob"/>
-		<property name="jobLauncher" ref="jobLauncher"/>
-	</bean>
+    <bean id="xmlCountDownLatch" class="java.util.concurrent.CountDownLatch">
+        <constructor-arg value="2"/>
+    </bean>
 
-	<!-- annotation scheduling -->
+    <bean id="springSchedulingLauncher" class="kr.spring.batch.chapter04.test.SpringSchedulingLauncher">
+        <property name="job" ref="xmlJob"/>
+        <property name="jobLauncher" ref="jobLauncher"/>
+    </bean>
 
-	<task:annotation-driven scheduler="scheduler"/>
+    <!-- annotation scheduling -->
 
-	<batch:job id="annotationJob">
-		<batch:step id="annotationStep">
-			<batch:tasklet>
-				<bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
-					<property name="countDownLatch" ref="annotationCountDownLatch"/>
-				</bean>
-			</batch:tasklet>
-		</batch:step>
-	</batch:job>
+    <!--
+        <batch:job id="annotationJob" job-repository="jobRepository">
+            <batch:step id="annotationStep">
+                <batch:tasklet>
+                    <bean class="kr.spring.batch.chapter04.test.CountDownTasklet">
+                        <property name="countDownLatch" ref="annotationCountDownLatch"/>
+                    </bean>
+                </batch:tasklet>
+            </batch:step>
+        </batch:job>
 
-	<bean id="annotationCountDownLatch" class="java.util.concurrent.CountDownLatch">
-		<constructor-arg value="2"/>
-	</bean>
+        <bean id="annotationCountDownLatch" class="java.util.concurrent.CountDownLatch">
+            <constructor-arg value="2"/>
+        </bean>
 
-	<bean id="springSchedulingAnnotatedLauncher"
-	      class="kr.spring.batch.chapter04.test.SpringSchedulingAnnotatedLauncher">
-		<property name="job" ref="annotationJob"/>
-		<property name="jobLauncher" ref="jobLauncher"/>
-	</bean>
+        <bean id="springSchedulingAnnotatedLauncher"
+              class="kr.spring.batch.chapter04.test.SpringSchedulingAnnotatedLauncher">
+            <property name="job" ref="annotationJob"/>
+            <property name="jobLauncher" ref="jobLauncher"/>
+        </bean>
+    -->
+    <!-- batch infrastructure -->
+    <!--
+        <import resource="classpath:spring/infrastructure-batch.xml"/>
 
-	<!-- batch infrastructure -->
-
-	<import resource="classpath:spring/infrastructure-batch.xml"/>
-
-	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
-
+        <bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+    -->
 
 </beans>

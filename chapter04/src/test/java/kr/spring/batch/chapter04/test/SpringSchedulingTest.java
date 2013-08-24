@@ -18,24 +18,25 @@ import static org.fest.assertions.Assertions.assertThat;
  * @since 13. 7. 31. 오후 4:57
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/kr/spring/batch/chapter04/test/spring-scheduling-job.xml" })
+// @ContextConfiguration(locations = { "classpath:/kr/spring/batch/chapter04/test/spring-scheduling-job.xml" })
+@ContextConfiguration(classes = { SpringSchedulingConfiguration.class })
 public class SpringSchedulingTest {
 
-    @Autowired
-    CountDownLatch xmlCountDownLatch;
+	@Autowired
+	CountDownLatch xmlCountDownLatch;
 
-    @Autowired
-    CountDownLatch annotationCountDownLatch;
+	@Autowired
+	CountDownLatch annotationCountDownLatch;
 
-    @Test
-    public void xmlSpringScheduling() throws Exception {
-        assertThat(xmlCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
-    }
+	@Test
+	public void xmlSpringScheduling() throws Exception {
+		assertThat(xmlCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
+	}
 
-    @Test
-    public void annotationSpringScheduling() throws Exception {
-        assertThat(annotationCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
-    }
+	@Test
+	public void annotationSpringScheduling() throws Exception {
+		assertThat(annotationCountDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
+	}
 }
 
 

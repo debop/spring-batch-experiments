@@ -1,67 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/jdbc
-       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-	<jdbc:embedded-database id="jobDataSource" type="HSQL">
-		<jdbc:script location="classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql"/>
-		<jdbc:script location="classpath:/org/springframework/batch/core/schema-hsqldb.sql"/>
-	</jdbc:embedded-database>
+    <jdbc:embedded-database id="jobDataSource" type="HSQL">
+        <jdbc:script location="classpath:/org/springframework/batch/core/schema-drop-hsqldb.sql"/>
+        <jdbc:script location="classpath:/org/springframework/batch/core/schema-hsqldb.sql"/>
+    </jdbc:embedded-database>
 
-	<bean id="jobTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="jobDataSource"/>
-	</bean>
+    <bean id="jobTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="jobDataSource"/>
+    </bean>
 
-	<!--<bean id="jobTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">-->
-	<!--<property name="corePoolSize" value="1"/>-->
-	<!--&lt;!&ndash;<property name="maxPoolSize" value="1"/>&ndash;&gt;-->
-	<!--</bean>-->
+    <!--<bean id="jobTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">-->
+    <!--<property name="corePoolSize" value="1"/>-->
+    <!--&lt;!&ndash;<property name="maxPoolSize" value="1"/>&ndash;&gt;-->
+    <!--</bean>-->
 
-	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-		<property name="jobRepository" ref="jobRepository"/>
-		<!--<property name="taskExecutor" ref="jobTaskExecutor"/>-->
-	</bean>
+    <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+        <property name="jobRepository" ref="jobRepository"/>
+        <!--<property name="taskExecutor" ref="jobTaskExecutor"/>-->
+    </bean>
 
-	<batch:job-repository id="jobRepository"
-	                      data-source="jobDataSource"
-	                      transaction-manager="jobTransactionManager"
-	                      isolation-level-for-create="READ_COMMITTED"/>
+    <bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+        <property name="dataSource" ref="jobDataSource"/>
+        <property name="transactionManager" ref="jobTransactionManager"/>
+        <!--
+            HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
+            HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
+        -->
+        <property name="isolationLevelForCreate" value="ISOLATION_DEFAULT"/>
+    </bean>
 
-	<!--
-		 NOTE: 이상하다. MapJobRepositoryFactoryBean 으로 Registry를 생성하면, jobOperator로 job의 실행정보를 못가지고 온다.
-		 NOTE: 위의 batch:job-registry를 이용해야만 한다.
-		 NOTE: 이때 문제되는 것이 Jpa 와 같이 사용할 때 문제가 되지 않을까 싶다.
-	-->
-	<bean id="jobRepository2" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
-		<property name="transactionManager" ref="jobTransactionManager"/>
-		<!--
-			HINT: 에러메시지 Standard JPA does not support custom isolation levels - use a special JpaDialect for your JPA implementation 가 나올 때
-			HINT: http://forum.springsource.org/showthread.php?59779-Spring-Batch-1-1-2-Standard-JPA-does-not-support-custom-isolation-levels-use-a-sp
-		-->
-		<property name="isolationLevelForCreate" value="ISOLATION_DEFAULT"/>
-	</bean>
+    <!-- Job 인스턴스 조회에 사용됩니다. -->
+    <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+        <property name="dataSource" ref="jobDataSource"/>
+    </bean>
 
-	<!-- Job 인스턴스 조회에 사용됩니다. -->
-	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-		<property name="dataSource" ref="jobDataSource"/>
-	</bean>
+    <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/>
 
-	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/>
+    <bean id="jobRegistryBeanPostProcessor"
+          class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+        <property name="jobRegistry" ref="jobRegistry"/>
+    </bean>
 
-	<bean id="jobRegistryBeanPostProcessor"
-	      class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
-		<property name="jobRegistry" ref="jobRegistry"/>
-	</bean>
-
-	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
-		<property name="jobLauncher" ref="jobLauncher"/>
-		<property name="jobRepository" ref="jobRepository"/>
-		<property name="jobExplorer" ref="jobExplorer"/>
-		<property name="jobRegistry" ref="jobRegistry"/>
-	</bean>
+    <bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
+        <property name="jobLauncher" ref="jobLauncher"/>
+        <property name="jobRepository" ref="jobRepository"/>
+        <property name="jobExplorer" ref="jobExplorer"/>
+        <property name="jobRegistry" ref="jobRegistry"/>
+    </bean>
 
 </beans>
