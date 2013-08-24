@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter05.test.jpa;
 
-import kr.spring.batch.chapter05.AbstractJobConfiguration;
 import kr.spring.batch.chapter05.Product;
+import kr.spring.batch.chapter05.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter05.test.DummyProductItemWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
@@ -31,14 +30,9 @@ import javax.persistence.EntityManagerFactory;
 @EnableTransactionManagement
 @Import(HSqlConfig.class)
 // @ImportResource({ "classpath:kr/spring/batch/chapter05/test/jpa/jobstructure-jpa.xml" })
-public class JobStructureJpaConfig extends AbstractJobConfiguration {
+public class JobStructureJpaConfig extends AbstractBatchConfiguration {
 
 	@Autowired EntityManagerFactory emf;
-
-	@Override
-	public TaskExecutor jobTaskExecutor() throws Exception {
-		return null;
-	}
 
 	@Bean
 	public Job importProductsJob() throws Exception {

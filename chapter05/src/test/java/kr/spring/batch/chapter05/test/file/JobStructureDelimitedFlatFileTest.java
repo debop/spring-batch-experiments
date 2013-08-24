@@ -20,7 +20,8 @@ public class JobStructureDelimitedFlatFileTest extends AbstractJobStructureTest 
 	public void existingServiceJob() throws Exception {
 		jobLauncher.run(job, new JobParameters());
 
-		checkProducts(writer.getProducts(), new String[] { "PR....210",
+		checkProducts(writer.getProducts(), new String[] {
+				"PR....210",
 				"PR....211",
 				"PR....212",
 				"PR....213",

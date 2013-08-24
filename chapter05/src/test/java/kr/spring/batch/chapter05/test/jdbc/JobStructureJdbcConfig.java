@@ -1,8 +1,8 @@
 package kr.spring.batch.chapter05.test.jdbc;
 
-import kr.spring.batch.chapter05.AbstractJobConfiguration;
 import kr.spring.batch.chapter05.Product;
 import kr.spring.batch.chapter05.jdbc.ProductRowMapper;
+import kr.spring.batch.chapter05.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter05.test.DummyProductItemWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -16,7 +16,6 @@ import org.springframework.batch.item.database.support.SqlPagingQueryProviderFac
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -34,12 +33,7 @@ import javax.sql.DataSource;
 @Slf4j
 @EnableBatchProcessing
 @EnableTransactionManagement
-public class JobStructureJdbcConfig extends AbstractJobConfiguration {
-
-	@Override
-	public TaskExecutor jobTaskExecutor() throws Exception {
-		return null;
-	}
+public class JobStructureJdbcConfig extends AbstractBatchConfiguration {
 
 	@Bean(name = "productDataSource")
 	public DataSource dataSource() {

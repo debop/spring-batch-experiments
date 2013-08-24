@@ -1,10 +1,12 @@
 package kr.spring.batch.chapter05.test.file;
 
-import kr.spring.batch.chapter05.AbstractJobConfiguration;
 import kr.spring.batch.chapter05.BookProduct;
 import kr.spring.batch.chapter05.MobilePhoneProduct;
 import kr.spring.batch.chapter05.Product;
+import kr.spring.batch.chapter05.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter05.test.DummyProductItemWriter;
+import kr.spring.batch.infrastructure.BatchDataSourceConfiguration;
+import kr.spring.batch.infrastructure.BatchInfrastructureConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -19,9 +21,9 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.task.TaskExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,13 +36,8 @@ import java.util.Map;
  */
 @Configuration
 @EnableBatchProcessing
-public class JobStructureDelimitedMultiFlatFileConfig extends AbstractJobConfiguration {
-
-	@Bean
-	@Override
-	public TaskExecutor jobTaskExecutor() throws Exception {
-		return null;
-	}
+@Import({ BatchInfrastructureConfiguration.class, BatchDataSourceConfiguration.class })
+public class JobStructureDelimitedMultiFlatFileConfig extends AbstractBatchConfiguration {
 
 	@Bean
 	public Job importProductsJob() throws Exception {

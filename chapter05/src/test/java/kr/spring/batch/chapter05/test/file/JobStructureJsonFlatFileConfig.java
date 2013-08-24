@@ -1,9 +1,9 @@
 package kr.spring.batch.chapter05.test.file;
 
-import kr.spring.batch.chapter05.AbstractJobConfiguration;
 import kr.spring.batch.chapter05.Product;
 import kr.spring.batch.chapter05.file.ProductFieldSetMapper;
 import kr.spring.batch.chapter05.file.WrappedJsonLineMapper;
+import kr.spring.batch.chapter05.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter05.test.DummyProductItemWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -19,7 +19,6 @@ import org.springframework.batch.item.file.separator.RecordSeparatorPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.task.TaskExecutor;
 
 /**
  * kr.spring.batch.chapter05.test.file.JobStructureJsonFlatFileConfig
@@ -29,13 +28,7 @@ import org.springframework.core.task.TaskExecutor;
  */
 @Configuration
 @EnableBatchProcessing
-public class JobStructureJsonFlatFileConfig extends AbstractJobConfiguration {
-
-	@Bean
-	@Override
-	public TaskExecutor jobTaskExecutor() throws Exception {
-		return null;
-	}
+public class JobStructureJsonFlatFileConfig extends AbstractBatchConfiguration {
 
 	@Bean
 	public Job importProductsJob() throws Exception {
