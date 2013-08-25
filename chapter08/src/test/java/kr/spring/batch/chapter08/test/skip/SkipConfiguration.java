@@ -7,7 +7,7 @@ import kr.spring.batch.chapter08.jpa.repositories.ProductRepository;
 import kr.spring.batch.chapter08.skip.DatabaseSkipListener;
 import kr.spring.batch.chapter08.skip.ExceptionSkipPolicy;
 import kr.spring.batch.chapter08.skip.Slf4jSkipListener;
-import kr.spring.batch.chapter08.test.AbstractRobustnessJobConfiguration;
+import kr.spring.batch.chapter08.test.AbstractRobustnessBatchConfiguration;
 import kr.spring.batch.chapter08.test.JpaHSqlConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -42,7 +42,7 @@ import java.io.FileNotFoundException;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ JpaHSqlConfiguration.class })
-public class SkipConfiguration extends AbstractRobustnessJobConfiguration {
+public class SkipConfiguration extends AbstractRobustnessBatchConfiguration {
 
 	@Autowired
 	EntityManagerFactory emf;

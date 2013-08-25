@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter08.test.skip;
 
 import kr.spring.batch.chapter08.jpa.repositories.ProductRepository;
-import kr.spring.batch.chapter08.test.AbstractRobustnessJobConfiguration;
+import kr.spring.batch.chapter08.test.AbstractRobustnessBatchConfiguration;
 import kr.spring.batch.chapter08.test.JpaHSqlConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -32,7 +32,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ JpaHSqlConfiguration.class })
-public class SkipBehaviorConfiguration extends AbstractRobustnessJobConfiguration {
+public class SkipBehaviorConfiguration extends AbstractRobustnessBatchConfiguration {
 
 	@Autowired
 	EntityManagerFactory emf;

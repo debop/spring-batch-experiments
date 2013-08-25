@@ -3,7 +3,7 @@ package kr.spring.batch.chapter09.test.besteffort;
 import kr.spring.batch.chapter09.batch.ShippedOrderWriter;
 import kr.spring.batch.chapter09.domain.OrderEntity;
 import kr.spring.batch.chapter09.repository.OrderEntityRepository;
-import kr.spring.batch.chapter09.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter09.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter09.test.JpaHSqlConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -35,34 +35,34 @@ import javax.management.ObjectName;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { OrderEntityRepository.class })
 @Import({ JpaHSqlConfiguration.class })
-public class IdempotencyConfiguration extends AbstractJobConfiguration {
+public class IdempotencyConfiguration extends AbstractBatchConfiguration {
 
-    @Bean
-    public Job updateInventoryJob() {
-        Step step = stepBuilders.get("updateInventoryStep")
-                                .<OrderEntity, OrderEntity>chunk(5).readerIsTransactionalQueue()
-                                .reader(orderReader())
-                                .writer(orderWriter())
-                                .build();
-        return jobBuilders.get("updateInventoryJob")
-                          .start(step)
-                          .build();
-    }
+	@Bean
+	public Job updateInventoryJob() {
+		Step step = stepBuilders.get("updateInventoryStep")
+		                        .<OrderEntity, OrderEntity>chunk(5).readerIsTransactionalQueue()
+		                        .reader(orderReader())
+		                        .writer(orderWriter())
+		                        .build();
+		return jobBuilders.get("updateInventoryJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public JmsItemReader<OrderEntity> orderReader() {
-        JmsItemReader<OrderEntity> reader = new JmsItemReader<OrderEntity>();
-        reader.setJmsTemplate(jmsTemplate());
-        reader.setItemType(OrderEntity.class);
-        // reader.setItemType(javax.jms.Message.class);
+	@Bean
+	public JmsItemReader<OrderEntity> orderReader() {
+		JmsItemReader<OrderEntity> reader = new JmsItemReader<OrderEntity>();
+		reader.setJmsTemplate(jmsTemplate());
+		reader.setItemType(OrderEntity.class);
+		// reader.setItemType(javax.jms.Message.class);
 
-        return reader;
-    }
+		return reader;
+	}
 
-    @Bean
-    public ShippedOrderWriter orderWriter() {
-        return new ShippedOrderWriter();
-    }
+	@Bean
+	public ShippedOrderWriter orderWriter() {
+		return new ShippedOrderWriter();
+	}
 
 //    @Bean
 //    @SuppressWarnings("unchecked")
@@ -70,45 +70,45 @@ public class IdempotencyConfiguration extends AbstractJobConfiguration {
 //        return (ItemReader<Message>) Mockito.mock(ItemReader.class);
 //    }
 
-    @Bean
-    public JmsTemplate jmsTemplate() {
-        JmsTemplate jms = new JmsTemplate();
-        jms.setConnectionFactory(connectionFactory());
-        jms.setDefaultDestination(shippedOrderQueue());
-        jms.setReceiveTimeout(100L);
-        jms.setSessionTransacted(true);
+	@Bean
+	public JmsTemplate jmsTemplate() {
+		JmsTemplate jms = new JmsTemplate();
+		jms.setConnectionFactory(connectionFactory());
+		jms.setDefaultDestination(shippedOrderQueue());
+		jms.setReceiveTimeout(100L);
+		jms.setSessionTransacted(true);
 
-        return jms;
-    }
-
-
-    @Bean
-    public CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory ccf = new CachingConnectionFactory();
-        ccf.setTargetConnectionFactory(new ActiveMQConnectionFactory("vm://embedded?broker.persistent=false"));
-        return ccf;
-    }
+		return jms;
+	}
 
 
-    @Bean
-    public ActiveMQQueue shippedOrderQueue() {
-        return new ActiveMQQueue("spring.batch.queue.shipped.order");
-    }
+	@Bean
+	public CachingConnectionFactory connectionFactory() {
+		CachingConnectionFactory ccf = new CachingConnectionFactory();
+		ccf.setTargetConnectionFactory(new ActiveMQConnectionFactory("vm://embedded?broker.persistent=false"));
+		return ccf;
+	}
 
-    //
-    // HINT: http://java.dzone.com/articles/managing-activemq-jmx-apis
-    // HINT: http://icodingclub.blogspot.kr/2011/09/spring-jms-with-embeded-activemq-in.html
-    @Bean
-    public QueueViewMBean shippedOrderQueueView() {
-        MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
-        try {
-            bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
-            bean.setObjectName(new ObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.shipped.order"));
-            bean.afterPropertiesSet();
-        } catch (MalformedObjectNameException e) {
-            log.error("에러", e);
-        }
-        bean.prepare();
-        return (QueueViewMBean) bean.getObject();
-    }
+
+	@Bean
+	public ActiveMQQueue shippedOrderQueue() {
+		return new ActiveMQQueue("spring.batch.queue.shipped.order");
+	}
+
+	//
+	// HINT: http://java.dzone.com/articles/managing-activemq-jmx-apis
+	// HINT: http://icodingclub.blogspot.kr/2011/09/spring-jms-with-embeded-activemq-in.html
+	@Bean
+	public QueueViewMBean shippedOrderQueueView() {
+		MBeanProxyFactoryBean bean = new MBeanProxyFactoryBean();
+		try {
+			bean.setProxyInterface(org.apache.activemq.broker.jmx.QueueViewMBean.class);
+			bean.setObjectName(new ObjectName("org.apache.activemq:BrokerName=embedded,Type=Queue,Destination=spring.batch.queue.shipped.order"));
+			bean.afterPropertiesSet();
+		} catch (MalformedObjectNameException e) {
+			log.error("에러", e);
+		}
+		bean.prepare();
+		return (QueueViewMBean) bean.getObject();
+	}
 }

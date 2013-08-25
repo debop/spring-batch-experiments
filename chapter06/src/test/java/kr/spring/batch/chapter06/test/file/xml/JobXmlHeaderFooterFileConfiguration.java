@@ -3,7 +3,7 @@ package kr.spring.batch.chapter06.test.file.xml;
 import kr.spring.batch.chapter06.Product;
 import kr.spring.batch.chapter06.file.ProductFooterStaxCallback;
 import kr.spring.batch.chapter06.file.ProductHeaderStaxCallback;
-import kr.spring.batch.chapter06.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter06.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter06.test.FlatFileReaderConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 @Configuration
 @EnableBatchProcessing
 @Import({ FlatFileReaderConfiguration.class })
-public class JobXmlHeaderFooterFileConfiguration extends AbstractJobConfiguration {
+public class JobXmlHeaderFooterFileConfiguration extends AbstractBatchConfiguration {
 
 	public static final String OUTPUT_FILE = "target/outputs/products-headerfooter.xml";
 

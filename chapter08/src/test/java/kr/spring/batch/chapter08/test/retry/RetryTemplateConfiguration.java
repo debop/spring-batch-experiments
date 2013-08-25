@@ -28,7 +28,6 @@ import org.springframework.retry.support.RetryTemplate;
 // NOTE: 현재로는 aop:advisor 연결을 java config로 표현할 방법이 없습니다. xml configuration을 참고하세요.
 // 참고: http://stackoverflow.com/questions/14068525/javaconfig-replacing-aopadvisor-and-txadvice
 @ImportResource(value = { "classpath:retry/RetryTemplateAop.xml" })
-
 public class RetryTemplateConfiguration {
 
 	@Bean

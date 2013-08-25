@@ -12,8 +12,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -30,45 +29,45 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:/kr/spring/batch/chapter13/multithreadedstep/process-indicator-context.xml" })
+// @ContextConfiguration({ "classpath:/kr/spring/batch/chapter13/multithreadedstep/process-indicator-context.xml" })
+@ContextConfiguration(classes = { ProcessIndicatorConfiguration.class })
 public class ProcessIndicatorTest {
 
-    @Autowired
-    private JobLauncher launcher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    @Qualifier("readWriteMultiThreadJob")
-    private Job multiThreadedJob;
+	@Autowired
+	private Job processIndicatorJob;
 
-    @Autowired
-    ProductRepository productRepository;
+	@Autowired
+	ProductRepository productRepository;
 
-    @Autowired
-    ThreadPoolTaskExecutor taskExecutor;
+	@Autowired
+	TaskExecutor taskExecutor;
 
-    @PersistenceContext
-    EntityManager em;
+	@PersistenceContext
+	EntityManager em;
 
-    @Before
-    public void initializeDatabase() {
-        int count = 55;
-        for (int i = 0; i < count; i++) {
-            Product p = new Product(String.valueOf(i));
-            p.setName("Proudct " + i);
-            p.setPrice(124.60f);
-            productRepository.save(p);
-        }
-        productRepository.flush();
-    }
+	@Before
+	public void initializeDatabase() {
+		int count = 55;
+		for (int i = 0; i < count; i++) {
+			Product p = new Product(String.valueOf(i));
+			p.setName("Proudct " + i);
+			p.setPrice(124.60f);
+			productRepository.save(p);
+		}
+		productRepository.flush();
+	}
 
-    @Test
-    public void multiThreadedStep() throws Exception {
-        JobExecution multiThreadedJobExec = launcher.run(multiThreadedJob, new JobParameters());
+	@Test
+	public void multiThreadedStep() throws Exception {
+		JobExecution multiThreadedJobExec = jobLauncher.run(processIndicatorJob, new JobParameters());
 
-        assertThat(multiThreadedJobExec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+		assertThat(multiThreadedJobExec.getStatus()).isEqualTo(BatchStatus.COMPLETED);
 
-        long countNotProcessed = productRepository.countByNotProcessed();
-        assertThat(countNotProcessed).isEqualTo(0);
-    }
+		long countNotProcessed = productRepository.countByNotProcessed();
+		assertThat(countNotProcessed).isEqualTo(0);
+	}
 
 }

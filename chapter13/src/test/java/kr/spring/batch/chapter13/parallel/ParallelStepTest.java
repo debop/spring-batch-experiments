@@ -18,19 +18,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since 13. 8. 20. 오전 11:30
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "/kr/spring/batch/chapter13/parallel/parallel-step-context.xml" })
+// @ContextConfiguration({ "/kr/spring/batch/chapter13/parallel/parallel-step-context.xml" })
+@ContextConfiguration(classes = { ParallelStepConfiguration.class })
 public class ParallelStepTest {
 
-    @Autowired
-    private JobLauncher launcher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    @Qualifier("parallelImportProductsJob")
-    private Job parallelImportProductsJob;
+	@Autowired
+	@Qualifier("parallelImportProductsJob")
+	private Job parallelImportProductsJob;
 
-    @Test
-    public void multithreadedStep() throws Exception {
-        JobExecution parallelImportProductsJobExec =
-            launcher.run(parallelImportProductsJob, new JobParameters());
-    }
+	@Test
+	public void multithreadedStep() throws Exception {
+		JobExecution parallelImportProductsJobExec =
+				jobLauncher.run(parallelImportProductsJob, new JobParameters());
+	}
 }

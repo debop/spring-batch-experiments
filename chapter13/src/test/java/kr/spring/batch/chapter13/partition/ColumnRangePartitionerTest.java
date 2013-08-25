@@ -21,37 +21,37 @@ import javax.persistence.PersistenceContext;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:kr/spring/batch/chapter13/partition/PartitionColumnRangeStepTest-context.xml" })
+@ContextConfiguration(classes = { PartitionColumnRangeStepConfiguration.class })
 public class ColumnRangePartitionerTest {
 
-    @Autowired
-    ProductForColumnRangeRepository productForColumnRangeRepository;
+	@Autowired
+	ProductForColumnRangeRepository productForColumnRangeRepository;
 
-    @PersistenceContext
-    EntityManager em;
+	@PersistenceContext
+	EntityManager em;
 
-    @Before
-    public void initializeDatabase() throws Exception {
-        int count = 55;
-        for (int i = 0; i < 55; i++) {
-            ProductForColumnRange p = new ProductForColumnRange();
-            p.setName("Product " + i);
-            p.setPrice(124.60f);
+	@Before
+	public void initializeDatabase() throws Exception {
+		int count = 55;
+		for (int i = 0; i < 55; i++) {
+			ProductForColumnRange p = new ProductForColumnRange();
+			p.setName("Product " + i);
+			p.setPrice(124.60f);
 
-            productForColumnRangeRepository.save(p);
-        }
-        productForColumnRangeRepository.flush();
-    }
+			productForColumnRangeRepository.save(p);
+		}
+		productForColumnRangeRepository.flush();
+	}
 
-    @Test
-    public void getMinValue() {
-        long min = (Long) em.createQuery("select min(id) from ProductForColumnRange").getSingleResult();
-        log.debug("min = [{}]", min);
-    }
+	@Test
+	public void getMinValue() {
+		long min = (Long) em.createQuery("select min(id) from ProductForColumnRange").getSingleResult();
+		log.debug("min = [{}]", min);
+	}
 
-    @Test
-    public void getMaxValue() {
-        long max = (Long) em.createQuery("select max(id) from ProductForColumnRange").getSingleResult();
-        log.debug("max = [{}]", max);
-    }
+	@Test
+	public void getMaxValue() {
+		long max = (Long) em.createQuery("select max(id) from ProductForColumnRange").getSingleResult();
+		log.debug("max = [{}]", max);
+	}
 }

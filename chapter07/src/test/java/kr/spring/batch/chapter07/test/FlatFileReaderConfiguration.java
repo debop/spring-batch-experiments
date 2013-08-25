@@ -3,6 +3,7 @@ package kr.spring.batch.chapter07.test;
 import kr.spring.batch.chapter07.Product;
 import kr.spring.batch.chapter07.ProductFieldSetMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -22,6 +23,7 @@ import org.springframework.core.io.ClassPathResource;
  */
 @Slf4j
 @Configuration
+@EnableBatchProcessing
 public class FlatFileReaderConfiguration {
 
 	@Bean

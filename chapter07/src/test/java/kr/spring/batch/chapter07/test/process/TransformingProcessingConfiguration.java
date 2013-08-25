@@ -2,7 +2,7 @@ package kr.spring.batch.chapter07.test.process;
 
 import kr.spring.batch.chapter07.*;
 import kr.spring.batch.chapter07.jpa.ProductRepository;
-import kr.spring.batch.chapter07.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter07.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter07.test.JpaHSqlConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -39,7 +39,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @EnableBatchProcessing
 @Import({ JpaHSqlConfiguration.class })
-public class TransformingProcessingConfiguration extends AbstractJobConfiguration {
+public class TransformingProcessingConfiguration extends AbstractBatchConfiguration {
 
 	@Autowired
 	EntityManagerFactory emf;

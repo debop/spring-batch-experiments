@@ -19,22 +19,22 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = { MultithreadedStepConfiguration.class })
 public class MultithreadedStepTest {
 
-    @Autowired
-    private JobLauncher launcher;
+	@Autowired
+	private JobLauncher launcher;
 
-    @Autowired
-    private Job multiThreadedJob;
+	@Autowired
+	private Job multiThreadedJob;
 
-    @Test
-    public void testMultiThreadedStep() throws Exception {
-        long count = 55;
-        JobExecution multithreadJobExec = launcher.run(
-            multiThreadedJob,
-            new JobParametersBuilder()
-                .addLong("count", count)
-                .toJobParameters());
-    }
+	@Test
+	public void testMultiThreadedStep() throws Exception {
+		long count = 55;
+		JobExecution multithreadJobExec = launcher.run(
+				multiThreadedJob,
+				new JobParametersBuilder()
+						.addLong("count", count)
+						.toJobParameters());
+	}
 }

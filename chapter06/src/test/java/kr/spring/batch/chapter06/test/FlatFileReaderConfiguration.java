@@ -1,6 +1,7 @@
 package kr.spring.batch.chapter06.test;
 
 import kr.spring.batch.chapter06.Product;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -18,6 +19,7 @@ import org.springframework.core.io.ClassPathResource;
  * @since 13. 8. 7. 오전 10:59
  */
 @Configuration
+@EnableBatchProcessing
 public class FlatFileReaderConfiguration {
 
 	@Bean

@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter09.test;
 
 import kr.spring.batch.chapter09.domain.OrderEntity;
-import kr.spring.batch.chapter09.jpa.config.HSqlConfigBase;
+import kr.spring.batch.infrastructure.jpa.HSqlConfigBase;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JpaHSqlConfiguration extends HSqlConfigBase {
 
-    @Override
-    public String[] getMappedPackageNames() {
-        return new String[]{
-            OrderEntity.class.getPackage().getName()
-        };
-    }
+	@Override
+	public String[] getMappedPackageNames() {
+		return new String[] {
+				OrderEntity.class.getPackage().getName()
+		};
+	}
 }

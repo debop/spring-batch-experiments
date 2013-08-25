@@ -2,7 +2,7 @@ package kr.spring.batch.chapter07.test.process;
 
 import kr.spring.batch.chapter07.Product;
 import kr.spring.batch.chapter07.jpa.ProductRepository;
-import kr.spring.batch.chapter07.test.AbstractJobTest;
+import kr.spring.batch.chapter07.test.AbstractBatchTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 @Slf4j
 @ContextConfiguration(classes = { FilteringExistingProductConfiguration.class })
-public class FilteringExistingProductTest extends AbstractJobTest {
+public class FilteringExistingProductTest extends AbstractBatchTest {
 
 	@Autowired
 	private JobLauncher jobLauncher;

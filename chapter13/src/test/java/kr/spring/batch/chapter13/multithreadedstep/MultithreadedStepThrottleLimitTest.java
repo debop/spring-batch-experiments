@@ -19,23 +19,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = { MultithreadedStepThrottleLimitConfiguration.class })
 public class MultithreadedStepThrottleLimitTest {
 
-    @Autowired
-    private JobLauncher launcher;
+	@Autowired
+	private JobLauncher launcher;
 
-    @Autowired
-    @Qualifier("readWriteMultiThreadJob")
-    private Job multiThreadedJob;
+	@Autowired
+	@Qualifier("readWriteMultiThreadJob")
+	private Job multiThreadedJob;
 
-    @Test
-    public void setMultiThreadedJobTest() throws Exception {
-        long count = 55;
-        launcher.run(multiThreadedJob,
-                     new JobParametersBuilder()
-                         .addLong("count", count)
-                         .toJobParameters());
-    }
+	@Test
+	public void setMultiThreadedJobTest() throws Exception {
+		long count = 55;
+		launcher.run(multiThreadedJob,
+		             new JobParametersBuilder()
+				             .addLong("count", count)
+				             .toJobParameters());
+	}
 
 }

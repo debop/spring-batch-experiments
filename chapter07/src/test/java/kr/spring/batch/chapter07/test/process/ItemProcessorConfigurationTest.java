@@ -1,6 +1,6 @@
 package kr.spring.batch.chapter07.test.process;
 
-import kr.spring.batch.chapter07.test.AbstractJobTest;
+import kr.spring.batch.chapter07.test.AbstractBatchTest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 @Slf4j
 @ContextConfiguration(classes = { ItemProcessorConfiguration.class })
-public class ItemProcessorConfigurationTest extends AbstractJobTest {
+public class ItemProcessorConfigurationTest extends AbstractBatchTest {
 
 	@Autowired
 	private JobLauncher jobLauncher;

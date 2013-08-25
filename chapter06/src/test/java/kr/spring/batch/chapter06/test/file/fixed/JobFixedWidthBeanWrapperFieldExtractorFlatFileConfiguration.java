@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter06.test.file.fixed;
 
 import kr.spring.batch.chapter06.Product;
-import kr.spring.batch.chapter06.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter06.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter06.test.FlatFileReaderConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -25,7 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 @Configuration
 @EnableBatchProcessing
 @Import({ FlatFileReaderConfiguration.class })
-public class JobFixedWidthBeanWrapperFieldExtractorFlatFileConfiguration extends AbstractJobConfiguration {
+public class JobFixedWidthBeanWrapperFieldExtractorFlatFileConfiguration extends AbstractBatchConfiguration {
 
 	public static final String OUTPUT_FILE = "target/outputs/fixedwidth-beanwrapperextractor.txt";
 

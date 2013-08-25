@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * kr.spring.batch.chapter08.test.AbstractRobustnessTest
+ * kr.spring.batch.chapter08.test.AbstractRobustnessBatchTest
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 9. 오후 2:53
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-public abstract class AbstractRobustnessTest {
+public abstract class AbstractRobustnessBatchTest {
 
 	@Autowired
 	protected JobLauncher jobLauncher;

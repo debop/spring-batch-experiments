@@ -1,6 +1,6 @@
 package kr.spring.batch.chapter09.test.transaction;
 
-import kr.spring.batch.chapter09.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter09.test.AbstractBatchConfiguration;
 import org.mockito.Mockito;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -19,7 +19,7 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
  */
 @Configuration
 @EnableBatchProcessing
-public class TaskletTransactionConfiguration extends AbstractJobConfiguration {
+public class TaskletTransactionConfiguration extends AbstractBatchConfiguration {
 
 	@Bean
 	public Tasklet tasklet() {

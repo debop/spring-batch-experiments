@@ -2,7 +2,7 @@ package kr.spring.batch.chapter06.test.jpa;
 
 import kr.spring.batch.chapter06.Product;
 import kr.spring.batch.chapter06.jpa.ProductRepository;
-import kr.spring.batch.chapter06.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter06.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter06.test.FlatFileReaderConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -27,7 +27,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ FlatFileReaderConfiguration.class, JpaHSqlConfiguration.class })
-public class JobJpaItemWriterConfiguration extends AbstractJobConfiguration {
+public class JobJpaItemWriterConfiguration extends AbstractBatchConfiguration {
 
 	@Autowired
 	protected EntityManagerFactory emf;

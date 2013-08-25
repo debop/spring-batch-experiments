@@ -2,7 +2,7 @@ package kr.spring.batch.chapter08.test.retry;
 
 import kr.spring.batch.chapter08.jpa.repositories.ProductRepository;
 import kr.spring.batch.chapter08.retry.Slf4jRetryListener;
-import kr.spring.batch.chapter08.test.AbstractRobustnessJobConfiguration;
+import kr.spring.batch.chapter08.test.AbstractRobustnessBatchConfiguration;
 import kr.spring.batch.chapter08.test.JpaHSqlConfiguration;
 import org.mockito.Mockito;
 import org.springframework.batch.core.Job;
@@ -35,7 +35,7 @@ import java.util.Map;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ JpaHSqlConfiguration.class })
-public class RetryBehaviorConfiguration extends AbstractRobustnessJobConfiguration {
+public class RetryBehaviorConfiguration extends AbstractRobustnessBatchConfiguration {
 
 	@Bean
 	public Job job() {
@@ -52,9 +52,7 @@ public class RetryBehaviorConfiguration extends AbstractRobustnessJobConfigurati
 		                        .listener(retryListener())
 		                        .build();
 
-		return jobBuilders.get("job")
-		                  .start(step)
-		                  .build();
+		return jobBuilders.get("job").start(step).build();
 	}
 
 	@Bean
@@ -76,9 +74,7 @@ public class RetryBehaviorConfiguration extends AbstractRobustnessJobConfigurati
 		                        .faultTolerant().retryPolicy(retryPolicy())
 		                        .build();
 
-		return jobBuilders.get("retryPolicyJob")
-		                  .start(step)
-		                  .build();
+		return jobBuilders.get("retryPolicyJob").start(step).build();
 	}
 
 	@Bean

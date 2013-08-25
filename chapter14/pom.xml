@@ -12,6 +12,13 @@
     <artifactId>chapter14</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>kr.spring.batch</groupId>
+            <artifactId>batch-infrastructure</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.data</groupId>

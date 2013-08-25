@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter08.test.restart;
 
 import kr.spring.batch.chapter08.jpa.repositories.ProductRepository;
-import kr.spring.batch.chapter08.test.AbstractRobustnessJobConfiguration;
+import kr.spring.batch.chapter08.test.AbstractRobustnessBatchConfiguration;
 import kr.spring.batch.chapter08.test.JpaHSqlConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
@@ -27,87 +27,87 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ JpaHSqlConfiguration.class })
-public class RestartBehaviorConfiguration extends AbstractRobustnessJobConfiguration {
+public class RestartBehaviorConfiguration extends AbstractRobustnessBatchConfiguration {
 
-    @Bean
-    public Job notRestartableJob() {
-        Step step = stepBuilders.get("notStartableStep").tasklet(taskletForNotRestartableJob()).build();
-        return jobBuilders.get("notStartableJob")
-                          .start(step)
-            .preventRestart()     // NOTE 재시작 금지
-            .build();
-    }
+	@Bean
+	public Job notRestartableJob() {
+		Step step = stepBuilders.get("notStartableStep").tasklet(taskletForNotRestartableJob()).build();
+		return jobBuilders.get("notStartableJob")
+		                  .start(step)
+				.preventRestart()     // NOTE 재시작 금지
+				.build();
+	}
 
-    @Bean
-    public Tasklet taskletForNotRestartableJob() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet taskletForNotRestartableJob() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public Job restartableJob() {
-        Step step = stepBuilders.get("restartableJob").tasklet(taskletForRestartableJob()).build();
-        return jobBuilders.get("restartableJob")
-                          .start(step)
-                          .build();
-    }
+	@Bean
+	public Job restartableJob() {
+		Step step = stepBuilders.get("restartableJob").tasklet(taskletForRestartableJob()).build();
+		return jobBuilders.get("restartableJob")
+		                  .start(step)
+		                  .build();
+	}
 
-    @Bean
-    public Tasklet taskletForRestartableJob() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet taskletForRestartableJob() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public Job importProductsJob() {
-        Step decompressStep = stepBuilders.get("decompressStep")
-                                          .tasklet(decompressTasklet())
-                                          .allowStartIfComplete(true)
-                                          .build();
+	@Bean
+	public Job importProductsJob() {
+		Step decompressStep = stepBuilders.get("decompressStep")
+		                                  .tasklet(decompressTasklet())
+		                                  .allowStartIfComplete(true)
+		                                  .build();
 
-        Step readWriteProductsStep = stepBuilders.get("readWriteProductsStep")
-                                                 .tasklet(readWriteProductsTasklet())
-                                                 .build();
+		Step readWriteProductsStep = stepBuilders.get("readWriteProductsStep")
+		                                         .tasklet(readWriteProductsTasklet())
+		                                         .build();
 
-        return jobBuilders.get("importProductsJob")
-                          .start(decompressStep)
-                          .next(readWriteProductsStep)
-                          .build();
-    }
+		return jobBuilders.get("importProductsJob")
+		                  .start(decompressStep)
+		                  .next(readWriteProductsStep)
+		                  .build();
+	}
 
-    @Bean
-    public Tasklet decompressTasklet() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet decompressTasklet() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public Tasklet readWriteProductsTasklet() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet readWriteProductsTasklet() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public Job importProductsLimitJob() {
-        Step decompressStepLimit = stepBuilders.get("decompressStepLimit")
-                                               .tasklet(decompressTaskletLimit())
-                                               .build();
+	@Bean
+	public Job importProductsLimitJob() {
+		Step decompressStepLimit = stepBuilders.get("decompressStepLimit")
+		                                       .tasklet(decompressTaskletLimit())
+		                                       .build();
 
-        // NOTE: Start Limit is 3
-        Step readWriteProductsStepLimit = stepBuilders.get("readWriteProductsStepLimit")
-                                                      .tasklet(readWriteProductsTaskletLimit())
-                                                      .startLimit(3)
-                                                      .build();
+		// NOTE: Start Limit is 3
+		Step readWriteProductsStepLimit = stepBuilders.get("readWriteProductsStepLimit")
+		                                              .tasklet(readWriteProductsTaskletLimit())
+		                                              .startLimit(3)
+		                                              .build();
 
-        return jobBuilders.get("importProductsLimitJob")
-                          .start(decompressStepLimit)
-                          .next(readWriteProductsStepLimit)
-                          .build();
-    }
+		return jobBuilders.get("importProductsLimitJob")
+		                  .start(decompressStepLimit)
+		                  .next(readWriteProductsStepLimit)
+		                  .build();
+	}
 
-    @Bean
-    public Tasklet decompressTaskletLimit() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet decompressTaskletLimit() {
+		return Mockito.mock(Tasklet.class);
+	}
 
-    @Bean
-    public Tasklet readWriteProductsTaskletLimit() {
-        return Mockito.mock(Tasklet.class);
-    }
+	@Bean
+	public Tasklet readWriteProductsTaskletLimit() {
+		return Mockito.mock(Tasklet.class);
+	}
 }

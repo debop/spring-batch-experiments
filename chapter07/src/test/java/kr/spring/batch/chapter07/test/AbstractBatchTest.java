@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * kr.spring.batch.chapter07.test.AbstractJobTest
+ * kr.spring.batch.chapter07.test.AbstractBatchTest
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 8. 오후 4:28
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-public abstract class AbstractJobTest {
+public abstract class AbstractBatchTest {
 
 	@Autowired
 	protected ProductRepository productRepository;

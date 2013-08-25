@@ -1,7 +1,7 @@
 package kr.spring.batch.chapter08.test;
 
 import kr.spring.batch.chapter08.SkippedProduct;
-import kr.spring.batch.chapter08.test.jpa.config.HSqlConfigBase;
+import kr.spring.batch.infrastructure.jpa.HSqlConfigBase;
 import org.springframework.context.annotation.Configuration;
 
 /**

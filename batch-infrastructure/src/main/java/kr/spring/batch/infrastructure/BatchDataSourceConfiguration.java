@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
 
 /**
  * kr.experiments.springbatch.AbstractJobConfiguration
@@ -23,7 +24,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchDataSourceConfiguration {
 
 	@Bean(name = "jobDataSource")
-	public EmbeddedDatabase jobDataSource() {
+	public DataSource jobDataSource() {
 		log.info("create DataSource");
 
 		return new EmbeddedDatabaseBuilder()

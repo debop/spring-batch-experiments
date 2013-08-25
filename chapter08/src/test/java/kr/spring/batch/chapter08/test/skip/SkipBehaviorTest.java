@@ -1,6 +1,6 @@
 package kr.spring.batch.chapter08.test.skip;
 
-import kr.spring.batch.chapter08.test.AbstractRobustnessTest;
+import kr.spring.batch.chapter08.test.AbstractRobustnessBatchTest;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
  */
 @Slf4j
 @ContextConfiguration(classes = { SkipBehaviorConfiguration.class })
-public class SkipBehaviorTest extends AbstractRobustnessTest {
+public class SkipBehaviorTest extends AbstractRobustnessBatchTest {
 
 	@Test
 	public void sunnyDay() throws Exception {

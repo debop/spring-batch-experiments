@@ -21,36 +21,36 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since 13. 8. 20. 오후 5:08
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = { PartitionColumnRangeStepConfiguration.class })
 public class PartitionColumnRangeStepTest {
 
-    @Autowired
-    private JobLauncher launcher;
+	@Autowired
+	private JobLauncher jobLauncher;
 
-    @Autowired
-    @Qualifier("partitionImportProductsJob")
-    private Job partitionImportProductsJob;
+	@Autowired
+	@Qualifier("partitionImportProductsJob")
+	private Job partitionImportProductsJob;
 
-    @Autowired
-    ProductForColumnRangeRepository productForColumnRangeRepository;
+	@Autowired
+	ProductForColumnRangeRepository productForColumnRangeRepository;
 
-    @Before
-    public void initializeDatabase() throws Exception {
-        int count = 55;
-        for (int i = 0; i < 55; i++) {
-            ProductForColumnRange p = new ProductForColumnRange();
-            p.setName("Product " + i);
-            p.setPrice(124.60f);
+	@Before
+	public void initializeDatabase() throws Exception {
+		int count = 55;
+		for (int i = 0; i < 55; i++) {
+			ProductForColumnRange p = new ProductForColumnRange();
+			p.setName("Product " + i);
+			p.setPrice(124.60f);
 
-            productForColumnRangeRepository.save(p);
-        }
-        productForColumnRangeRepository.flush();
-    }
+			productForColumnRangeRepository.save(p);
+		}
+		productForColumnRangeRepository.flush();
+	}
 
-    @Test
-    public void multiThreadedStep() throws Exception {
-        JobExecution partitionImportProductsJobExec =
-            launcher.run(partitionImportProductsJob,
-                         new JobParameters());
-    }
+	@Test
+	public void multiThreadedStep() throws Exception {
+		JobExecution partitionImportProductsJobExec =
+				jobLauncher.run(partitionImportProductsJob,
+				                new JobParameters());
+	}
 }

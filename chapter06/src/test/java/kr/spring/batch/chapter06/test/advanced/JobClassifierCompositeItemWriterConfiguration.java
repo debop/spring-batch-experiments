@@ -5,7 +5,7 @@ import kr.spring.batch.chapter06.advanced.DeleteProductItemWriter;
 import kr.spring.batch.chapter06.advanced.InsertProductItemWriter;
 import kr.spring.batch.chapter06.advanced.ProductRepository;
 import kr.spring.batch.chapter06.advanced.ProductRouterClassifier;
-import kr.spring.batch.chapter06.test.AbstractJobConfiguration;
+import kr.spring.batch.chapter06.test.AbstractBatchConfiguration;
 import kr.spring.batch.chapter06.test.FlatFileReaderConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -33,13 +33,14 @@ import java.util.HashMap;
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackageClasses = { ProductRepository.class })
 @Import({ FlatFileReaderConfiguration.class, JpaHSqlConfiguration.class })
-public class JobClassifierCompositeItemWriterConfiguration extends AbstractJobConfiguration {
+public class JobClassifierCompositeItemWriterConfiguration extends AbstractBatchConfiguration {
 
 	@Autowired
 	EntityManagerFactory emf;
 
 	@Autowired
 	ItemReader<Product> productItemReader;
+
 
 	@Bean
 	public Job writeProductsJob() {

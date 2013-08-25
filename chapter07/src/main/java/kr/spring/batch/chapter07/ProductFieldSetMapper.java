@@ -19,7 +19,7 @@ public class ProductFieldSetMapper implements FieldSetMapper<Product> {
 
 		log.trace("FieldSet으로 Product를 빌드합니다...");
 
-		// TODO : 나중에 ModelMapper 에서도 잘되나 보자.
+		// TODO : 나중에 ModelMapper 에서도 잘되나 보자. ==> 이건 ModelMapper 로 되는 게 아니다.
 		Product product = new Product();
 
 		product.setId(fieldSet.readString("PRODUCT_ID"));
