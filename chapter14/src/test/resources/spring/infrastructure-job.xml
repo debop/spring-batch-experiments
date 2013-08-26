@@ -3,17 +3,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:batch="http://www.springframework.org/schema/batch"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/batch
        http://www.springframework.org/schema/batch/spring-batch.xsd
        http://www.springframework.org/schema/data/jpa
-       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<import resource="classpath:spring/infrastructure-batch.xml"/>
 	<import resource="classpath:spring/infrastructure-jpa.xml"/>
 
-	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils"/>
+	<tx:annotation-driven/>
+
+	<bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils">
+		<property name="jobRepository" ref="jobRepository"/>
+	</bean>
 
 	<jpa:repositories base-package="kr.spring.batch.chapter14.repository"/>
 

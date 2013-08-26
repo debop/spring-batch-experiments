@@ -2,6 +2,7 @@ package kr.spring.batch.chapter14.test.batch.integration.step;
 
 import kr.spring.batch.chapter14.domain.Product;
 import kr.spring.batch.chapter14.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,16 +15,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
- * kr.spring.batch.chapter14.test.batch.integration.step.StatisticStepTest
+ * FIXME: maven으로 실행시키면 예외가 발생하고, JUnit으로 실행시키면 성공한다.
  *
  * @author 배성혁 sunghyouk.bae@gmail.com
  * @since 13. 8. 19. 오후 9:29
  */
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/infrastructure-job.xml")
 public class StatisticStepTest {
@@ -37,10 +41,14 @@ public class StatisticStepTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @PersistenceContext
+    EntityManager em;
+
     @Before
     public void setup() {
-        productRepository.deleteAll();
-        productRepository.flush();
+        // em.createQuery("delete from Product").executeUpdate();
+        // productRepository.deleteAll();
+        // productRepository.flush();
 
         Product product = new Product();
         product.setId("1");
