@@ -7,3 +7,6 @@ target
 *.jar
 *.war
 *.ear
+chapter09/activemq-data/embedded/scheduler/db-1.log
+chapter09/activemq-data/embedded/scheduler/scheduleDB.data
+chapter09/activemq-data/embedded/scheduler/scheduleDB.redo

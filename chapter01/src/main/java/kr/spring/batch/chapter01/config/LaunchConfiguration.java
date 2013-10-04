@@ -126,7 +126,7 @@ public class LaunchConfiguration {
 
 	@Bean
 	public JobRepository jobRepository() throws Exception {
-		LaunchConfiguration.log.info("create JobRepository...");
+		log.info("create JobRepository...");
 
 		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
 		factory.setDataSource(dataSource());

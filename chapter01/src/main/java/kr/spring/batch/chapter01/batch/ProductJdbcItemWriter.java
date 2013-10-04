@@ -33,7 +33,7 @@ public class ProductJdbcItemWriter implements ItemWriter<Product> {
     @Override
     public void write(List<? extends Product> items) throws Exception {
         for (Product item : items) {
-            ProductJdbcItemWriter.log.debug("UPSERT Product=[{}]", item);
+            log.debug("UPSERT Product=[{}]", item);
 
             int updated = jdbcTemplate.update(UPDATE_PRODUCT,
                                               item.getName(),
