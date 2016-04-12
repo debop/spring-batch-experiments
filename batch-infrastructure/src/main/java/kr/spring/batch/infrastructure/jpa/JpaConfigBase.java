@@ -66,13 +66,13 @@ public abstract class JpaConfigBase {
 
 	@Bean
 	public EntityManagerFactory entityManagerFactory() {
-		JpaConfigBase.log.info("EntityManagerFactory 를 생성합니다...");
+		log.info("EntityManagerFactory 를 생성합니다...");
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 
 		String[] packageNames = getMappedPackageNames();
 		if (packageNames != null && packageNames.length > 0) {
-			JpaConfigBase.log.info("JPA용 엔티티를 스캔합니다.");
+			log.info("JPA용 엔티티를 스캔합니다.");
 			factoryBean.setPackagesToScan(packageNames);
 		}
 		if (!StringUtils.isEmpty(getPersistentUnitName()))
